@@ -1,18 +1,25 @@
 import { Link } from "react-router-dom";
 import { ProfileDropdown } from "./ProfileDropdown";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store/authStore";
+import { useSignOut } from "@/hooks/useAuth";
 
-interface NavbarProps {
-  user?: {
-    name: string;
-    email: string;
-    avatarUrl?: string;
+export function Navbar() {
+  const { user, loading } = useAuthStore();
+  const signOutMutation = useSignOut();
+
+  const userInfo = user
+    ? {
+        name:
+          user.user_metadata?.full_name || user.email?.split("@")[0] || "User",
+        email: user.email || "",
+        avatarUrl: user.user_metadata?.avatar_url,
+      }
+    : undefined;
+
+  const handleLogout = () => {
+    signOutMutation.mutate();
   };
-  onLogout?: () => void;
-}
-
-export function Navbar({ user, onLogout }: NavbarProps) {
-  const isLoggedIn = !!user;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -49,8 +56,10 @@ export function Navbar({ user, onLogout }: NavbarProps) {
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
-          {isLoggedIn ? (
-            <ProfileDropdown user={user} onLogout={onLogout} />
+          {loading ? (
+            <div className="h-9 w-9 rounded-full bg-muted animate-pulse" />
+          ) : user ? (
+            <ProfileDropdown user={userInfo} onLogout={handleLogout} />
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" asChild>
