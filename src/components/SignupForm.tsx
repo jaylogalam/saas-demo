@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,7 +15,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useSignUp, useSignInWithGoogle } from "@/hooks/useAuth";
+import {
+  useSignUp,
+  useSignInWithGoogle,
+  useVerifyOTP,
+  useResendOTP,
+} from "@/hooks/useAuth";
+import { OTPVerificationCard } from "@/components/OTPVerificationCard";
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [fullName, setFullName] = useState("");
@@ -23,9 +29,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const signUpMutation = useSignUp();
   const googleMutation = useSignInWithGoogle();
+  const verifyMutation = useVerifyOTP();
+  const resendMutation = useResendOTP();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,28 +57,40 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     googleMutation.mutate();
   };
 
+  const handleVerifyOTP = (otp: string) => {
+    verifyMutation.mutate(
+      { email, token: otp },
+      {
+        onSuccess: () => {
+          navigate("/");
+        },
+      }
+    );
+  };
+
+  const handleResendOTP = () => {
+    resendMutation.mutate(email);
+  };
+
   const error =
     validationError ||
     signUpMutation.error?.message ||
     googleMutation.error?.message;
   const isLoading = signUpMutation.isPending || googleMutation.isPending;
 
+  // Show OTP verification card after successful signup
   if (signUpMutation.isSuccess) {
     return (
-      <Card {...props}>
-        <CardHeader>
-          <CardTitle>Check your email</CardTitle>
-          <CardDescription>
-            We've sent you a confirmation link to <strong>{email}</strong>.
-            Please check your inbox and click the link to verify your account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button asChild className="w-full">
-            <Link to="/login">Back to Login</Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <OTPVerificationCard
+        email={email}
+        onVerify={handleVerifyOTP}
+        onResend={handleResendOTP}
+        isVerifying={verifyMutation.isPending}
+        isResending={resendMutation.isPending}
+        error={verifyMutation.error?.message}
+        resendSuccess={resendMutation.isSuccess}
+        {...props}
+      />
     );
   }
 

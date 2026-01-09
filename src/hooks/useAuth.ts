@@ -12,6 +12,11 @@ interface SignUpCredentials {
   fullName: string;
 }
 
+interface VerifyOTPCredentials {
+  email: string;
+  token: string;
+}
+
 export function useSignIn() {
   const queryClient = useQueryClient();
 
@@ -42,8 +47,47 @@ export function useSignUp() {
           },
         },
       });
+
+      // TODO: Add email already exists logic
+      // if (data.user && data.user.identities?.length === 0) {
+      //   console.log(
+      //     "This email is already taken. Show a 'Check your email' or 'Login' message."
+      //   );
+      // }
+
       if (error) throw error;
       return data;
+    },
+  });
+}
+
+export function useVerifyOTP() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ email, token }: VerifyOTPCredentials) => {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: "signup",
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
+    },
+  });
+}
+
+export function useResendOTP() {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email,
+      });
+      if (error) throw error;
     },
   });
 }
