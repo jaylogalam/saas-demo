@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  height: 100dvh;
+  width: 100dvw;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --background: hsl(0, 0%, 90%);
+
+  --text : hsl(0, 0%, 5%);
+  --text-dim : hsl(0, 0%, 40%);
+
+  --primary: hsl(280, 100%, 50%);
+  --primary-shade: hsl(280, 100%, 80%);
+  --primary-gradient: hsl(0, 0%, 0%, 0);
+
+  --secondary: hsl(325, 100%, 50%);
+  --secondary-shade: hsl(0, 100%, 35%);
+
+  --accent : hsl(0, 0%, 85%);
+  --error : hsl(0, 80%, 50%);
+  --success : hsl(120, 80%, 40%);
+}
+
+.dark {
+  --background: hsl(0, 0%, 90%);
+
+  --text : hsl(0, 0%, 5%);
+  --text-dim : hsl(0, 0%, 20%);
+
+  --primary: hsla(0, 0%, 0%, 0);
+  --primary-shade: hsl(0, 0%, 0%, 0);
+  --primary-gradient: hsl(0, 0%, 0%, 0);
+
+  --secondary: hsla(0, 0%, 0%, 0);
+  --secondary-shade: hsl(0, 0%, 0%, 0);
+
+  --accent : hsl(0, 0%, 85%);
+  --error : hsl(0, 80%, 50%);
+  --success : hsl(120, 80%, 40%);
+}
+
+@theme inline {
+  --color-background: var(--background);
+
+  --color-text : var(--text);
+  --color-text-dim : var(--text-dim);
+
+  --color-primary: var(--primary);
+  --color-primary-shade: var(--primary-shade);
+  --color-primary-gradient: var(--primary-gradient);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-shade: var(--secondary-shade);
+
+  --color-accent: var(--accent);
+  --color-error : var(--error);
+  --color-success : var(--success);
+}
+
+@layer base {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  * {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
