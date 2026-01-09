@@ -1,0 +1,81 @@
+import { User, Settings, LogOut, CreditCard } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+interface ProfileDropdownProps {
+  user?: {
+    name: string;
+    email: string;
+    avatarUrl?: string;
+  };
+  onLogout?: () => void;
+}
+
+export function ProfileDropdown({ user, onLogout }: ProfileDropdownProps) {
+  const initials =
+    user?.name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) || "U";
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center gap-2 rounded-full outline-none ring-ring focus-visible:ring-2 transition-all hover:opacity-80">
+          <Avatar className="size-9 cursor-pointer border-2 border-transparent hover:border-primary/20">
+            <AvatarImage src={user?.avatarUrl} alt={user?.name || "User"} />
+            <AvatarFallback className="bg-primary text-primary-foreground font-medium">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end" sideOffset={8}>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">
+              {user?.name || "Guest"}
+            </p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {user?.email || "No email"}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem className="cursor-pointer">
+            <User className="mr-2 size-4" />
+            <span>Profile</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
+            <CreditCard className="mr-2 size-4" />
+            <span>Billing</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
+            <Settings className="mr-2 size-4" />
+            <span>Settings</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="cursor-pointer"
+          variant="destructive"
+          onClick={onLogout}
+        >
+          <LogOut className="mr-2 size-4" />
+          <span>Log out</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
