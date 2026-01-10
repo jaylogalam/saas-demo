@@ -121,3 +121,30 @@ export function useSignOut() {
     },
   });
 }
+
+export function useResetPasswordRequest() {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+    },
+  });
+}
+
+export function useUpdatePassword() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (newPassword: string) => {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
+    },
+  });
+}
