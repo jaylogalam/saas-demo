@@ -3,6 +3,7 @@ import { ProfileDropdown } from "./ProfileDropdown";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { useSignOut } from "@/hooks/useAuth";
+import { AppLogo } from "@/components/AppLogo";
 
 export function Navbar() {
   const { user, loading } = useAuthStore();
@@ -25,12 +26,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
-            S
-          </div>
-          <span className="text-xl font-bold">SaaS Demo</span>
-        </Link>
+        <AppLogo />
 
         {/* Navigation Links */}
         <div className="hidden md:flex items-center gap-6">
