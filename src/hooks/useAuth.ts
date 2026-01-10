@@ -48,14 +48,15 @@ export function useSignUp() {
         },
       });
 
-      // TODO: Add email already exists logic
-      // if (data.user && data.user.identities?.length === 0) {
-      //   console.log(
-      //     "This email is already taken. Show a 'Check your email' or 'Login' message."
-      //   );
-      // }
-
       if (error) throw error;
+
+      // Check if email already exists (Supabase returns empty identities array)
+      if (data.user && data.user.identities?.length === 0) {
+        throw new Error(
+          "An account with this email already exists. Please sign in instead."
+        );
+      }
+
       return data;
     },
   });
