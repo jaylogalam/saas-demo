@@ -25,7 +25,6 @@ export function SignupForm({
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -37,11 +36,6 @@ export function SignupForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError(null);
-
-    if (password !== confirmPassword) {
-      setValidationError("Passwords do not match");
-      return;
-    }
 
     if (password.length < 8) {
       setValidationError("Password must be at least 8 characters long");
@@ -144,16 +138,6 @@ export function SignupForm({
           <FieldDescription>
             Must be at least 8 characters long.
           </FieldDescription>
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-          <Input
-            id="confirm-password"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
         </Field>
         <Field>
           <Button type="submit" disabled={isLoading}>
