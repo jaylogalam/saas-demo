@@ -10,6 +10,11 @@ import LoginPage from "@/pages/LoginPage";
 import SignupPage from "@/pages/SignupPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
+import PricingPage from "@/pages/PricingPage";
+import {
+  CheckoutSuccessPage,
+  CheckoutCancelPage,
+} from "@/pages/CheckoutResultPage";
 
 // Layout with Navbar
 function MainLayout() {
@@ -27,6 +32,7 @@ function App() {
       {/* Routes WITH Navbar */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
         {/* Add more routes that need navbar here */}
       </Route>
 
@@ -35,6 +41,10 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+      {/* Checkout Result Pages */}
+      <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+      <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
     </Routes>
   );
 }
