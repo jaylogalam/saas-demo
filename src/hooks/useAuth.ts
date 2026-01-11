@@ -53,7 +53,7 @@ export function useSignUp() {
       // Check if email already exists (Supabase returns empty identities array)
       if (data.user && data.user.identities?.length === 0) {
         throw new Error(
-          "An account with this email already exists. Please sign in instead."
+          "An account with this email already exists. Please sign in instead.",
         );
       }
 
@@ -99,7 +99,7 @@ export function useSignInWithGoogle() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `${window.location.origin}/dashboard`,
         },
       });
       if (error) throw error;
