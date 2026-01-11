@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { AppLogo } from "@/components/AppLogo";
 import { ProfileDropdown } from "./ProfileDropdown";
 import { SubscriptionBadge } from "./SubscriptionBadge";
-import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { useSignOut } from "@/hooks/useAuth";
-import { AppLogo } from "@/components/AppLogo";
 
-export function Navbar() {
+export function PublicNavbar() {
   const { user, loading } = useAuthStore();
   const signOutMutation = useSignOut();
 
@@ -30,27 +30,25 @@ export function Navbar() {
         <div className="flex items-center gap-8">
           <AppLogo />
 
-          {/* Navigation Links - Only show when not logged in */}
-          {!user && (
-            <div className="hidden md:flex items-center gap-8 ml-8">
-              <Link
-                to="/pricing"
-                className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                Pricing
-              </Link>
-              <Link
-                to="/about"
-                className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                About
-              </Link>
-            </div>
-          )}
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center gap-8 ml-8">
+            <Link
+              to="/pricing"
+              className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Pricing
+            </Link>
+            <Link
+              to="/about"
+              className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              About
+            </Link>
+          </div>
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           {loading ? (
             <div className="h-9 w-9 rounded-full bg-muted animate-pulse" />
           ) : user ? (
@@ -59,14 +57,14 @@ export function Navbar() {
               <ProfileDropdown user={userInfo} onLogout={handleLogout} />
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <>
               <Button variant="ghost" asChild>
                 <Link to="/login">Log in</Link>
               </Button>
               <Button asChild>
                 <Link to="/signup">Get Started</Link>
               </Button>
-            </div>
+            </>
           )}
         </div>
       </nav>

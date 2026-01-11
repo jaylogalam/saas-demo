@@ -1,4 +1,4 @@
-import { User, Settings, LogOut, CreditCard } from "lucide-react";
+import { LogOut, User, CreditCard, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   DropdownMenu,
@@ -19,9 +19,14 @@ interface ProfileDropdownProps {
     avatarUrl?: string;
   };
   onLogout?: () => void;
+  showNavItems?: boolean;
 }
 
-export function ProfileDropdown({ user, onLogout }: ProfileDropdownProps) {
+export function ProfileDropdown({
+  user,
+  onLogout,
+  showNavItems = true,
+}: ProfileDropdownProps) {
   const { data: subscription } = useUserSubscription();
   const isSubscribed = !!subscription;
 
@@ -68,27 +73,31 @@ export function ProfileDropdown({ user, onLogout }: ProfileDropdownProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer" asChild>
-            <Link to="/profile">
-              <User className="mr-2 size-4" />
-              <span>Profile</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer" asChild>
-            <Link to="/billing">
-              <CreditCard className="mr-2 size-4" />
-              <span>Billing</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer" asChild>
-            <Link to="/settings">
-              <Settings className="mr-2 size-4" />
-              <span>Settings</span>
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
+        {showNavItems && (
+          <>
+            <DropdownMenuGroup>
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link to="/profile">
+                  <User className="mr-2 size-4" />
+                  <span>Profile</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link to="/billing">
+                  <CreditCard className="mr-2 size-4" />
+                  <span>Billing</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link to="/settings">
+                  <Settings className="mr-2 size-4" />
+                  <span>Settings</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem
           className="cursor-pointer"
           variant="destructive"

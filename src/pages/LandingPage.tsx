@@ -1,8 +1,20 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store/authStore";
 
 const LandingPage = () => {
+  const { user, loading } = useAuthStore();
+
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
       {/* Background gradient */}
@@ -24,9 +36,9 @@ const LandingPage = () => {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" className="text-base px-8" asChild>
-            <Link to="/signup">
-              Get Started
-              <ArrowRight className="ml-2" size={18} />
+            <Link to={user ? "/dashboard" : "/signup"}>
+              {user ? "Go to Dashboard" : "Get Started"}
+              {!user && <ArrowRight className="ml-2" size={18} />}
             </Link>
           </Button>
           <Button
