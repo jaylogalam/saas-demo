@@ -1,12 +1,12 @@
 // Follow this setup guide to integrate the Deno runtime and Stripe SDK
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
+import Stripe from "npm:stripe@^14.21.0";
 
 /* ----------------------------------------------
 --- 1. Initialize Stripe
 ---------------------------------------------- */
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"), {
+const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") as string, {
   apiVersion: "2023-10-16",
   httpClient: Stripe.createFetchHttpClient(),
 });
@@ -32,7 +32,7 @@ serve(async (req) => {
       });
     }
     const body = await req.text();
-    const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+    const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET") as string;
     let event;
     try {
       event = await stripe.webhooks.constructEventAsync(
@@ -153,11 +153,11 @@ async function upsertPrice(price) {
 --- Helper Functions: Subscriptions ---
 ------------------------------------------------- */
 async function handleCheckoutSession(session) {
-  // CRITICAL: Retrieve the userId you sent in metadata during checkout creation
-  const userId = session.metadata?.userId;
+  // Retrieve the userId from metadata (Checkout API) or client_reference_id (Payment Links)
+  const userId = session.metadata?.userId || session.client_reference_id;
   const subscriptionId = session.subscription;
   if (!userId || !subscriptionId) {
-    console.error("Missing userId in metadata or subscriptionId");
+    console.error("Missing userId in metadata/client_reference_id or subscriptionId");
     return;
   }
   // Fetch full subscription details from Stripe to get dates/status

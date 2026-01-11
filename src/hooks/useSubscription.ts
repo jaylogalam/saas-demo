@@ -3,17 +3,17 @@ import { supabase } from "@/lib/supabase";
 import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { useAuthStore } from "@/store/authStore";
 import type {
-  SubscriptionPlan,
   BillingInterval,
+  SubscriptionPlan,
 } from "@/types/subscription.types";
-import type { SupabaseProduct, SupabasePrice } from "@/types/database.types";
+import type { SupabasePrice, SupabaseProduct } from "@/types/database.types";
 
 /**
  * Transform Supabase products and prices into SubscriptionPlan format
  */
 function transformToSubscriptionPlans(
   products: SupabaseProduct[],
-  prices: SupabasePrice[]
+  prices: SupabasePrice[],
 ): SubscriptionPlan[] {
   const plans = products.map((product) => {
     // Get prices for this product
@@ -22,11 +22,10 @@ function transformToSubscriptionPlans(
     const yearlyPrice = productPrices.find((p) => p.interval === "year");
 
     // Parse metadata
-    const features =
-      product.metadata?.features
-        ?.split(",")
-        .map((f) => f.trim())
-        .filter(Boolean) ?? [];
+    const features = product.metadata?.features
+      ?.split(",")
+      .map((f) => f.trim())
+      .filter(Boolean) ?? [];
     const highlighted = product.metadata?.highlighted === "true";
     const paymentLinkMonthly = product.metadata?.payment_link_monthly ?? "";
     const paymentLinkYearly = product.metadata?.payment_link_yearly ?? "";
@@ -95,7 +94,7 @@ export function useSubscriptionPlans() {
       // Transform to SubscriptionPlan format
       const plans = transformToSubscriptionPlans(
         products as SupabaseProduct[],
-        prices as SupabasePrice[]
+        prices as SupabasePrice[],
       );
 
       console.log("Transformed plans:", plans);
@@ -139,17 +138,28 @@ export function useCheckout() {
       return;
     }
 
-    // Build the payment link URL with prefilled email if user is logged in
+    // Build the payment link URL with user info
     let checkoutUrl = paymentLink;
-    if (user?.email) {
-      const separator = paymentLink.includes("?") ? "&" : "?";
-      checkoutUrl = `${paymentLink}${separator}prefilled_email=${encodeURIComponent(
-        user.email
-      )}`;
+    const params = new URLSearchParams();
+
+    // Add client_reference_id so the webhook can link subscription to user
+    if (user?.id) {
+      params.set("client_reference_id", user.id);
     }
 
-    // Redirect to Stripe Payment Link
-    window.location.href = checkoutUrl;
+    // Prefill email if available
+    if (user?.email) {
+      params.set("prefilled_email", user.email);
+    }
+
+    // Append params to URL
+    if (params.toString()) {
+      const separator = paymentLink.includes("?") ? "&" : "?";
+      checkoutUrl = `${paymentLink}${separator}${params.toString()}`;
+    }
+
+    // Redirect to Stripe Payment Link in new tab
+    window.open(checkoutUrl, "_blank");
   };
 
   return { checkout };
@@ -168,7 +178,7 @@ export function useCustomerPortal() {
     if (portalUrl.includes("XXXX")) {
       console.error("Customer portal link not configured");
       alert(
-        "Subscription management is not configured yet. Please contact support."
+        "Subscription management is not configured yet. Please contact support.",
       );
       return;
     }
