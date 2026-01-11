@@ -9,6 +9,7 @@ import type {
 export interface UserSubscription {
     subscription: SupabaseSubscription;
     productName: string;
+    priceInterval: "month" | "year" | null;
 }
 
 /**
@@ -36,10 +37,10 @@ export function useUserSubscription() {
                 return null;
             }
 
-            // Fetch the product name via price -> product relationship
+            // Fetch the price with interval and product_id
             const { data: price } = await supabase
                 .from("prices")
-                .select("product_id")
+                .select("product_id, interval")
                 .eq("id", subscription.price_id)
                 .single();
 
@@ -47,6 +48,7 @@ export function useUserSubscription() {
                 return {
                     subscription: subscription as SupabaseSubscription,
                     productName: "Subscription",
+                    priceInterval: price?.interval ?? null,
                 };
             }
 
@@ -60,6 +62,7 @@ export function useUserSubscription() {
                 subscription: subscription as SupabaseSubscription,
                 productName: (product as SupabaseProduct)?.name ||
                     "Subscription",
+                priceInterval: price?.interval ?? null,
             };
         },
         enabled: !!user?.id,

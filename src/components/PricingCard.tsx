@@ -21,6 +21,7 @@ import type {
   BillingInterval,
 } from "@/types/subscription.types";
 import { useCheckout } from "@/hooks/useSubscription";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
 
@@ -41,11 +42,21 @@ interface PricingCardProps {
 export function PricingCard({ plan, billingInterval }: PricingCardProps) {
   const { checkout } = useCheckout();
   const { user } = useAuthStore();
+  const { data: userSubscription } = useUserSubscription();
   const navigate = useNavigate();
 
   const price = plan.price[billingInterval];
   const isYearly = billingInterval === "yearly";
   const monthlyEquivalent = isYearly ? Math.round(price / 12) : price;
+
+  // Check if user is subscribed to this specific plan
+  const isSubscribed = !!userSubscription;
+  // Compare plan name AND billing interval - yearly plan shows "Change Plan" if subscribed to monthly
+  const subscriptionInterval =
+    userSubscription?.priceInterval === "month" ? "monthly" : "yearly";
+  const isCurrentPlan =
+    userSubscription?.productName === plan.name &&
+    subscriptionInterval === billingInterval;
 
   const handleSubscribe = () => {
     if (!user) {
@@ -91,9 +102,11 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
                   currency: plan.currency || "usd",
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,
-                }).format(monthlyEquivalent)}
+                }).format(isYearly ? price : monthlyEquivalent)}
               </span>
-              <span className="text-muted-foreground text-lg">/mo</span>
+              <span className="text-muted-foreground text-lg">
+                {isYearly ? "/year" : "/mo"}
+              </span>
             </div>
             {isYearly && (
               <div className="flex items-center justify-center gap-2 mt-2">
@@ -103,8 +116,8 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
                     currency: plan.currency || "usd",
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
-                  }).format(price)}
-                  /year
+                  }).format(monthlyEquivalent)}
+                  /mo
                 </span>
                 <Badge variant="secondary" className="text-xs">
                   Save 17%
@@ -147,14 +160,20 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
         </CardContent>
 
         <CardFooter className="pt-4 pb-6">
-          <Button
-            className="w-full"
-            size="lg"
-            variant={plan.highlighted ? "default" : "outline"}
-            onClick={handleSubscribe}
-          >
-            Get Started
-          </Button>
+          {isCurrentPlan ? (
+            <Button className="w-full" disabled variant="outline">
+              Currently Active
+            </Button>
+          ) : (
+            <Button
+              className="w-full"
+              size="lg"
+              variant={plan.highlighted ? "default" : "outline"}
+              onClick={handleSubscribe}
+            >
+              {isSubscribed ? "Change Plan" : "Get Started"}
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </TooltipProvider>
