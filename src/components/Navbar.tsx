@@ -33,12 +33,6 @@ export function Navbar() {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-8 ml-8">
             <Link
-              to="/features"
-              className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Features
-            </Link>
-            <Link
               to="/pricing"
               className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
             >

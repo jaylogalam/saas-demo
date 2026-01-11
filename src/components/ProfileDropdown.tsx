@@ -1,4 +1,5 @@
 import { User, Settings, LogOut, CreditCard } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,17 +69,23 @@ export function ProfileDropdown({ user, onLogout }: ProfileDropdownProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer">
-            <User className="mr-2 size-4" />
-            <span>Profile</span>
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link to="/profile">
+              <User className="mr-2 size-4" />
+              <span>Profile</span>
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
-            <CreditCard className="mr-2 size-4" />
-            <span>Billing</span>
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link to="/billing">
+              <CreditCard className="mr-2 size-4" />
+              <span>Billing</span>
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
-            <Settings className="mr-2 size-4" />
-            <span>Settings</span>
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link to="/settings">
+              <Settings className="mr-2 size-4" />
+              <span>Settings</span>
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

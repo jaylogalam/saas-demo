@@ -11,6 +11,10 @@ import SignupPage from "@/pages/SignupPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import PricingPage from "@/pages/PricingPage";
+import AboutPage from "@/pages/AboutPage";
+import ProfilePage from "@/pages/ProfilePage";
+import SettingsPage from "@/pages/SettingsPage";
+import BillingPage from "@/pages/BillingPage";
 import {
   CheckoutSuccessPage,
   CheckoutCancelPage,
@@ -33,7 +37,10 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/pricing" element={<PricingPage />} />
-        {/* Add more routes that need navbar here */}
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/billing" element={<BillingPage />} />
       </Route>
 
       {/* Routes WITHOUT Navbar (Auth pages) */}
