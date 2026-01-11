@@ -1,7 +1,19 @@
 import { SignupForm } from "@/components/SignupForm";
 import { AppLogo } from "@/components/AppLogo";
+import { useAuthStore } from "@/store/authStore";
+import { Navigate } from "react-router-dom";
 
 export default function SignupPage() {
+  const { user, loading } = useAuthStore();
+
+  if (!loading && user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  if (loading) {
+    return null; // Or a spinner
+  }
+
   return (
     <div className="grid min-h-svh">
       <div className="flex flex-col gap-4 p-6 md:p-4 md:px-8">

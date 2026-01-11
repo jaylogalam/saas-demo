@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
 
 interface SignInCredentials {
   email: string;
@@ -19,6 +20,7 @@ interface VerifyOTPCredentials {
 
 export function useSignIn() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async ({ email, password }: SignInCredentials) => {
@@ -29,8 +31,9 @@ export function useSignIn() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
+      navigate("/dashboard");
     },
   });
 }
@@ -53,7 +56,7 @@ export function useSignUp() {
       // Check if email already exists (Supabase returns empty identities array)
       if (data.user && data.user.identities?.length === 0) {
         throw new Error(
-          "An account with this email already exists. Please sign in instead."
+          "An account with this email already exists. Please sign in instead.",
         );
       }
 
@@ -99,7 +102,7 @@ export function useSignInWithGoogle() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `${window.location.origin}/dashboard`,
         },
       });
       if (error) throw error;
@@ -110,6 +113,7 @@ export function useSignInWithGoogle() {
 
 export function useSignOut() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async () => {
@@ -117,6 +121,7 @@ export function useSignOut() {
       if (error) throw error;
     },
     onSuccess: () => {
+      navigate("/");
       queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
     },
   });

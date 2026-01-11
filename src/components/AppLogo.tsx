@@ -11,16 +11,15 @@ export function AppLogo({
   name = "SaaS Demo",
   iconSize = "md",
 }: AppLogoProps) {
-  const sizeClasses = iconSize === "sm" ? "size-6 text-sm" : "size-8 text-base";
+  const sizeClasses = iconSize === "sm" ? "size-6" : "size-8";
 
   return (
-    <Link to={to} className="flex items-center gap-2">
-      <div
-        className={`flex items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold ${sizeClasses}`}
-      >
-        S
-      </div>
-      <span className="text-xl font-bold">{name}</span>
+    <Link
+      to={to}
+      className="flex items-center gap-2 transition-opacity hover:opacity-90"
+    >
+      <img src="/logo.svg" alt="Logo" className={sizeClasses} />
+      <span className="text-xl font-bold tracking-tight">{name}</span>
     </Link>
   );
 }
