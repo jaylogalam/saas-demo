@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ProfileDropdown } from "./ProfileDropdown";
+import { SubscriptionBadge } from "./SubscriptionBadge";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { useSignOut } from "@/hooks/useAuth";
@@ -55,7 +56,10 @@ export function Navbar() {
           {loading ? (
             <div className="h-9 w-9 rounded-full bg-muted animate-pulse" />
           ) : user ? (
-            <ProfileDropdown user={userInfo} onLogout={handleLogout} />
+            <div className="flex items-center gap-3">
+              <SubscriptionBadge variant="compact" />
+              <ProfileDropdown user={userInfo} onLogout={handleLogout} />
+            </div>
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" asChild>

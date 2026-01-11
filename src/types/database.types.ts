@@ -36,6 +36,29 @@ export interface Database {
       prices: {
         Row: SupabasePrice;
       };
+      subscriptions: {
+        Row: SupabaseSubscription;
+      };
     };
   };
+}
+
+// Subscription data from database
+export interface SupabaseSubscription {
+  id: number;
+  user_id: string;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string;
+  status:
+    | "active"
+    | "canceled"
+    | "incomplete"
+    | "incomplete_expired"
+    | "past_due"
+    | "paused"
+    | "trialing"
+    | "unpaid";
+  price_id: string;
+  current_period_end: string;
+  created_at: string;
 }

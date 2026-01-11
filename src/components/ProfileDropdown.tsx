@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 
 interface ProfileDropdownProps {
   user?: {
@@ -20,6 +21,9 @@ interface ProfileDropdownProps {
 }
 
 export function ProfileDropdown({ user, onLogout }: ProfileDropdownProps) {
+  const { data: subscription } = useUserSubscription();
+  const isSubscribed = !!subscription;
+
   const initials =
     user?.name
       ?.split(" ")
@@ -32,7 +36,18 @@ export function ProfileDropdown({ user, onLogout }: ProfileDropdownProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-2 rounded-full outline-none ring-ring focus-visible:ring-2 transition-all hover:opacity-80">
-          <Avatar className="size-9 cursor-pointer border-2 border-transparent hover:border-primary/20">
+          <Avatar
+            className={`size-9 cursor-pointer border-2 transition-all ${
+              isSubscribed
+                ? "border-primary/50 shadow-[0_0_12px_rgba(var(--primary),0.5)]"
+                : "border-transparent hover:border-primary/20"
+            }`}
+            style={
+              isSubscribed
+                ? { boxShadow: "0 0 14px hsl(var(--primary) / 0.4)" }
+                : undefined
+            }
+          >
             <AvatarImage src={user?.avatarUrl} alt={user?.name || "User"} />
             <AvatarFallback className="bg-primary text-primary-foreground font-medium">
               {initials}
