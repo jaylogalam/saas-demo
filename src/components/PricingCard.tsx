@@ -86,14 +86,25 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
           <div className="text-center mb-6">
             <div className="flex items-baseline justify-center gap-1">
               <span className="text-5xl font-bold tracking-tight">
-                ${monthlyEquivalent}
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: plan.currency || "usd",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(monthlyEquivalent)}
               </span>
               <span className="text-muted-foreground text-lg">/mo</span>
             </div>
             {isYearly && (
               <div className="flex items-center justify-center gap-2 mt-2">
                 <span className="text-sm text-muted-foreground">
-                  ${price}/year
+                  {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: plan.currency || "usd",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  }).format(price)}
+                  /year
                 </span>
                 <Badge variant="secondary" className="text-xs">
                   Save 17%

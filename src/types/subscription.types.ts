@@ -7,6 +7,7 @@ export interface SubscriptionPlan {
     monthly: number;
     yearly: number;
   };
+  currency: string;
   features: string[];
   highlighted?: boolean;
   paymentLinks: {
