@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import { Route, Routes, Outlet } from "react-router-dom";
 import "./index.css";
 
@@ -5,25 +6,33 @@ import "./index.css";
 import { PublicNavbar } from "@/components/PublicNavbar";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { useAuthStore } from "@/store/authStore";
+import { PageLoader } from "@/components/PageLoader";
 
-/* Pages */
-import LandingPage from "@/pages/LandingPage";
-import LoginPage from "@/pages/LoginPage";
-import SignupPage from "@/pages/SignupPage";
-import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
-import ResetPasswordPage from "@/pages/ResetPasswordPage";
-import PricingPage from "@/pages/PricingPage";
-import AboutPage from "@/pages/AboutPage";
-import ProfilePage from "@/pages/ProfilePage";
-import SettingsPage from "@/pages/SettingsPage";
-import BillingPage from "@/pages/BillingPage";
-import DashboardPage from "@/pages/DashboardPage";
-import ProjectsPage from "@/pages/ProjectsPage";
-import AnalyticsPage from "@/pages/AnalyticsPage";
-import {
-  CheckoutSuccessPage,
-  CheckoutCancelPage,
-} from "@/pages/CheckoutResultPage";
+/* Lazy Loaded Pages */
+const LandingPage = lazy(() => import("@/pages/LandingPage"));
+const LoginPage = lazy(() => import("@/pages/LoginPage"));
+const SignupPage = lazy(() => import("@/pages/SignupPage"));
+const ForgotPasswordPage = lazy(() => import("@/pages/ForgotPasswordPage"));
+const ResetPasswordPage = lazy(() => import("@/pages/ResetPasswordPage"));
+const PricingPage = lazy(() => import("@/pages/PricingPage"));
+const AboutPage = lazy(() => import("@/pages/AboutPage"));
+const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
+const BillingPage = lazy(() => import("@/pages/BillingPage"));
+const DashboardPage = lazy(() => import("@/pages/DashboardPage"));
+const ProjectsPage = lazy(() => import("@/pages/ProjectsPage"));
+const AnalyticsPage = lazy(() => import("@/pages/AnalyticsPage"));
+
+const CheckoutSuccessPage = lazy(() =>
+  import("@/pages/CheckoutResultPage").then((module) => ({
+    default: module.CheckoutSuccessPage,
+  }))
+);
+const CheckoutCancelPage = lazy(() =>
+  import("@/pages/CheckoutResultPage").then((module) => ({
+    default: module.CheckoutCancelPage,
+  }))
+);
 
 // Layout with public navbar (shows for all users on landing page)
 function PublicLayout() {
@@ -47,34 +56,36 @@ function PublicLayout() {
 
 function App() {
   return (
-    <Routes>
-      {/* Public pages with navbar */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/about" element={<AboutPage />} />
-      </Route>
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        {/* Public pages with navbar */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/about" element={<AboutPage />} />
+        </Route>
 
-      {/* Dashboard pages (have their own sidebar/navbar) */}
-      <Route element={<DashboardLayout />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/analytics" element={<AnalyticsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/billing" element={<BillingPage />} />
-      </Route>
+        {/* Dashboard pages (have their own sidebar/navbar) */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/billing" element={<BillingPage />} />
+        </Route>
 
-      {/* Routes WITHOUT Navbar (Auth pages) */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
+        {/* Routes WITHOUT Navbar (Auth pages) */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-      {/* Checkout Result Pages */}
-      <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
-      <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
-    </Routes>
+        {/* Checkout Result Pages */}
+        <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+        <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+      </Routes>
+    </Suspense>
   );
 }
 
