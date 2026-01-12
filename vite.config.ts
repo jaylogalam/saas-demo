@@ -13,19 +13,29 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            // Split React and DOM into their own chunk
-            if (id.includes("react") || id.includes("react-dom")) {
-              return "vendor-react";
-            }
-            // Split Supabase into its own chunk
+            // Split Supabase into its own chunk (no React dependency)
             if (id.includes("@supabase")) {
               return "vendor-supabase";
             }
-            // Split Stripe (Frontend) into its own chunk
+            // Split Stripe into its own chunk (no React dependency)
             if (id.includes("@stripe")) {
               return "vendor-stripe";
             }
-            // Everything else goes here
+            // Keep React and ALL React-dependent packages together
+            if (
+              id.includes("react") ||
+              id.includes("react-dom") ||
+              id.includes("react-router") ||
+              id.includes("@radix-ui") ||
+              id.includes("@tanstack") ||
+              id.includes("@floating-ui") ||
+              id.includes("lucide-react") ||
+              id.includes("scheduler") ||
+              id.includes("zustand")
+            ) {
+              return "vendor-react";
+            }
+            // Everything else (clsx, tailwind-merge, class-variance-authority, etc.)
             return "vendor-utils";
           }
         },
