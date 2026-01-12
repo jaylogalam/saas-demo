@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useSyncExternalStore, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,6 +14,86 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+
+// Custom hook: countdown timer using useSyncExternalStore
+function useCountdown(initialSeconds: number, resetTrigger: unknown) {
+  const storeRef = useRef<{
+    countdown: number;
+    intervalId: ReturnType<typeof setInterval> | null;
+    listeners: Set<() => void>;
+    lastResetTrigger: unknown;
+  } | null>(null);
+
+  // Initialize store lazily
+  if (!storeRef.current) {
+    storeRef.current = {
+      countdown: initialSeconds,
+      intervalId: null,
+      listeners: new Set(),
+      lastResetTrigger: resetTrigger,
+    };
+  }
+
+  const store = storeRef.current;
+
+  // Handle reset trigger change during render (React 19 pattern)
+  if (resetTrigger && resetTrigger !== store.lastResetTrigger) {
+    store.countdown = initialSeconds;
+    store.lastResetTrigger = resetTrigger;
+  }
+
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      store.listeners.add(onStoreChange);
+
+      // Start timer if not running
+      if (!store.intervalId && store.countdown > 0) {
+        store.intervalId = setInterval(() => {
+          store.countdown = Math.max(0, store.countdown - 1);
+          store.listeners.forEach((listener) => listener());
+
+          if (store.countdown <= 0 && store.intervalId) {
+            clearInterval(store.intervalId);
+            store.intervalId = null;
+          }
+        }, 1000);
+      }
+
+      return () => {
+        store.listeners.delete(onStoreChange);
+        if (store.listeners.size === 0 && store.intervalId) {
+          clearInterval(store.intervalId);
+          store.intervalId = null;
+        }
+      };
+    },
+    [store]
+  );
+
+  const getSnapshot = useCallback(() => store.countdown, [store]);
+
+  const countdown = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+
+  const reset = useCallback(() => {
+    store.countdown = initialSeconds;
+    store.listeners.forEach((listener) => listener());
+
+    // Restart timer if stopped
+    if (!store.intervalId) {
+      store.intervalId = setInterval(() => {
+        store.countdown = Math.max(0, store.countdown - 1);
+        store.listeners.forEach((listener) => listener());
+
+        if (store.countdown <= 0 && store.intervalId) {
+          clearInterval(store.intervalId);
+          store.intervalId = null;
+        }
+      }, 1000);
+    }
+  }, [store, initialSeconds]);
+
+  return { countdown, reset };
+}
 
 interface OTPVerificationCardProps extends React.ComponentProps<typeof Card> {
   email: string;
@@ -36,25 +116,7 @@ export function OTPVerificationCard({
   ...props
 }: OTPVerificationCardProps) {
   const [otp, setOtp] = useState("");
-  const [countdown, setCountdown] = useState(60);
-
-  // Countdown timer
-  useEffect(() => {
-    if (countdown <= 0) return;
-
-    const timer = setInterval(() => {
-      setCountdown((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [countdown]);
-
-  // Reset countdown when resend is successful
-  useEffect(() => {
-    if (resendSuccess) {
-      setCountdown(60);
-    }
-  }, [resendSuccess]);
+  const { countdown, reset } = useCountdown(60, resendSuccess);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +128,7 @@ export function OTPVerificationCard({
   const handleResend = () => {
     if (countdown <= 0 && onResend) {
       onResend();
+      reset();
     }
   };
 
