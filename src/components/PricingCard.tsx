@@ -69,9 +69,9 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
   return (
     <TooltipProvider delayDuration={300}>
       <Card
-        className={`relative h-full flex flex-col transition-all duration-300 hover:shadow-xl ${
+        className={`relative w-full max-w-sm h-full flex flex-col transition-all duration-300 hover:shadow-xl ${
           plan.highlighted
-            ? "border-primary shadow-lg scale-105 z-10"
+            ? "border-primary shadow-lg md:scale-105 z-10"
             : "hover:border-primary/50"
         }`}
       >

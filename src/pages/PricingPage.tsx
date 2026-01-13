@@ -52,19 +52,19 @@ export default function PricingPage() {
   const { billingInterval } = useSubscriptionStore();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Header Section */}
       <section className="relative overflow-hidden pt-20 pb-12">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[400px] bg-primary/5 blur-[120px] rounded-full" />
 
-        <div className="container mx-auto px-6 relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
             Choose Your{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-muted-foreground">
               Plan
             </span>
           </h1>
-          <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
+          <p className="max-w-2xl mx-auto text-base sm:text-lg text-muted-foreground px-4">
             Start building today with our flexible plans. Upgrade or downgrade
             anytime.
           </p>
@@ -75,7 +75,7 @@ export default function PricingPage() {
       <BillingToggle />
 
       {/* Pricing Cards */}
-      <section className="container mx-auto px-6 pb-20">
+      <section className="container mx-auto px-4 sm:px-6 pb-20">
         {isLoading ? (
           <div className="flex justify-center">
             <div className="animate-pulse text-muted-foreground">
@@ -83,7 +83,7 @@ export default function PricingPage() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto items-start justify-items-center">
             {plans?.map((plan) => (
               <PricingCard
                 key={plan.id}
