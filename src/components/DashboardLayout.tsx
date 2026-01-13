@@ -1,16 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
-import {
-  LayoutDashboard,
-  FolderOpen,
-  BarChart3,
-  User,
-  CreditCard,
-  Settings,
-  LogOut,
-  Menu,
-  X,
-} from "lucide-react";
+import { LayoutDashboard, FolderOpen, BarChart3, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppLogo } from "@/components/AppLogo";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
@@ -25,14 +15,6 @@ const sidebarSections = [
       { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
       { icon: FolderOpen, label: "Projects", href: "/projects" },
       { icon: BarChart3, label: "Analytics", href: "/analytics" },
-    ],
-  },
-  {
-    title: "Settings",
-    items: [
-      { icon: User, label: "Profile", href: "/profile" },
-      { icon: CreditCard, label: "Billing", href: "/billing" },
-      { icon: Settings, label: "Settings", href: "/settings" },
     ],
   },
 ];
@@ -105,18 +87,6 @@ export function DashboardLayout() {
             </div>
           ))}
         </nav>
-
-        {/* Bottom Section - Logout Only */}
-        <div className="p-4 border-t">
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
-            onClick={handleLogout}
-          >
-            <LogOut size={18} />
-            Log out
-          </Button>
-        </div>
       </aside>
 
       {/* Mobile Sidebar */}
@@ -167,21 +137,6 @@ export function DashboardLayout() {
             </div>
           ))}
         </nav>
-
-        {/* Mobile Logout */}
-        <div className="p-4 border-t">
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
-            onClick={() => {
-              handleLogout();
-              closeMobileMenu();
-            }}
-          >
-            <LogOut size={18} />
-            Log out
-          </Button>
-        </div>
       </aside>
 
       {/* Main Content Area */}

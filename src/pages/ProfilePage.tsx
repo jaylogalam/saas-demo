@@ -122,7 +122,6 @@ const ProfilePage = () => {
             <div className="flex-1 text-center sm:text-left">
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
                 <h2 className="text-xl sm:text-2xl font-bold">{name}</h2>
-                <SubscriptionBadge variant="compact" />
               </div>
               <p className="text-muted-foreground">{email}</p>
               <div className="mt-3 flex flex-wrap justify-center sm:justify-start gap-2">
@@ -132,9 +131,6 @@ const ProfilePage = () => {
                     Verified
                   </Badge>
                 )}
-                <Badge variant="outline" className="capitalize">
-                  {provider}
-                </Badge>
               </div>
             </div>
           </div>
@@ -142,47 +138,47 @@ const ProfilePage = () => {
           <Separator className="my-6" />
 
           {/* Profile Details */}
+          {/* TODO: Implement editable account details */}
           <div className="space-y-6">
             <h3 className="text-lg font-semibold">Account Details</h3>
 
             <div className="grid gap-6 sm:grid-cols-2">
               {/* Display Name */}
-              {/* TODO: Implement editable display name */}
               <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-muted-foreground">
+                <Label className="flex items-center gap-2 text-foreground">
                   <User className="size-4" />
                   Display Name
                 </Label>
-                <p className="text-sm font-medium py-2">{name}</p>
+                <p className="text-sm text-muted-foreground py-2">{name}</p>
               </div>
 
               {/* Email */}
               <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-muted-foreground">
+                <Label className="flex items-center gap-2 text-foreground">
                   <Mail className="size-4" />
                   Email Address
                 </Label>
-                <p className="text-sm font-medium py-2">{email}</p>
+                <p className="text-sm text-muted-foreground py-2">{email}</p>
               </div>
 
               {/* Member Since */}
               <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-muted-foreground">
+                <Label className="flex items-center gap-2 text-foreground">
                   <Calendar className="size-4" />
                   Member Since
                 </Label>
-                <p className="text-sm font-medium py-2">
+                <p className="text-sm text-muted-foreground py-2">
                   {createdAt ? formatDate(createdAt) : "N/A"}
                 </p>
               </div>
 
               {/* Auth Provider */}
               <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-muted-foreground">
+                <Label className="flex items-center gap-2 text-foreground">
                   <Shield className="size-4" />
                   Sign-in Method
                 </Label>
-                <p className="text-sm font-medium py-2 capitalize">
+                <p className="text-sm text-muted-foreground py-2 capitalize">
                   {provider}
                 </p>
               </div>
