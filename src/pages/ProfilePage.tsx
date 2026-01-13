@@ -123,19 +123,12 @@ const ProfilePage = () => {
           {/* Avatar Section */}
           <div className="relative mb-6 flex flex-col items-center sm:flex-row sm:items-start gap-6">
             <div className="relative">
-              <Avatar className="size-20 sm:size-24 border-4 border-background shadow-lg">
+              <Avatar className="size-20 sm:size-24 border-4 border-background/60 shadow-lg">
                 <AvatarImage src={avatarUrl} alt={name} />
                 <AvatarFallback className="bg-primary text-primary-foreground text-xl sm:text-2xl font-semibold">
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              {/* TODO: Implement avatar upload */}
-              <button
-                className="absolute bottom-0 right-0 flex size-8 items-center justify-center rounded-full border bg-background shadow-sm transition-colors hover:bg-muted"
-                title="Change avatar"
-              >
-                <Camera className="size-4 text-muted-foreground" />
-              </button>
             </div>
 
             <div className="flex-1 text-center sm:text-left min-w-0">
