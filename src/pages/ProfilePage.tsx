@@ -1,4 +1,4 @@
-import { User, Mail, Calendar, Shield, Camera, Check } from "lucide-react";
+import { User, Mail, Calendar, Camera, Check, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/store/authStore";
-import { SubscriptionBadge } from "@/components/SubscriptionBadge";
 
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString(undefined, {
@@ -74,7 +73,7 @@ const ProfilePage = () => {
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
   const createdAt = user.created_at;
   const emailVerified = user.email_confirmed_at !== null;
-  const provider = user.app_metadata?.provider || "email";
+  const phone = user.phone || user.user_metadata?.phone || null;
 
   const initials = name
     .split(" ")
@@ -161,6 +160,17 @@ const ProfilePage = () => {
                 <p className="text-sm text-muted-foreground py-2">{email}</p>
               </div>
 
+              {/* Phone */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2 text-foreground">
+                  <Phone className="size-4" />
+                  Phone Number
+                </Label>
+                <p className="text-sm text-muted-foreground py-2">
+                  {phone || "Not provided"}
+                </p>
+              </div>
+
               {/* Member Since */}
               <div className="space-y-2">
                 <Label className="flex items-center gap-2 text-foreground">
@@ -169,17 +179,6 @@ const ProfilePage = () => {
                 </Label>
                 <p className="text-sm text-muted-foreground py-2">
                   {createdAt ? formatDate(createdAt) : "N/A"}
-                </p>
-              </div>
-
-              {/* Auth Provider */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-foreground">
-                  <Shield className="size-4" />
-                  Sign-in Method
-                </Label>
-                <p className="text-sm text-muted-foreground py-2 capitalize">
-                  {provider}
                 </p>
               </div>
             </div>
