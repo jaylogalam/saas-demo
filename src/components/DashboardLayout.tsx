@@ -52,15 +52,6 @@ export function DashboardLayout() {
     signOutMutation.mutate();
   };
 
-  // Determine current page title
-  const currentPath = location.pathname;
-  let pageTitle = "Dashboard";
-  if (currentPath.startsWith("/projects")) pageTitle = "Projects";
-  else if (currentPath.startsWith("/analytics")) pageTitle = "Analytics";
-  else if (currentPath.startsWith("/profile")) pageTitle = "Profile";
-  else if (currentPath.startsWith("/settings")) pageTitle = "Settings";
-  else if (currentPath.startsWith("/billing")) pageTitle = "Billing";
-
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar - Full Height */}
@@ -115,8 +106,7 @@ export function DashboardLayout() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
-        <header className="h-16 border-b bg-background flex items-center justify-between px-6">
-          <h1 className="text-lg font-semibold">{pageTitle}</h1>
+        <header className="h-16 border-b bg-background flex items-center justify-end px-6">
           <div className="flex items-center gap-3">
             <SubscriptionBadge variant="compact" />
             <ProfileDropdown
