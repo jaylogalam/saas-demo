@@ -1,4 +1,6 @@
-import { User, Mail, Calendar, Camera, Check, Phone } from "lucide-react";
+import { useState } from "react";
+import { User, Calendar, Camera, Check, Pencil, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,7 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/authStore";
+import { useUpdateDisplayName } from "@/hooks/useUpdateProfile";
 
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString(undefined, {
@@ -39,6 +43,10 @@ function ProfileSkeleton() {
 
 const ProfilePage = () => {
   const { user, loading } = useAuthStore();
+  const updateDisplayName = useUpdateDisplayName();
+
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState("");
 
   if (loading) {
     return (
@@ -73,7 +81,6 @@ const ProfilePage = () => {
     user.user_metadata?.avatar_url || user.user_metadata?.picture;
   const createdAt = user.created_at;
   const emailVerified = user.email_confirmed_at !== null;
-  const phone = user.phone || user.user_metadata?.phone || null;
 
   const initials = name
     .split(" ")
@@ -81,6 +88,19 @@ const ProfilePage = () => {
     .join("")
     .toUpperCase()
     .slice(0, 2);
+
+  const handleUpdateName = async () => {
+    if (editedName && editedName !== name) {
+      await updateDisplayName.mutateAsync(editedName);
+      toast.success("Display name updated successfully");
+    }
+    setIsEditingName(false);
+  };
+
+  const startEditingName = () => {
+    setEditedName(name);
+    setIsEditingName(true);
+  };
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -118,10 +138,39 @@ const ProfilePage = () => {
               </button>
             </div>
 
-            <div className="flex-1 text-center sm:text-left">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
-                <h2 className="text-xl sm:text-2xl font-bold">{name}</h2>
-              </div>
+            <div className="flex-1 text-center sm:text-left min-w-0">
+              {isEditingName ? (
+                <div className="flex items-center gap-2 mb-1">
+                  <Input
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleUpdateName();
+                      if (e.key === "Escape") setIsEditingName(false);
+                    }}
+                    onBlur={handleUpdateName}
+                    className="text-xl font-bold h-9 max-w-[200px]"
+                    autoFocus
+                  />
+                  {updateDisplayName.isPending && (
+                    <Loader2 className="size-4 animate-spin text-muted-foreground" />
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
+                  <h2 className="text-xl sm:text-2xl font-bold truncate max-w-[200px] sm:max-w-[300px]">
+                    {name}
+                  </h2>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={startEditingName}
+                    className="shrink-0 size-8"
+                  >
+                    <Pencil className="size-3.5 text-muted-foreground" />
+                  </Button>
+                </div>
+              )}
               <p className="text-muted-foreground">{email}</p>
               <div className="mt-3 flex flex-wrap justify-center sm:justify-start gap-2">
                 {emailVerified && (
@@ -137,41 +186,11 @@ const ProfilePage = () => {
           <Separator className="my-6" />
 
           {/* Profile Details */}
-          {/* TODO: Implement editable account details */}
           <div className="space-y-6">
             <h3 className="text-lg font-semibold">Account Details</h3>
 
             <div className="grid gap-6 sm:grid-cols-2">
-              {/* Display Name */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-foreground">
-                  <User className="size-4" />
-                  Display Name
-                </Label>
-                <p className="text-sm text-muted-foreground py-2">{name}</p>
-              </div>
-
-              {/* Email */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-foreground">
-                  <Mail className="size-4" />
-                  Email Address
-                </Label>
-                <p className="text-sm text-muted-foreground py-2">{email}</p>
-              </div>
-
-              {/* Phone */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-foreground">
-                  <Phone className="size-4" />
-                  Phone Number
-                </Label>
-                <p className="text-sm text-muted-foreground py-2">
-                  {phone || "Not provided"}
-                </p>
-              </div>
-
-              {/* Member Since */}
+              {/* Member Since - Read only */}
               <div className="space-y-2">
                 <Label className="flex items-center gap-2 text-foreground">
                   <Calendar className="size-4" />
