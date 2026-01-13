@@ -106,6 +106,7 @@ const ProfilePage = () => {
                   {initials}
                 </AvatarFallback>
               </Avatar>
+              {/* TODO: Implement avatar upload */}
               <button
                 className="absolute bottom-0 right-0 flex size-8 items-center justify-center rounded-full border bg-background shadow-sm transition-colors hover:bg-muted"
                 title="Change avatar"
