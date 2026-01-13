@@ -139,9 +139,11 @@ const BillingPage = () => {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold tracking-tight">Billing</h1>
-        <p className="text-muted-foreground">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="mb-1 sm:mb-2 text-2xl sm:text-3xl font-bold tracking-tight">
+          Billing
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           Manage your subscription and billing information
         </p>
       </div>
@@ -182,18 +184,19 @@ const BillingPage = () => {
               </span>
             </div>
             {isActive && (
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 {/* TODO: Implement cancel subscription */}
                 <Button
                   variant="outline"
+                  size="sm"
                   className="flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive"
                 >
-                  Cancel Subscription
+                  Cancel
                 </Button>
-                <Button variant="outline" className="flex-1" asChild>
+                <Button variant="outline" size="sm" className="flex-1" asChild>
                   <Link to="/pricing">
                     Change Plan
-                    <ArrowUpRight className="ml-1 size-4" />
+                    <ArrowUpRight className="ml-1 size-3 sm:size-4" />
                   </Link>
                 </Button>
               </div>

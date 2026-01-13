@@ -43,7 +43,7 @@ const ProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto max-w-3xl px-4 py-8">
+      <div className="mx-auto max-w-3xl">
         <ProfileSkeleton />
       </div>
     );
@@ -51,15 +51,15 @@ const ProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="container mx-auto max-w-3xl px-4 py-8">
+      <div className="mx-auto max-w-3xl">
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <div className="mb-6 rounded-full bg-muted p-4">
             <User className="size-8 text-muted-foreground" />
           </div>
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="mb-2 text-xl sm:text-2xl font-semibold tracking-tight">
             Not Signed In
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-sm sm:text-base text-muted-foreground">
             Please sign in to view your profile.
           </p>
         </div>
@@ -84,11 +84,15 @@ const ProfilePage = () => {
     .slice(0, 2);
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto max-w-3xl">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold tracking-tight">Profile</h1>
-        <p className="text-muted-foreground">Manage your account information</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="mb-1 sm:mb-2 text-2xl sm:text-3xl font-bold tracking-tight">
+          Profile
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          Manage your account information
+        </p>
       </div>
 
       {/* Profile Card */}
@@ -100,9 +104,9 @@ const ProfilePage = () => {
           {/* Avatar Section */}
           <div className="relative mb-6 flex flex-col items-center sm:flex-row sm:items-start gap-6">
             <div className="relative">
-              <Avatar className="size-24 border-4 border-background shadow-lg">
+              <Avatar className="size-20 sm:size-24 border-4 border-background shadow-lg">
                 <AvatarImage src={avatarUrl} alt={name} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-semibold">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xl sm:text-2xl font-semibold">
                   {initials}
                 </AvatarFallback>
               </Avatar>
@@ -116,8 +120,8 @@ const ProfilePage = () => {
             </div>
 
             <div className="flex-1 text-center sm:text-left">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
-                <h2 className="text-2xl font-bold">{name}</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
+                <h2 className="text-xl sm:text-2xl font-bold">{name}</h2>
                 <SubscriptionBadge variant="compact" />
               </div>
               <p className="text-muted-foreground">{email}</p>
