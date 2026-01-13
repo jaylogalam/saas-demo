@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes, Outlet } from "react-router-dom";
+import { Toaster } from "sonner";
 import "./index.css";
 
 /* Layout Components */
@@ -56,36 +57,39 @@ function PublicLayout() {
 
 function App() {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <Routes>
-        {/* Public pages with navbar */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/about" element={<AboutPage />} />
-        </Route>
+    <>
+      <Toaster position="bottom-right" theme="dark" />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Public pages with navbar */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/about" element={<AboutPage />} />
+          </Route>
 
-        {/* Dashboard pages (have their own sidebar/navbar) */}
-        <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/billing" element={<BillingPage />} />
-        </Route>
+          {/* Dashboard pages (have their own sidebar/navbar) */}
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/billing" element={<BillingPage />} />
+          </Route>
 
-        {/* Routes WITHOUT Navbar (Auth pages) */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+          {/* Routes WITHOUT Navbar (Auth pages) */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-        {/* Checkout Result Pages */}
-        <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
-        <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
-      </Routes>
-    </Suspense>
+          {/* Checkout Result Pages */}
+          <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+          <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+        </Routes>
+      </Suspense>
+    </>
   );
 }
 
