@@ -45,7 +45,7 @@ export function ProfileDropdown({
           <Avatar
             className={`size-9 cursor-pointer border-2 transition-all ${
               isSubscribed
-                ? "border-primary/50 shadow-[0_0_12px_rgba(var(--primary),0.5)]"
+                ? "border-primary/20 shadow-[0_0_12px_rgba(var(--primary),0.5)]"
                 : "border-transparent hover:border-primary/20"
             }`}
             style={
