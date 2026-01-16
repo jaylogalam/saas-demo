@@ -24,17 +24,6 @@ const DashboardPage = lazy(() => import("@/pages/app/DashboardPage"));
 const ProjectsPage = lazy(() => import("@/pages/app/ProjectsPage"));
 const AnalyticsPage = lazy(() => import("@/pages/app/AnalyticsPage"));
 
-const CheckoutSuccessPage = lazy(() =>
-  import("@/pages/CheckoutResultPage").then((module) => ({
-    default: module.CheckoutSuccessPage,
-  }))
-);
-const CheckoutCancelPage = lazy(() =>
-  import("@/pages/CheckoutResultPage").then((module) => ({
-    default: module.CheckoutCancelPage,
-  }))
-);
-
 function App() {
   return (
     <>
@@ -62,10 +51,6 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-
-        {/* Checkout Result Pages */}
-        <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
-        <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
       </Routes>
     </>
   );
