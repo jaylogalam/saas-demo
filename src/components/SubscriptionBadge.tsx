@@ -50,8 +50,9 @@ function getStatusLabel(status: SupabaseSubscription["status"]): string {
   }
 }
 
-function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString(undefined, {
+function formatDate(timestamp: number): string {
+  // Stripe timestamps are in seconds, JS Date expects milliseconds
+  return new Date(timestamp * 1000).toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",

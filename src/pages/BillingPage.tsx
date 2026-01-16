@@ -57,8 +57,9 @@ function getStatusConfig(status: string) {
   }
 }
 
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString(undefined, {
+function formatDate(timestamp: number) {
+  // Stripe timestamps are in seconds, JS Date expects milliseconds
+  return new Date(timestamp * 1000).toLocaleDateString(undefined, {
     year: "numeric",
     month: "long",
     day: "numeric",
