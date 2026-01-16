@@ -13,6 +13,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 
 // Custom hook: countdown timer using useSyncExternalStore
@@ -145,15 +146,12 @@ export function OTPVerificationCard({
       <CardContent>
         <form onSubmit={handleSubmit}>
           <FieldGroup>
-            {error && (
-              <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
-                {error}
-              </div>
-            )}
+            {error && <FormAlert type="error" message={error} />}
             {resendSuccess && (
-              <div className="p-3 text-sm text-green-600 bg-green-500/10 rounded-md">
-                Verification code resent! Check your email.
-              </div>
+              <FormAlert
+                type="success"
+                message="Verification code resent! Check your email."
+              />
             )}
             <Field>
               <FieldLabel htmlFor="otp">Verification code</FieldLabel>

@@ -8,6 +8,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { useUpdatePassword } from "@/hooks/useAuth";
 import { CheckCircle } from "lucide-react";
@@ -74,11 +75,7 @@ export function ResetPasswordForm({
             Enter your new password below.
           </p>
         </div>
-        {error && (
-          <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
-            {error}
-          </div>
-        )}
+        {error && <FormAlert type="error" message={error} />}
         <Field>
           <FieldLabel htmlFor="password">New Password</FieldLabel>
           <Input
