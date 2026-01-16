@@ -6,101 +6,80 @@ import type {
   BillingInterval,
   SubscriptionPlan,
 } from "@/types/subscription.types";
-import type { SupabasePrice, SupabaseProduct } from "@/types/database.types";
+import type { StripePrice, StripeProduct } from "@/types/database.types";
 
 /**
- * Transform Supabase products and prices into SubscriptionPlan format
+ * Transform Stripe products and prices into SubscriptionPlan format
  */
 function transformToSubscriptionPlans(
-  products: SupabaseProduct[],
-  prices: SupabasePrice[],
+  products: StripeProduct[],
+  prices: StripePrice[],
 ): SubscriptionPlan[] {
-  const plans = products.map((product) => {
-    // Get prices for this product
-    const productPrices = prices.filter((p) => p.product_id === product.id);
-    const monthlyPrice = productPrices.find((p) => p.interval === "month");
-    const yearlyPrice = productPrices.find((p) => p.interval === "year");
+  return products
+    .map((product) => {
+      const productPrices = prices.filter((p) => p.product === product.id);
+      const monthlyPrice = productPrices.find((p) =>
+        p.recurring?.interval === "month"
+      );
+      const yearlyPrice = productPrices.find((p) =>
+        p.recurring?.interval === "year"
+      );
 
-    // Parse metadata
-    const features = product.metadata?.features
-      ?.split(",")
-      .map((f) => f.trim())
-      .filter(Boolean) ?? [];
-    const highlighted = product.metadata?.highlighted === "true";
-    const paymentLinkMonthly = product.metadata?.payment_link_monthly ?? "";
-    const paymentLinkYearly = product.metadata?.payment_link_yearly ?? "";
+      // Parse metadata
+      const features = product.metadata?.features?.split(",").map((f) =>
+        f.trim()
+      ).filter(Boolean) ?? [];
+      const highlighted = product.metadata?.highlighted === "true";
 
-    // Get currency (default to USD)
-    const currency = monthlyPrice?.currency ?? yearlyPrice?.currency ?? "usd";
-
-    return {
-      id: product.id,
-      name: product.name,
-      description: product.description ?? "",
-      price: {
-        monthly: (monthlyPrice?.unit_amount ?? 0) / 100, // Convert cents to dollars
-        yearly: (yearlyPrice?.unit_amount ?? 0) / 100,
-      },
-      currency,
-      features,
-      highlighted,
-      paymentLinks: {
-        monthly: paymentLinkMonthly,
-        yearly: paymentLinkYearly,
-      },
-    };
-  });
-
-  // Sort by monthly price (cheapest first)
-  return plans.sort((a, b) => a.price.monthly - b.price.monthly);
+      return {
+        id: product.id,
+        name: product.name,
+        description: product.description ?? "",
+        price: {
+          monthly: (monthlyPrice?.unit_amount ?? 0) / 100,
+          yearly: (yearlyPrice?.unit_amount ?? 0) / 100,
+        },
+        currency: monthlyPrice?.currency ?? yearlyPrice?.currency ?? "usd",
+        features,
+        highlighted,
+        paymentLinks: {
+          monthly: product.metadata?.payment_link_monthly ?? "",
+          yearly: product.metadata?.payment_link_yearly ?? "",
+        },
+      };
+    })
+    .sort((a, b) => a.price.monthly - b.price.monthly);
 }
 
 /**
- * Fetch available subscription plans from Supabase
+ * Fetch subscription plans from public views
  */
 export function useSubscriptionPlans() {
   return useQuery({
     queryKey: ["subscription", "plans"],
     queryFn: async (): Promise<SubscriptionPlan[]> => {
-      console.log("Fetching products from Supabase...");
-
-      // Fetch active products
       const { data: products, error: productsError } = await supabase
-        .from("products")
+        .from("stripe_products")
         .select("*")
         .eq("active", true)
         .order("name");
 
-      console.log("Products response:", { products, error: productsError });
+      if (productsError) throw productsError;
 
-      if (productsError) {
-        console.error("Error fetching products:", productsError);
-        throw productsError;
-      }
-
-      // Fetch active prices
       const { data: prices, error: pricesError } = await supabase
-        .from("prices")
+        .from("stripe_prices")
         .select("*")
-        .eq("active", true);
+        .eq("active", true)
+        .eq("type", "recurring");
 
-      console.log("Prices response:", { prices, error: pricesError });
+      if (pricesError) throw pricesError;
 
-      if (pricesError) {
-        console.error("Error fetching prices:", pricesError);
-        throw pricesError;
-      }
-
-      // Transform to SubscriptionPlan format
-      const plans = transformToSubscriptionPlans(
-        products as SupabaseProduct[],
-        prices as SupabasePrice[],
+      return transformToSubscriptionPlans(
+        products as StripeProduct[],
+        prices as StripePrice[],
       );
-
-      console.log("Transformed plans:", plans);
-      return plans;
     },
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 }
 
@@ -112,10 +91,7 @@ export function usePlan(planId: string | undefined) {
 
   return useQuery({
     queryKey: ["subscription", "plan", planId],
-    queryFn: async () => {
-      if (!planId || !plans) return null;
-      return plans.find((p) => p.id === planId) ?? null;
-    },
+    queryFn: () => plans?.find((p) => p.id === planId) ?? null,
     enabled: !!planId && !!plans,
     staleTime: Infinity,
   });
@@ -133,50 +109,28 @@ export function useCheckout() {
     const paymentLink = plan.paymentLinks[selectedInterval];
 
     if (!paymentLink || paymentLink.includes("XXXX") || paymentLink === "") {
-      console.error("Payment link not configured for this plan");
       alert("Payment is not configured yet. Please contact support.");
       return;
     }
 
-    // Build the payment link URL with user info
-    let checkoutUrl = paymentLink;
-    const params = new URLSearchParams();
+    const url = new URL(paymentLink);
+    if (user?.id) url.searchParams.set("client_reference_id", user.id);
+    if (user?.email) url.searchParams.set("prefilled_email", user.email);
 
-    // Add client_reference_id so the webhook can link subscription to user
-    if (user?.id) {
-      params.set("client_reference_id", user.id);
-    }
-
-    // Prefill email if available
-    if (user?.email) {
-      params.set("prefilled_email", user.email);
-    }
-
-    // Append params to URL
-    if (params.toString()) {
-      const separator = paymentLink.includes("?") ? "&" : "?";
-      checkoutUrl = `${paymentLink}${separator}${params.toString()}`;
-    }
-
-    // Redirect to Stripe Payment Link in new tab
-    window.open(checkoutUrl, "_blank");
+    window.open(url.toString(), "_blank");
   };
 
   return { checkout };
 }
 
 /**
- * Open Stripe Customer Portal for subscription management
- * Note: Customer Portal URL should be configured in Stripe Dashboard
+ * Open Stripe Customer Portal
  */
 export function useCustomerPortal() {
   const openPortal = () => {
-    // Replace with your Stripe Customer Portal link
-    // You can find this in Stripe Dashboard > Settings > Billing > Customer Portal
     const portalUrl = "https://billing.stripe.com/p/login/test_XXXXXX";
 
     if (portalUrl.includes("XXXX")) {
-      console.error("Customer portal link not configured");
       alert(
         "Subscription management is not configured yet. Please contact support.",
       );

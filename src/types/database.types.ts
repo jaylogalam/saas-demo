@@ -1,12 +1,24 @@
-// Supabase Database Types
-// These types match your Supabase products and prices tables
+/**
+ * Stripe Sync Engine Database Types
+ * Types matching the `stripe` schema created by Supabase Stripe Sync Engine
+ */
 
-export interface SupabaseProduct {
+// Stripe Customer from stripe.customers
+export interface StripeCustomer {
+  id: string;
+  email: string | null;
+  name: string | null;
+  metadata: Record<string, string> | null;
+  created: number;
+}
+
+// Stripe Product from stripe.products
+export interface StripeProduct {
   id: string;
   active: boolean;
   name: string;
   description: string | null;
-  image: string | null;
+  images: string[] | null;
   metadata: {
     features?: string;
     highlighted?: string;
@@ -15,40 +27,25 @@ export interface SupabaseProduct {
   } | null;
 }
 
-export interface SupabasePrice {
+// Stripe Price from stripe.prices
+export interface StripePrice {
   id: string;
-  product_id: string;
+  product: string; // Product ID reference
   active: boolean;
-  unit_amount: number;
+  unit_amount: number | null;
   currency: string;
-  type: string;
-  interval: "month" | "year" | null;
-  interval_count: number | null;
+  type: "one_time" | "recurring";
+  recurring: {
+    interval: "day" | "week" | "month" | "year";
+    interval_count: number;
+  } | null;
   metadata: Record<string, string> | null;
 }
 
-export interface Database {
-  public: {
-    Tables: {
-      products: {
-        Row: SupabaseProduct;
-      };
-      prices: {
-        Row: SupabasePrice;
-      };
-      subscriptions: {
-        Row: SupabaseSubscription;
-      };
-    };
-  };
-}
-
-// Subscription data from database
-export interface SupabaseSubscription {
-  id: number;
-  user_id: string;
-  stripe_customer_id: string | null;
-  stripe_subscription_id: string;
+// Stripe Subscription from stripe.subscriptions
+export interface StripeSubscription {
+  id: string;
+  customer: string; // Customer ID reference
   status:
     | "active"
     | "canceled"
@@ -58,7 +55,24 @@ export interface SupabaseSubscription {
     | "paused"
     | "trialing"
     | "unpaid";
-  price_id: string;
-  current_period_end: string;
-  created_at: string;
+  items: {
+    data: Array<{
+      price: {
+        id: string;
+        product: string;
+        recurring: {
+          interval: "day" | "week" | "month" | "year";
+        } | null;
+      };
+    }>;
+  };
+  current_period_end: number;
+  current_period_start: number;
+  cancel_at_period_end: boolean;
+  created: number;
 }
+
+// Legacy type aliases for backwards compatibility
+export type SupabaseProduct = StripeProduct;
+export type SupabasePrice = StripePrice;
+export type SupabaseSubscription = StripeSubscription;
