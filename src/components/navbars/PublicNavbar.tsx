@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { AppLogo } from "@/components/AppLogo";
-import { ProfileDropdown } from "./ProfileDropdown";
-import { SubscriptionBadge } from "./SubscriptionBadge";
+import { ProfileDropdown } from "@/components/ProfileDropdown";
+import { SubscriptionBadge } from "@/components/SubscriptionBadge";
 import { useUserInfo } from "@/hooks/useUserInfo";
 import { useSignOut } from "@/hooks/useAuth";
 

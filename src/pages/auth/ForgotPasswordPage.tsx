@@ -1,7 +1,7 @@
-import { ResetPasswordForm } from "@/components/ResetPasswordForm";
+import { ForgotPasswordForm } from "@/components/forms/ForgotPasswordForm";
 import { AppLogo } from "@/components/AppLogo";
 
-export default function ResetPasswordPage() {
+export default function ForgotPasswordPage() {
   return (
     <div className="grid min-h-svh">
       <div className="flex flex-col gap-4 p-6 md:p-4 md:px-8">
@@ -10,7 +10,7 @@ export default function ResetPasswordPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <ResetPasswordForm />
+            <ForgotPasswordForm />
           </div>
         </div>
       </div>

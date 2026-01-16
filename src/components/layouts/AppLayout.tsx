@@ -202,7 +202,7 @@ function TopHeader({ userInfo, onMenuClick, onLogout }: TopHeaderProps) {
 // Main Dashboard Layout Component
 // ============================================================================
 
-export function DashboardLayout() {
+export function AppLayout() {
   const location = useLocation();
   const { userInfo } = useUserInfo();
   const signOutMutation = useSignOut();

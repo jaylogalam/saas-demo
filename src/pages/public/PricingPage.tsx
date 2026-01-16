@@ -1,4 +1,4 @@
-import { PricingCard } from "@/components/PricingCard";
+import { PricingCard } from "@/components/cards/PricingCard";
 import { useSubscriptionPlans } from "@/hooks/useSubscription";
 import { useSubscriptionStore } from "@/store/subscriptionStore";
 
