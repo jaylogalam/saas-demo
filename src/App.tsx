@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { Route, Routes, Outlet } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import "./index.css";
 
