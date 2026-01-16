@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { queryKeys } from "@/lib/queryKeys";
 import { useNavigate } from "react-router-dom";
+
+// ============================================================================
+// Types
+// ============================================================================
 
 interface SignInCredentials {
   email: string;
@@ -18,6 +23,14 @@ interface VerifyOTPCredentials {
   token: string;
 }
 
+// ============================================================================
+// Auth Mutation Hooks
+// ============================================================================
+
+/**
+ * Sign in with email and password
+ * Automatically navigates to dashboard on success
+ */
 export function useSignIn() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -32,12 +45,17 @@ export function useSignIn() {
       return data;
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.auth.session(),
+      });
       navigate("/dashboard");
     },
   });
 }
 
+/**
+ * Create a new account with email, password, and name
+ */
 export function useSignUp() {
   return useMutation({
     mutationFn: async ({ email, password, fullName }: SignUpCredentials) => {
@@ -45,16 +63,14 @@ export function useSignUp() {
         email,
         password,
         options: {
-          data: {
-            full_name: fullName,
-          },
+          data: { full_name: fullName },
         },
       });
 
       if (error) throw error;
 
-      // Check if email already exists (Supabase returns empty identities array)
-      if (data.user && data.user.identities?.length === 0) {
+      // Supabase returns empty identities array for existing email
+      if (data.user?.identities?.length === 0) {
         throw new Error(
           "An account with this email already exists. Please sign in instead.",
         );
@@ -65,6 +81,9 @@ export function useSignUp() {
   });
 }
 
+/**
+ * Verify OTP token for email verification
+ */
 export function useVerifyOTP() {
   const queryClient = useQueryClient();
 
@@ -79,11 +98,14 @@ export function useVerifyOTP() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.session() });
     },
   });
 }
 
+/**
+ * Resend OTP verification email
+ */
 export function useResendOTP() {
   return useMutation({
     mutationFn: async (email: string) => {
@@ -96,6 +118,9 @@ export function useResendOTP() {
   });
 }
 
+/**
+ * Sign in with Google OAuth
+ */
 export function useSignInWithGoogle() {
   return useMutation({
     mutationFn: async () => {
@@ -111,6 +136,10 @@ export function useSignInWithGoogle() {
   });
 }
 
+/**
+ * Sign out current user
+ * Automatically navigates to home page on success
+ */
 export function useSignOut() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -122,11 +151,18 @@ export function useSignOut() {
     },
     onSuccess: () => {
       navigate("/");
-      queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.session() });
     },
   });
 }
 
+// ============================================================================
+// Password Reset Hooks
+// ============================================================================
+
+/**
+ * Request password reset email
+ */
 export function useResetPasswordRequest() {
   return useMutation({
     mutationFn: async (email: string) => {
@@ -138,6 +174,9 @@ export function useResetPasswordRequest() {
   });
 }
 
+/**
+ * Update password (used after reset link is clicked)
+ */
 export function useUpdatePassword() {
   const queryClient = useQueryClient();
 
@@ -149,7 +188,7 @@ export function useUpdatePassword() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.session() });
     },
   });
 }

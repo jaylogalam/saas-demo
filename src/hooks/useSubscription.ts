@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { queryKeys } from "@/lib/queryKeys";
 import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { useAuthStore } from "@/store/authStore";
 import type {
@@ -7,6 +8,16 @@ import type {
   SubscriptionPlan,
 } from "@/types/subscription.types";
 import type { StripePrice, StripeProduct } from "@/types/database.types";
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const FIVE_MINUTES = 1000 * 60 * 5;
+
+// ============================================================================
+// Transform Functions
+// ============================================================================
 
 /**
  * Transform Stripe products and prices into SubscriptionPlan format
@@ -18,17 +29,18 @@ function transformToSubscriptionPlans(
   return products
     .map((product) => {
       const productPrices = prices.filter((p) => p.product === product.id);
-      const monthlyPrice = productPrices.find((p) =>
-        p.recurring?.interval === "month"
+      const monthlyPrice = productPrices.find(
+        (p) => p.recurring?.interval === "month",
       );
-      const yearlyPrice = productPrices.find((p) =>
-        p.recurring?.interval === "year"
+      const yearlyPrice = productPrices.find(
+        (p) => p.recurring?.interval === "year",
       );
 
       // Parse metadata
-      const features = product.metadata?.features?.split(",").map((f) =>
-        f.trim()
-      ).filter(Boolean) ?? [];
+      const features = product.metadata?.features
+        ?.split(",")
+        .map((f) => f.trim())
+        .filter(Boolean) ?? [];
       const highlighted = product.metadata?.highlighted === "true";
 
       return {
@@ -51,35 +63,39 @@ function transformToSubscriptionPlans(
     .sort((a, b) => a.price.monthly - b.price.monthly);
 }
 
+// ============================================================================
+// Query Hooks
+// ============================================================================
+
 /**
- * Fetch subscription plans from public views
+ * Fetch all subscription plans from Stripe
  */
 export function useSubscriptionPlans() {
   return useQuery({
-    queryKey: ["subscription", "plans"],
+    queryKey: queryKeys.subscription.plans(),
     queryFn: async (): Promise<SubscriptionPlan[]> => {
-      const { data: products, error: productsError } = await supabase
-        .from("stripe_products")
-        .select("*")
-        .eq("active", true)
-        .order("name");
+      const [productsResult, pricesResult] = await Promise.all([
+        supabase
+          .from("stripe_products")
+          .select("*")
+          .eq("active", true)
+          .order("name"),
+        supabase
+          .from("stripe_prices")
+          .select("*")
+          .eq("active", true)
+          .eq("type", "recurring"),
+      ]);
 
-      if (productsError) throw productsError;
-
-      const { data: prices, error: pricesError } = await supabase
-        .from("stripe_prices")
-        .select("*")
-        .eq("active", true)
-        .eq("type", "recurring");
-
-      if (pricesError) throw pricesError;
+      if (productsResult.error) throw productsResult.error;
+      if (pricesResult.error) throw pricesResult.error;
 
       return transformToSubscriptionPlans(
-        products as StripeProduct[],
-        prices as StripePrice[],
+        productsResult.data as StripeProduct[],
+        pricesResult.data as StripePrice[],
       );
     },
-    staleTime: 1000 * 60 * 5,
+    staleTime: FIVE_MINUTES,
   });
 }
 
@@ -90,12 +106,16 @@ export function usePlan(planId: string | undefined) {
   const { data: plans } = useSubscriptionPlans();
 
   return useQuery({
-    queryKey: ["subscription", "plan", planId],
+    queryKey: queryKeys.subscription.plan(planId ?? ""),
     queryFn: () => plans?.find((p) => p.id === planId) ?? null,
     enabled: !!planId && !!plans,
     staleTime: Infinity,
   });
 }
+
+// ============================================================================
+// Action Hooks
+// ============================================================================
 
 /**
  * Handle checkout redirect to Stripe Payment Link
