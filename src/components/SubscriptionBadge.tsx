@@ -7,6 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { formatUnixTimestamp } from "@/utils/formatDate";
 import type { SupabaseSubscription } from "@/types/database.types";
 
 interface SubscriptionBadgeProps {
@@ -48,14 +49,6 @@ function getStatusLabel(status: SupabaseSubscription["status"]): string {
     default:
       return status;
   }
-}
-
-function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 }
 
 export function SubscriptionBadge({
@@ -101,7 +94,7 @@ export function SubscriptionBadge({
           <TooltipContent>
             <p className="text-xs">
               {statusLabel} • Renews{" "}
-              {formatDate(subscription.current_period_end)}
+              {formatUnixTimestamp(subscription.current_period_end)}
             </p>
           </TooltipContent>
         </Tooltip>
@@ -126,8 +119,12 @@ export function SubscriptionBadge({
           <p className="text-xs">
             {statusLabel} •{" "}
             {subscription.status === "canceled"
-              ? `Expires ${formatDate(subscription.current_period_end)}`
-              : `Renews ${formatDate(subscription.current_period_end)}`}
+              ? `Expires ${formatUnixTimestamp(
+                  subscription.current_period_end
+                )}`
+              : `Renews ${formatUnixTimestamp(
+                  subscription.current_period_end
+                )}`}
           </p>
         </TooltipContent>
       </Tooltip>

@@ -3,21 +3,12 @@ import { Button } from "@/components/ui/button";
 import { AppLogo } from "@/components/AppLogo";
 import { ProfileDropdown } from "./ProfileDropdown";
 import { SubscriptionBadge } from "./SubscriptionBadge";
-import { useAuthStore } from "@/store/authStore";
+import { useUserInfo } from "@/hooks/useUserInfo";
 import { useSignOut } from "@/hooks/useAuth";
 
 export function PublicNavbar() {
-  const { user, loading } = useAuthStore();
+  const { user, userInfo, loading } = useUserInfo();
   const signOutMutation = useSignOut();
-
-  const userInfo = user
-    ? {
-        name:
-          user.user_metadata?.full_name || user.email?.split("@")[0] || "User",
-        email: user.email || "",
-        avatarUrl: user.user_metadata?.avatar_url,
-      }
-    : undefined;
 
   const handleLogout = () => {
     signOutMutation.mutate();

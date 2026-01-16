@@ -1,71 +1,96 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { queryKeys } from "@/lib/queryKeys";
 import { useAuthStore } from "@/store/authStore";
 import type {
-    SupabaseProduct,
-    SupabaseSubscription,
+    StripeCustomer,
+    StripeProduct,
+    StripeSubscription,
 } from "@/types/database.types";
 
+// ============================================================================
+// Types
+// ============================================================================
+
 export interface UserSubscription {
-    subscription: SupabaseSubscription;
+    subscription: StripeSubscription;
     productName: string;
-    priceInterval: "month" | "year" | null;
+    priceInterval: "day" | "week" | "month" | "year" | null;
 }
 
+// ============================================================================
+// Constants
+// ============================================================================
+
+const FIVE_MINUTES = 1000 * 60 * 5;
+const ACTIVE_STATUSES = ["active", "trialing"] as const;
+
+// ============================================================================
+// Hook
+// ============================================================================
+
 /**
- * Fetch the current user's subscription from Supabase
+ * Fetch the current user's subscription via email-based customer lookup
+ *
+ * This hook queries the Stripe sync engine tables to find:
+ * 1. The Stripe customer matching the user's email
+ * 2. Any active/trialing subscription for that customer
+ * 3. The product name for display
  */
 export function useUserSubscription() {
     const { user } = useAuthStore();
 
     return useQuery({
-        queryKey: ["user-subscription", user?.id],
+        queryKey: queryKeys.subscription.user(user?.id),
         queryFn: async (): Promise<UserSubscription | null> => {
-            if (!user?.id) return null;
+            if (!user?.email) return null;
 
-            // Fetch user's subscription
-            const { data: subscription, error: subError } = await supabase
-                .from("subscriptions")
+            // Find Stripe customer by email
+            const { data: customers } = await supabase
+                .from("stripe_customers")
+                .select("id")
+                .eq("email", user.email)
+                .limit(1);
+
+            const customer = customers?.[0] as StripeCustomer | undefined;
+            if (!customer) return null;
+
+            // Get active subscription for this customer
+            const { data: subscription } = await supabase
+                .from("stripe_subscriptions")
                 .select("*")
-                .eq("user_id", user.id)
-                .in("status", ["active", "trialing"])
-                .order("created_at", { ascending: false })
+                .eq("customer", customer.id)
+                .in("status", ACTIVE_STATUSES)
+                .order("created", { ascending: false })
                 .limit(1)
                 .single();
 
-            if (subError || !subscription) {
-                return null;
+            if (!subscription) return null;
+
+            const sub = subscription as StripeSubscription;
+            const priceItem = sub.items?.data?.[0];
+            const productId = priceItem?.price?.product;
+
+            // Get product name
+            let productName = "Subscription";
+            if (productId) {
+                const { data: product } = await supabase
+                    .from("stripe_products")
+                    .select("name")
+                    .eq("id", productId)
+                    .single();
+
+                productName = (product as StripeProduct)?.name ??
+                    "Subscription";
             }
-
-            // Fetch the price with interval and product_id
-            const { data: price } = await supabase
-                .from("prices")
-                .select("product_id, interval")
-                .eq("id", subscription.price_id)
-                .single();
-
-            if (!price?.product_id) {
-                return {
-                    subscription: subscription as SupabaseSubscription,
-                    productName: "Subscription",
-                    priceInterval: price?.interval ?? null,
-                };
-            }
-
-            const { data: product } = await supabase
-                .from("products")
-                .select("name")
-                .eq("id", price.product_id)
-                .single();
 
             return {
-                subscription: subscription as SupabaseSubscription,
-                productName: (product as SupabaseProduct)?.name ||
-                    "Subscription",
-                priceInterval: price?.interval ?? null,
+                subscription: sub,
+                productName,
+                priceInterval: priceItem?.price?.recurring?.interval ?? null,
             };
         },
-        enabled: !!user?.id,
-        staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+        enabled: !!user?.email,
+        staleTime: FIVE_MINUTES,
     });
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Calendar, Camera, Check, Pencil, Loader2 } from "lucide-react";
+import { User, Calendar, Pencil, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,14 +16,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/authStore";
 import { useUpdateDisplayName } from "@/hooks/useUpdateProfile";
-
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
+import { formatDate } from "@/utils/formatDate";
+import { PageHeader } from "@/components/PageHeader";
+import { EmptyState } from "@/components/EmptyState";
+import { Check } from "lucide-react";
 
 // Loading skeleton
 function ProfileSkeleton() {
@@ -59,17 +55,11 @@ const ProfilePage = () => {
   if (!user) {
     return (
       <div className="mx-auto max-w-3xl">
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="mb-6 rounded-full bg-muted p-4">
-            <User className="size-8 text-muted-foreground" />
-          </div>
-          <h2 className="mb-2 text-xl sm:text-2xl font-semibold tracking-tight">
-            Not Signed In
-          </h2>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Please sign in to view your profile.
-          </p>
-        </div>
+        <EmptyState
+          icon={User}
+          title="Not Signed In"
+          description="Please sign in to view your profile."
+        />
       </div>
     );
   }
@@ -104,15 +94,10 @@ const ProfilePage = () => {
 
   return (
     <div className="mx-auto max-w-3xl">
-      {/* Header */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="mb-1 sm:mb-2 text-2xl sm:text-3xl font-bold tracking-tight">
-          Profile
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground">
-          Manage your account information
-        </p>
-      </div>
+      <PageHeader
+        title="Profile"
+        description="Manage your account information"
+      />
 
       {/* Profile Card */}
       <Card className="relative overflow-hidden">

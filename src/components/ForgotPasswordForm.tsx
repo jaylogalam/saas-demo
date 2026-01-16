@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { useResetPasswordRequest } from "@/hooks/useAuth";
 import { ArrowLeft, Mail } from "lucide-react";
@@ -59,9 +60,7 @@ export function ForgotPasswordForm({
           </p>
         </div>
         {resetMutation.error && (
-          <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
-            {resetMutation.error.message}
-          </div>
+          <FormAlert type="error" message={resetMutation.error.message} />
         )}
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>

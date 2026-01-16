@@ -20,6 +20,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { formatUnixTimestamp } from "@/utils/formatDate";
+import { PageHeader } from "@/components/PageHeader";
+import { EmptyState } from "@/components/EmptyState";
 
 function getStatusConfig(status: string) {
   switch (status) {
@@ -57,14 +60,6 @@ function getStatusConfig(status: string) {
   }
 }
 
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
 // Loading skeleton component
 function BillingSkeleton() {
   return (
@@ -82,24 +77,16 @@ function BillingSkeleton() {
 // Empty state when no subscription
 function NoSubscription() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="mb-6 rounded-full bg-primary/10 p-4">
-        <Rocket className="size-8 text-primary" />
-      </div>
-      <h2 className="mb-2 text-2xl font-semibold tracking-tight">
-        No Active Subscription
-      </h2>
-      <p className="mb-6 max-w-sm text-muted-foreground">
-        Unlock premium features and take your experience to the next level.
-        Choose a plan that works for you.
-      </p>
-      <Button asChild size="lg">
-        <Link to="/pricing">
-          View Plans
-          <ArrowUpRight className="ml-1 size-4" />
-        </Link>
-      </Button>
-    </div>
+    <EmptyState
+      icon={Rocket}
+      title="No Active Subscription"
+      description="Unlock premium features and take your experience to the next level. Choose a plan that works for you."
+      action={{
+        label: "View Plans",
+        href: "/pricing",
+        icon: ArrowUpRight,
+      }}
+    />
   );
 }
 
@@ -117,10 +104,10 @@ const BillingPage = () => {
   if (!data) {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-8">
-        <h1 className="mb-2 text-3xl font-bold tracking-tight">Billing</h1>
-        <p className="mb-8 text-muted-foreground">
-          Manage your subscription and billing information
-        </p>
+        <PageHeader
+          title="Billing"
+          description="Manage your subscription and billing information"
+        />
         <Card>
           <NoSubscription />
         </Card>
@@ -138,15 +125,10 @@ const BillingPage = () => {
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
-      {/* Header */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="mb-1 sm:mb-2 text-2xl sm:text-3xl font-bold tracking-tight">
-          Billing
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground">
-          Manage your subscription and billing information
-        </p>
-      </div>
+      <PageHeader
+        title="Billing"
+        description="Manage your subscription and billing information"
+      />
 
       {/* Main Grid */}
       <div className="grid gap-6 md:grid-cols-2">
@@ -180,7 +162,7 @@ const BillingPage = () => {
                 {isCanceled ? "Expires on" : "Next billing date"}
               </span>
               <span className="font-medium">
-                {formatDate(subscription.current_period_end)}
+                {formatUnixTimestamp(subscription.current_period_end)}
               </span>
             </div>
             {isActive && (

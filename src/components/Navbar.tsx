@@ -2,22 +2,13 @@ import { Link } from "react-router-dom";
 import { ProfileDropdown } from "./ProfileDropdown";
 import { SubscriptionBadge } from "./SubscriptionBadge";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/store/authStore";
+import { useUserInfo } from "@/hooks/useUserInfo";
 import { useSignOut } from "@/hooks/useAuth";
 import { AppLogo } from "@/components/AppLogo";
 
 export function Navbar() {
-  const { user, loading } = useAuthStore();
+  const { user, userInfo, loading } = useUserInfo();
   const signOutMutation = useSignOut();
-
-  const userInfo = user
-    ? {
-        name:
-          user.user_metadata?.full_name || user.email?.split("@")[0] || "User",
-        email: user.email || "",
-        avatarUrl: user.user_metadata?.avatar_url,
-      }
-    : undefined;
 
   const handleLogout = () => {
     signOutMutation.mutate();
