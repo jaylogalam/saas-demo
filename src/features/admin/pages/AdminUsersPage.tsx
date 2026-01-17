@@ -11,9 +11,9 @@ import {
 import { PageHeader } from "@/components/PageHeader";
 import {
   useAdminUsers,
-  useIsAdmin,
+  useAdmin,
   type AdminUser,
-} from "@/features/admin/hooks/useAdminUsers";
+} from "@/features/admin/hooks";
 import { formatDate } from "@/utils/formatDate";
 
 // ============================================================================
@@ -117,7 +117,7 @@ function UsersTable({ users }: UsersTableProps) {
 // ============================================================================
 
 function AdminUsersPageContent() {
-  const { data: isAdmin, isLoading: isAdminLoading } = useIsAdmin();
+  const { data: isAdmin, isLoading: isAdminLoading } = useAdmin();
   const { data: users, isLoading: isUsersLoading } = useAdminUsers();
 
   if (isAdminLoading) return <AdminSkeleton />;

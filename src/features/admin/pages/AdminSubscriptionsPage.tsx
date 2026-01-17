@@ -18,9 +18,9 @@ import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/PageHeader";
 import {
   useAdminUsers,
-  useIsAdmin,
+  useAdmin,
   type AdminUser,
-} from "@/features/admin/hooks/useAdminUsers";
+} from "@/features/admin/hooks";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 
 // ============================================================================
@@ -189,7 +189,7 @@ function SubscriptionsTable({ users }: SubscriptionsTableProps) {
 // ============================================================================
 
 function AdminSubscriptionsPageContent() {
-  const { data: isAdmin, isLoading: isAdminLoading } = useIsAdmin();
+  const { data: isAdmin, isLoading: isAdminLoading } = useAdmin();
   const { data: users, isLoading: isUsersLoading } = useAdminUsers();
 
   if (isAdminLoading) return <AdminSkeleton />;

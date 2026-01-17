@@ -16,7 +16,7 @@ import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/components/SubscriptionBadge";
 import { useUserInfo } from "@/hooks/useUserInfo";
 import { useSignOut } from "@/features/auth/hooks";
-import { useIsAdmin } from "@/features/admin/hooks/useAdminUsers";
+import { useAdmin } from "@/features/admin/hooks";
 
 // ============================================================================
 // Types
@@ -222,7 +222,7 @@ export function AppLayout() {
   const location = useLocation();
   const { userInfo } = useUserInfo();
   const signOutMutation = useSignOut();
-  const { data: isAdmin } = useIsAdmin();
+  const { data: isAdmin } = useAdmin();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Build sidebar sections dynamically based on admin status
