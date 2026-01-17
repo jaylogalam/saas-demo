@@ -265,9 +265,62 @@ export function useSubscriptionUpdate() {
     }
   };
 
+  /**
+   * Cancel the subscription
+   */
+  const cancelSubscription = async (
+    subscriptionId: string,
+    cancelImmediately = false,
+  ): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      console.log("[useSubscriptionUpdate] Cancelling subscription:", {
+        subscriptionId,
+        cancelImmediately,
+      });
+
+      const { data, error: fnError } = await supabase.functions.invoke(
+        "cancel-subscription",
+        {
+          body: {
+            subscriptionId,
+            cancelImmediately,
+          },
+        },
+      );
+
+      console.log("[useSubscriptionUpdate] Cancel response:", {
+        data,
+        fnError,
+      });
+
+      if (fnError) throw new Error(fnError.message);
+      if (data?.error) throw new Error(data.error);
+
+      // Invalidate subscription queries to refetch updated data
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.subscription.all,
+      });
+
+      return true;
+    } catch (err) {
+      console.error("[useSubscriptionUpdate] Cancel error:", err);
+      const message = err instanceof Error
+        ? err.message
+        : "Failed to cancel subscription";
+      setError(message);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     previewChange,
     confirmChange,
+    cancelSubscription,
     isLoading,
     error,
     clearError: () => setError(null),
