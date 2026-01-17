@@ -15,14 +15,16 @@ export const useUserStore = create<UserState>((set) => ({
   userLoading: true,
   setUser: (user) =>
     set({
-      user: {
-        id: user?.id,
-        email: user?.email,
-        name: user?.user_metadata?.name as string,
-        avatar_url: user?.user_metadata?.avatar_url as string,
-        created_at: user?.created_at as string,
-        email_confirmed_at: user?.email_confirmed_at as string,
-      } as User,
+      user: user
+        ? ({
+          id: user.id,
+          email: user.email,
+          name: user.user_metadata?.name as string,
+          avatar_url: user.user_metadata?.avatar_url as string,
+          created_at: user.created_at as string,
+          email_confirmed_at: user.email_confirmed_at as string,
+        } as User)
+        : null,
       userLoading: false,
     }),
 }));

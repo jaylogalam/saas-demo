@@ -92,7 +92,7 @@ export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
         <DropdownMenuItem
           className="cursor-pointer"
           variant="destructive"
-          onClick={() => handleLogout}
+          onClick={() => handleLogout()}
         >
           <LogOut className="mr-2 size-4" />
           <span>Log out</span>
