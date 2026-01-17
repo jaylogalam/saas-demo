@@ -1,5 +1,5 @@
 import { SignupForm } from "@/features/auth/components/SignupForm";
-import { AppLogo } from "@/components/AppLogo";
+import { AppLogo } from "@/components/icons/AppLogo";
 import { useAuthStore } from "@/store/authStore";
 import { Navigate } from "react-router-dom";
 

@@ -1,5 +1,5 @@
-import { ProfileDropdown } from "@/components/ProfileDropdown";
-import { SubscriptionBadge } from "@/components/SubscriptionBadge";
+import { ProfileDropdown } from "@/features/profile/components/ProfileDropdown";
+import { SubscriptionBadge } from "@/features/subscription/components/SubscriptionBadge";
 import { useAuthStore } from "@/store/authStore";
 import { useSignOut } from "@/features/auth/hooks";
 

@@ -11,9 +11,9 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AppLogo } from "@/components/AppLogo";
-import { ProfileDropdown } from "@/components/ProfileDropdown";
-import { SubscriptionBadge } from "@/components/SubscriptionBadge";
+import { AppLogo } from "@/components/icons/AppLogo";
+import { ProfileDropdown } from "@/features/profile/components/ProfileDropdown";
+import { SubscriptionBadge } from "@/features/subscription/components/SubscriptionBadge";
 import { useUserInfo } from "@/hooks/useUserInfo";
 import { useSignOut } from "@/features/auth/hooks";
 import { useAdmin } from "@/features/admin/hooks";

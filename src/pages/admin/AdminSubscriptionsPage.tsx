@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { PageHeader } from "@/components/PageHeader";
+import { PageHeader } from "@/components/layouts/PageHeader";
 import {
   useAdminUsers,
   useAdmin,

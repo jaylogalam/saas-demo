@@ -1,5 +1,5 @@
 import { ForgotPasswordForm } from "@/features/auth/components/ForgotPasswordForm";
-import { AppLogo } from "@/components/AppLogo";
+import { AppLogo } from "@/components/icons/AppLogo";
 
 export default function ForgotPasswordPage() {
   return (

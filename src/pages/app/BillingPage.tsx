@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useUserSubscription } from "@/features/subscription/hooks";
 import { formatUnixTimestamp } from "@/utils/formatDate";
-import { PageHeader } from "@/components/PageHeader";
+import { PageHeader } from "@/components/layouts/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
 
 function getStatusConfig(status: string) {

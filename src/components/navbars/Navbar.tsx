@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { ProfileDropdown } from "./ProfileDropdown";
-import { SubscriptionBadge } from "./SubscriptionBadge";
+import { ProfileDropdown } from "../../features/profile/components/ProfileDropdown";
+import { SubscriptionBadge } from "../../features/subscription/components/SubscriptionBadge";
 import { Button } from "@/components/ui/button";
 import { useUserInfo } from "@/hooks/useUserInfo";
 import { useSignOut } from "@/features/auth/hooks";
-import { AppLogo } from "@/components/AppLogo";
+import { AppLogo } from "@/components/icons/AppLogo";
 
 export function Navbar() {
   const { user, userInfo, loading } = useUserInfo();

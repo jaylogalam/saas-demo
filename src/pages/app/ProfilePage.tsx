@@ -15,9 +15,9 @@ import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/authStore";
-import { useUpdateDisplayName } from "@/hooks/useUpdateProfile";
+import { useUpdateDisplayName } from "@/features/profile/hooks/useUpdateProfile";
 import { formatDate } from "@/utils/formatDate";
-import { PageHeader } from "@/components/PageHeader";
+import { PageHeader } from "@/components/layouts/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
 import { Check } from "lucide-react";
 
