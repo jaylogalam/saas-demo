@@ -9,12 +9,12 @@ import { AppLayout } from "@/components/layouts/AppLayout";
 
 /* Lazy Loaded Pages */
 const LandingPage = lazy(() => import("@/pages/public/LandingPage"));
-const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage"));
-const SignupPage = lazy(() => import("@/features/auth/pages/SignupPage"));
+const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
+const SignupPage = lazy(() => import("@/pages/auth/SignupPage"));
 const ForgotPasswordPage = lazy(
-  () => import("@/features/auth/pages/ForgotPasswordPage")
+  () => import("@/pages/auth/ForgotPasswordPage")
 );
-const ResetPasswordPage = lazy(() => import("@/features/auth/pages/ResetPasswordPage"));
+const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
 const PricingPage = lazy(() => import("@/pages/public/PricingPage"));
 const AboutPage = lazy(() => import("@/pages/public/AboutPage"));
 const ProfilePage = lazy(() => import("@/pages/app/ProfilePage"));
@@ -23,9 +23,9 @@ const BillingPage = lazy(() => import("@/pages/app/BillingPage"));
 const DashboardPage = lazy(() => import("@/pages/app/DashboardPage"));
 const ProjectsPage = lazy(() => import("@/pages/app/ProjectsPage"));
 const AnalyticsPage = lazy(() => import("@/pages/app/AnalyticsPage"));
-const AdminUsersPage = lazy(() => import("@/features/admin/pages/AdminUsersPage"));
+const AdminUsersPage = lazy(() => import("@/pages/admin/AdminUsersPage"));
 const AdminSubscriptionsPage = lazy(
-  () => import("@/features/admin/pages/AdminSubscriptionsPage")
+  () => import("@/pages/admin/AdminSubscriptionsPage")
 );
 
 function App() {
