@@ -6,7 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import type { SupabaseSubscription } from "@/types/database.types";
 

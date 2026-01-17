@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useSubscriptionUpdate } from "@/features/subscription/hooks/useSubscription";
+import { useSubscriptionUpdate } from "@/features/subscription/hooks";
 
 interface CancelSubscriptionModalProps {
   open: boolean;

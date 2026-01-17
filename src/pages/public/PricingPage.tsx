@@ -2,7 +2,7 @@ import {
   PricingCard,
   PricingCardSkeleton,
 } from "@/features/subscription/components/PricingCard";
-import { useSubscriptionPlans } from "@/features/subscription/hooks/useSubscription";
+import { useSubscriptionPlans } from "@/features/subscription/hooks";
 import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { Skeleton } from "@/components/ui/skeleton";
 

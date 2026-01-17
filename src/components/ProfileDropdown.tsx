@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks";
 
 interface ProfileDropdownProps {
   user?: {

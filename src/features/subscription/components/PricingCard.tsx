@@ -21,8 +21,8 @@ import type {
   SubscriptionPlan,
   BillingInterval,
 } from "@/types/subscription.types";
-import { useCheckout } from "@/features/subscription/hooks/useSubscription";
-import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
+import { useCheckout } from "@/features/subscription/hooks";
+import { useUserSubscription } from "@/features/subscription/hooks";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "../../../components/ui/skeleton";

@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
-import { useSubscriptionUpdate } from "@/features/subscription/hooks/useSubscription";
+import { useSubscriptionUpdate } from "@/features/subscription/hooks";
 import type {
   BillingInterval,
   ProrationPreview,

@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
