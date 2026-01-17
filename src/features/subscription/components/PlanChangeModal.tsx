@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
-import { useSubscriptionUpdate } from "@/hooks/useSubscription";
+import { useSubscriptionUpdate } from "@/features/subscription/hooks/useSubscription";
 import type {
   BillingInterval,
   ProrationPreview,
@@ -163,7 +163,7 @@ export function PlanChangeModal({
                     <span>
                       {formatCurrency(
                         preview.immediateAmount,
-                        preview.currency
+                        preview.currency,
                       )}
                     </span>
                   </div>
@@ -181,7 +181,7 @@ export function PlanChangeModal({
                           month: "long",
                           day: "numeric",
                           year: "numeric",
-                        }
+                        },
                       )}
                       , then switch to {newPlan.name}.
                     </p>

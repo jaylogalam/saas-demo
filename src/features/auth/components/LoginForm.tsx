@@ -12,7 +12,7 @@ import {
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
-import { useSignIn, useSignInWithGoogle } from "@/hooks/useAuth";
+import { useSignIn, useSignInWithGoogle } from "@/features/auth/hooks/useAuth";
 
 export function LoginForm({
   className,
@@ -31,7 +31,7 @@ export function LoginForm({
       { email, password },
       {
         onSuccess: () => navigate("/"),
-      }
+      },
     );
   };
 

@@ -1,9 +1,9 @@
-import { LoginForm } from "@/components/forms/LoginForm";
+import { SignupForm } from "@/features/auth/components/SignupForm";
 import { AppLogo } from "@/components/AppLogo";
 import { useAuthStore } from "@/store/authStore";
 import { Navigate } from "react-router-dom";
 
-export default function LoginPage() {
+export default function SignupPage() {
   const { user, loading } = useAuthStore();
 
   if (!loading && user) {
@@ -22,7 +22,7 @@ export default function LoginPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm />
+            <SignupForm />
           </div>
         </div>
       </div>

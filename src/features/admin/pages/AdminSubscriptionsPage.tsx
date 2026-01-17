@@ -20,7 +20,7 @@ import {
   useAdminUsers,
   useIsAdmin,
   type AdminUser,
-} from "@/hooks/useAdminUsers";
+} from "@/features/admin/hooks/useAdminUsers";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 
 // ============================================================================
@@ -200,7 +200,8 @@ function AdminSubscriptionsPageContent() {
   const subscribedCount = allUsers.filter((u) => u.subscription_status).length;
   const activeCount = allUsers.filter(
     (u) =>
-      u.subscription_status === "active" || u.subscription_status === "trialing"
+      u.subscription_status === "active" ||
+      u.subscription_status === "trialing",
   ).length;
 
   return (

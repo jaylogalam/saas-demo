@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   CreditCard,
@@ -20,11 +19,10 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
-import { CancelSubscriptionModal } from "@/components/modals/CancelSubscriptionModal";
 
 function getStatusConfig(status: string) {
   switch (status) {
@@ -93,8 +91,7 @@ function NoSubscription() {
 }
 
 const BillingPage = () => {
-  const { data, isLoading, refetch } = useUserSubscription();
-  const [showCancelModal, setShowCancelModal] = useState(false);
+  const { data, isLoading } = useUserSubscription();
 
   if (isLoading) {
     return (
@@ -174,7 +171,6 @@ const BillingPage = () => {
                   variant="outline"
                   size="sm"
                   className="flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                  onClick={() => setShowCancelModal(true)}
                 >
                   Cancel
                 </Button>
@@ -247,20 +243,6 @@ const BillingPage = () => {
         </CardContent>
       </Card>
     </div>
-
-    {/* Cancel Subscription Modal */}
-    {data?.subscription && (
-      <CancelSubscriptionModal
-        open={showCancelModal}
-        onOpenChange={setShowCancelModal}
-        subscriptionId={data.subscription.id}
-        currentPeriodEnd={new Date(
-          data.subscription.current_period_end * 1000
-        ).toISOString()}
-        onSuccess={() => refetch()}
-      />
-    )}
-    </>
   );
 };
 

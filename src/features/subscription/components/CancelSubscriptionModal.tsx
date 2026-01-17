@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useSubscriptionUpdate } from "@/hooks/useSubscription";
+import { useSubscriptionUpdate } from "@/features/subscription/hooks/useSubscription";
 
 interface CancelSubscriptionModalProps {
   open: boolean;
@@ -44,7 +44,7 @@ export function CancelSubscriptionModal({
       month: "long",
       day: "numeric",
       year: "numeric",
-    }
+    },
   );
 
   return (

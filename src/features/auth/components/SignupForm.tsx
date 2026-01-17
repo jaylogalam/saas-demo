@@ -17,8 +17,8 @@ import {
   useSignInWithGoogle,
   useVerifyOTP,
   useResendOTP,
-} from "@/hooks/useAuth";
-import { OTPVerificationCard } from "@/components/OTPVerificationCard";
+} from "@/features/auth/hooks/useAuth";
+import { OTPVerificationCard } from "@/features/auth/components/OTPVerificationCard";
 
 export function SignupForm({
   className,
@@ -58,7 +58,7 @@ export function SignupForm({
         onSuccess: () => {
           navigate("/");
         },
-      }
+      },
     );
   };
 

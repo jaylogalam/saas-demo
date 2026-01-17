@@ -21,12 +21,12 @@ import type {
   SubscriptionPlan,
   BillingInterval,
 } from "@/types/subscription.types";
-import { useCheckout } from "@/hooks/useSubscription";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { useCheckout } from "@/features/subscription/hooks/useSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
-import { Skeleton } from "../ui/skeleton";
-import { PlanChangeModal } from "../modals/PlanChangeModal";
+import { Skeleton } from "../../../components/ui/skeleton";
+import { PlanChangeModal } from "./PlanChangeModal";
 
 // Feature tooltips for complex features
 const featureTooltips: Record<string, string> = {
@@ -65,11 +65,11 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
 
   // Get current plan price for the modal
   const currentPlanPrice = userSubscription
-    ? (
+    ? ((
         userSubscription.subscription.items?.data?.[0]?.price as {
           unit_amount?: number;
         }
-      )?.unit_amount ?? 0
+      )?.unit_amount ?? 0)
     : 0;
 
   const handleSubscribe = () => {

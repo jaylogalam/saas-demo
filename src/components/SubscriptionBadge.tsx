@@ -6,7 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import type { SupabaseSubscription } from "@/types/database.types";
 
@@ -120,10 +120,10 @@ export function SubscriptionBadge({
             {statusLabel} •{" "}
             {subscription.status === "canceled"
               ? `Expires ${formatUnixTimestamp(
-                  subscription.current_period_end
+                  subscription.current_period_end,
                 )}`
               : `Renews ${formatUnixTimestamp(
-                  subscription.current_period_end
+                  subscription.current_period_end,
                 )}`}
           </p>
         </TooltipContent>

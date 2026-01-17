@@ -15,8 +15,8 @@ import { AppLogo } from "@/components/AppLogo";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/components/SubscriptionBadge";
 import { useUserInfo } from "@/hooks/useUserInfo";
-import { useSignOut } from "@/hooks/useAuth";
-import { useIsAdmin } from "@/hooks/useAdminUsers";
+import { useSignOut } from "@/features/auth/hooks/useAuth";
+import { useIsAdmin } from "@/features/admin/hooks/useAdminUsers";
 
 // ============================================================================
 // Types

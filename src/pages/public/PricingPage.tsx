@@ -1,8 +1,8 @@
 import {
   PricingCard,
   PricingCardSkeleton,
-} from "@/components/cards/PricingCard";
-import { useSubscriptionPlans } from "@/hooks/useSubscription";
+} from "@/features/subscription/components/PricingCard";
+import { useSubscriptionPlans } from "@/features/subscription/hooks/useSubscription";
 import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { Skeleton } from "@/components/ui/skeleton";
 

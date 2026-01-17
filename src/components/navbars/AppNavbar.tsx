@@ -1,7 +1,7 @@
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/components/SubscriptionBadge";
 import { useAuthStore } from "@/store/authStore";
-import { useSignOut } from "@/hooks/useAuth";
+import { useSignOut } from "@/features/auth/hooks/useAuth";
 
 interface AppNavbarProps {
   title?: string;

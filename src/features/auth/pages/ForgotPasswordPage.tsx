@@ -1,19 +1,7 @@
-import { SignupForm } from "@/components/forms/SignupForm";
+import { ForgotPasswordForm } from "@/features/auth/components/ForgotPasswordForm";
 import { AppLogo } from "@/components/AppLogo";
-import { useAuthStore } from "@/store/authStore";
-import { Navigate } from "react-router-dom";
 
-export default function SignupPage() {
-  const { user, loading } = useAuthStore();
-
-  if (!loading && user) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  if (loading) {
-    return null; // Or a spinner
-  }
-
+export default function ForgotPasswordPage() {
   return (
     <div className="grid min-h-svh">
       <div className="flex flex-col gap-4 p-6 md:p-4 md:px-8">
@@ -22,7 +10,7 @@ export default function SignupPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <SignupForm />
+            <ForgotPasswordForm />
           </div>
         </div>
       </div>
