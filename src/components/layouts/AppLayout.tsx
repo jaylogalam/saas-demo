@@ -1,6 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
-import { LayoutDashboard, FolderOpen, BarChart3, Menu, X } from "lucide-react";
+import {
+  LayoutDashboard,
+  FolderOpen,
+  BarChart3,
+  Menu,
+  X,
+  Shield,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppLogo } from "@/components/AppLogo";
@@ -8,6 +15,7 @@ import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/components/SubscriptionBadge";
 import { useUserInfo } from "@/hooks/useUserInfo";
 import { useSignOut } from "@/hooks/useAuth";
+import { useIsAdmin } from "@/hooks/useAdminUsers";
 
 // ============================================================================
 // Types
@@ -108,15 +116,16 @@ function MobileOverlay({ isOpen, onClose }: MobileOverlayProps) {
 
 interface DesktopSidebarProps {
   currentPath: string;
+  sections: SidebarSection[];
 }
 
-function DesktopSidebar({ currentPath }: DesktopSidebarProps) {
+function DesktopSidebar({ currentPath, sections }: DesktopSidebarProps) {
   return (
     <aside className="w-64 border-r bg-muted/30 hidden lg:flex lg:flex-col">
       <div className="p-6">
         <AppLogo />
       </div>
-      <SidebarNav sections={SIDEBAR_SECTIONS} currentPath={currentPath} />
+      <SidebarNav sections={sections} currentPath={currentPath} />
     </aside>
   );
 }
@@ -128,10 +137,16 @@ function DesktopSidebar({ currentPath }: DesktopSidebarProps) {
 interface MobileSidebarProps {
   isOpen: boolean;
   currentPath: string;
+  sections: SidebarSection[];
   onClose: () => void;
 }
 
-function MobileSidebar({ isOpen, currentPath, onClose }: MobileSidebarProps) {
+function MobileSidebar({
+  isOpen,
+  currentPath,
+  sections,
+  onClose,
+}: MobileSidebarProps) {
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-50 w-72 border-r bg-background transform transition-transform duration-300 ease-in-out lg:hidden ${
@@ -150,7 +165,7 @@ function MobileSidebar({ isOpen, currentPath, onClose }: MobileSidebarProps) {
         </Button>
       </div>
       <SidebarNav
-        sections={SIDEBAR_SECTIONS}
+        sections={sections}
         currentPath={currentPath}
         onItemClick={onClose}
       />
@@ -206,7 +221,20 @@ export function AppLayout() {
   const location = useLocation();
   const { userInfo } = useUserInfo();
   const signOutMutation = useSignOut();
+  const { data: isAdmin } = useIsAdmin();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Build sidebar sections dynamically based on admin status
+  const sidebarSections = useMemo(() => {
+    const sections = [...SIDEBAR_SECTIONS];
+    if (isAdmin) {
+      sections.push({
+        title: "Admin",
+        items: [{ icon: Shield, label: "Admin", href: "/admin" }],
+      });
+    }
+    return sections;
+  }, [isAdmin]);
 
   const handleLogout = () => {
     signOutMutation.mutate();
@@ -219,10 +247,14 @@ export function AppLayout() {
   return (
     <div className="flex h-screen overflow-hidden">
       <MobileOverlay isOpen={mobileMenuOpen} onClose={closeMobileMenu} />
-      <DesktopSidebar currentPath={location.pathname} />
+      <DesktopSidebar
+        currentPath={location.pathname}
+        sections={sidebarSections}
+      />
       <MobileSidebar
         isOpen={mobileMenuOpen}
         currentPath={location.pathname}
+        sections={sidebarSections}
         onClose={closeMobileMenu}
       />
 
