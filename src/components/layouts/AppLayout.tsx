@@ -6,7 +6,6 @@ import {
   BarChart3,
   Menu,
   X,
-  Shield,
   Users,
   CreditCard,
 } from "lucide-react";
