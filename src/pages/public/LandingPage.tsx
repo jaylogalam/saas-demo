@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/store/authStore";
+import { useUserStore } from "@/store/userStore";
 
 const LandingPage = () => {
-  const { user } = useAuthStore();
+  const { user } = useUserStore();
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">

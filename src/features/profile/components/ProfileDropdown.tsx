@@ -11,24 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserSubscription } from "@/features/subscription/hooks";
+import { useUserStore } from "@/store/userStore";
+import { useSignOut } from "@/features/auth/hooks";
 
-interface ProfileDropdownProps {
-  user?: {
-    name: string;
-    email: string;
-    avatarUrl?: string;
-  };
-  onLogout?: () => void;
-  showNavItems?: boolean;
-}
-
-export function ProfileDropdown({
-  user,
-  onLogout,
-  showNavItems = true,
-}: ProfileDropdownProps) {
+export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
   const { data: subscription } = useUserSubscription();
+  const { user } = useUserStore();
   const isSubscribed = !!subscription;
+
+  const { handleLogout } = useSignOut();
 
   const initials =
     user?.name
@@ -54,7 +45,7 @@ export function ProfileDropdown({
                 : undefined
             }
           >
-            <AvatarImage src={user?.avatarUrl} alt={user?.name || "User"} />
+            <AvatarImage src={user?.avatar_url} alt={user?.name || "User"} />
             <AvatarFallback className="bg-primary text-primary-foreground font-medium">
               {initials}
             </AvatarFallback>
@@ -101,7 +92,7 @@ export function ProfileDropdown({
         <DropdownMenuItem
           className="cursor-pointer"
           variant="destructive"
-          onClick={onLogout}
+          onClick={() => handleLogout}
         >
           <LogOut className="mr-2 size-4" />
           <span>Log out</span>

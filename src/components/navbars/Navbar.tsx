@@ -2,17 +2,11 @@ import { Link } from "react-router-dom";
 import { ProfileDropdown } from "../../features/profile/components/ProfileDropdown";
 import { SubscriptionBadge } from "../../features/subscription/components/SubscriptionBadge";
 import { Button } from "@/components/ui/button";
-import { useUserInfo } from "@/hooks/useUserInfo";
-import { useSignOut } from "@/features/auth/hooks";
 import { AppLogo } from "@/components/icons/AppLogo";
+import { useUserStore } from "@/store/userStore";
 
 export function Navbar() {
-  const { user, userInfo, loading } = useUserInfo();
-  const signOutMutation = useSignOut();
-
-  const handleLogout = () => {
-    signOutMutation.mutate();
-  };
+  const { user, userLoading } = useUserStore();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -42,12 +36,12 @@ export function Navbar() {
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
-          {loading ? (
+          {userLoading ? (
             <div className="h-9 w-9 rounded-full bg-muted animate-pulse" />
           ) : user ? (
             <div className="flex items-center gap-3">
               <SubscriptionBadge variant="compact" />
-              <ProfileDropdown user={userInfo} onLogout={handleLogout} />
+              <ProfileDropdown />
             </div>
           ) : (
             <div className="flex items-center gap-2">

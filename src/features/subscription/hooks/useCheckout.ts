@@ -1,5 +1,5 @@
 import { useSubscriptionStore } from "@/store/subscriptionStore";
-import { useAuthStore } from "@/store/authStore";
+import { useUserStore } from "@/store/userStore";
 import type {
     BillingInterval,
     SubscriptionPlan,
@@ -9,7 +9,7 @@ import type {
  * Handle checkout redirect to Stripe Payment Link
  */
 export function useCheckout() {
-    const { user } = useAuthStore();
+    const { user } = useUserStore();
     const { billingInterval } = useSubscriptionStore();
 
     const checkout = (plan: SubscriptionPlan, interval?: BillingInterval) => {

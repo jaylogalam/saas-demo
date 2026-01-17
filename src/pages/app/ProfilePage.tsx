@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useAuthStore } from "@/store/authStore";
+import { useUserStore } from "@/store/userStore";
 import { useUpdateDisplayName } from "@/features/profile/hooks/useUpdateProfile";
 import { formatDate } from "@/utils/formatDate";
 import { PageHeader } from "@/components/layouts/PageHeader";
@@ -38,13 +38,13 @@ function ProfileSkeleton() {
 }
 
 const ProfilePage = () => {
-  const { user, loading } = useAuthStore();
+  const { user, userLoading } = useUserStore();
   const updateDisplayName = useUpdateDisplayName();
 
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState("");
 
-  if (loading) {
+  if (userLoading) {
     return (
       <div className="mx-auto max-w-3xl">
         <ProfileSkeleton />
@@ -52,7 +52,7 @@ const ProfilePage = () => {
     );
   }
 
-  if (!user) {
+  if (!user?.id) {
     return (
       <div className="mx-auto max-w-3xl">
         <EmptyState
@@ -65,10 +65,8 @@ const ProfilePage = () => {
   }
 
   const email = user.email || "";
-  const name =
-    user.user_metadata?.full_name || user.user_metadata?.name || "User";
-  const avatarUrl =
-    user.user_metadata?.avatar_url || user.user_metadata?.picture;
+  const name = user.name || "User";
+  const avatarUrl = user.avatar_url || "";
   const createdAt = user.created_at;
   const emailVerified = user.email_confirmed_at !== null;
 

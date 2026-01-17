@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { queryKeys } from "@/lib/queryKeys";
-import { useAuthStore } from "@/store/authStore";
+import { useUserStore } from "@/store/userStore";
 import type {
     StripeCustomer,
     StripeProduct,
@@ -38,7 +38,7 @@ const ACTIVE_STATUSES = ["active", "trialing"] as const;
  * 3. The product name for display
  */
 export function useUserSubscription() {
-    const { user } = useAuthStore();
+    const { user } = useUserStore();
 
     return useQuery({
         queryKey: queryKeys.subscription.user(user?.id),
@@ -49,7 +49,7 @@ export function useUserSubscription() {
             const { data: customers } = await supabase
                 .from("stripe_customers")
                 .select("id")
-                .eq("email", user.email)
+                .eq("email", user?.email)
                 .limit(1);
 
             const customer = customers?.[0] as StripeCustomer | undefined;

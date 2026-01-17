@@ -32,7 +32,7 @@ const FIVE_MINUTES = 1000 * 60 * 5;
 // ============================================================================
 
 export function useAdminUsers() {
-    const { data: isAdmin } = useAdmin();
+    const { admin } = useAdmin();
 
     return useQuery({
         queryKey: ["admin", "users"],
@@ -45,7 +45,7 @@ export function useAdminUsers() {
             if (error) throw error;
             return (data as AdminUser[]) ?? [];
         },
-        enabled: isAdmin === true,
+        enabled: admin === true,
         staleTime: FIVE_MINUTES,
     });
 }

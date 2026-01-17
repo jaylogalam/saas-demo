@@ -117,11 +117,11 @@ function UsersTable({ users }: UsersTableProps) {
 // ============================================================================
 
 function AdminUsersPageContent() {
-  const { data: isAdmin, isLoading: isAdminLoading } = useAdmin();
+  const { admin, adminLoading } = useAdmin();
   const { data: users, isLoading: isUsersLoading } = useAdminUsers();
 
-  if (isAdminLoading) return <AdminSkeleton />;
-  if (!isAdmin) return <Navigate to="/dashboard" replace />;
+  if (adminLoading) return <AdminSkeleton />;
+  if (!admin) return <Navigate to="/dashboard" replace />;
   if (isUsersLoading) return <AdminSkeleton />;
 
   // Deduplicate users (a user may appear multiple times if they have multiple subscriptions)

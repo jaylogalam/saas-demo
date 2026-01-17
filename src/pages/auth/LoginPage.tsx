@@ -1,16 +1,16 @@
 import { LoginForm } from "@/features/auth/components/LoginForm";
 import { AppLogo } from "@/components/icons/AppLogo";
-import { useAuthStore } from "@/store/authStore";
+import { useUserStore } from "@/store/userStore";
 import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const { user, loading } = useAuthStore();
+  const { user, userLoading } = useUserStore();
 
-  if (!loading && user) {
+  if (!userLoading && user) {
     return <Navigate to="/dashboard" replace />;
   }
 
-  if (loading) {
+  if (userLoading) {
     return null; // Or a spinner
   }
 

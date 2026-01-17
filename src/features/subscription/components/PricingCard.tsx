@@ -23,10 +23,10 @@ import type {
 } from "@/types/subscription.types";
 import { useCheckout } from "@/features/subscription/hooks";
 import { useUserSubscription } from "@/features/subscription/hooks";
-import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "../../../components/ui/skeleton";
 import { PlanChangeModal } from "./PlanChangeModal";
+import { useUserStore } from "@/store/userStore";
 
 // Feature tooltips for complex features
 const featureTooltips: Record<string, string> = {
@@ -44,7 +44,7 @@ interface PricingCardProps {
 
 export function PricingCard({ plan, billingInterval }: PricingCardProps) {
   const { checkout } = useCheckout();
-  const { user } = useAuthStore();
+  const { user } = useUserStore();
   const { data: userSubscription, refetch } = useUserSubscription();
   const navigate = useNavigate();
 
