@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserSubscription } from "@/features/subscription/hooks";
 import { useUserStore } from "@/store/userStore";
 import { useSignOut } from "@/features/auth/hooks";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
   const { data: subscription } = useUserSubscription();
@@ -47,7 +48,7 @@ export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
           >
             <AvatarImage src={user?.avatar_url} alt={user?.name || "User"} />
             <AvatarFallback className="bg-primary text-primary-foreground font-medium">
-              {initials}
+              <Skeleton className="h-8 w-8 rounded-full" />
             </AvatarFallback>
           </Avatar>
         </button>
