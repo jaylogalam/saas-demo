@@ -4,16 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 
 const LandingPage = () => {
-  const { user, loading } = useAuthStore();
-
-  // Show loading state while checking auth
-  if (loading) {
-    return (
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-      </div>
-    );
-  }
+  const { user } = useAuthStore();
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">

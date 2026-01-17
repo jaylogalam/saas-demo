@@ -1,13 +1,13 @@
-import { ProfileDropdown } from "./ProfileDropdown";
-import { SubscriptionBadge } from "./SubscriptionBadge";
+import { ProfileDropdown } from "@/components/ProfileDropdown";
+import { SubscriptionBadge } from "@/components/SubscriptionBadge";
 import { useAuthStore } from "@/store/authStore";
 import { useSignOut } from "@/hooks/useAuth";
 
-interface DashboardNavbarProps {
+interface AppNavbarProps {
   title?: string;
 }
 
-export function DashboardNavbar({ title = "Dashboard" }: DashboardNavbarProps) {
+export function AppNavbar({ title = "Dashboard" }: AppNavbarProps) {
   const { user } = useAuthStore();
   const signOutMutation = useSignOut();
 

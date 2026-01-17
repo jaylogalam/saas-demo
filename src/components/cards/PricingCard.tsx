@@ -24,6 +24,7 @@ import { useCheckout } from "@/hooks/useSubscription";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "../ui/skeleton";
 
 // Feature tooltips for complex features
 const featureTooltips: Record<string, string> = {
@@ -177,5 +178,39 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
         </CardFooter>
       </Card>
     </TooltipProvider>
+  );
+}
+
+export function PricingCardSkeleton() {
+  return (
+    <div className="relative w-full max-w-sm h-full flex flex-col border border-border rounded-xl p-6 bg-card">
+      {/* Header */}
+      <div className="text-center space-y-2 mb-6">
+        <Skeleton className="h-7 w-24 mx-auto" />
+        <Skeleton className="h-4 w-40 mx-auto" />
+      </div>
+
+      {/* Price */}
+      <div className="text-center mb-6">
+        <Skeleton className="h-12 w-28 mx-auto" />
+        <Skeleton className="h-4 w-20 mx-auto mt-2" />
+      </div>
+
+      {/* Separator */}
+      <Skeleton className="h-px w-full my-6" />
+
+      {/* Features */}
+      <div className="flex-1 space-y-3">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="flex items-center gap-3">
+            <Skeleton className="h-5 w-5 rounded-full flex-shrink-0" />
+            <Skeleton className="h-4 flex-1" />
+          </div>
+        ))}
+      </div>
+
+      {/* CTA Button */}
+      <Skeleton className="h-11 w-full mt-6 rounded-md" />
+    </div>
   );
 }
