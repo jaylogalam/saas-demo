@@ -1,10 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { queryKeys } from "@/lib/queryKeys";
 import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { useAuthStore } from "@/store/authStore";
 import type {
   BillingInterval,
+  ProrationPreview,
   SubscriptionPlan,
 } from "@/types/subscription.types";
 import type { StripePrice, StripeProduct } from "@/types/database.types";
@@ -50,6 +52,10 @@ function transformToSubscriptionPlans(
         price: {
           monthly: (monthlyPrice?.unit_amount ?? 0) / 100,
           yearly: (yearlyPrice?.unit_amount ?? 0) / 100,
+        },
+        priceIds: {
+          monthly: monthlyPrice?.id ?? "",
+          yearly: yearlyPrice?.id ?? "",
         },
         currency: monthlyPrice?.currency ?? yearlyPrice?.currency ?? "usd",
         features,
@@ -161,4 +167,109 @@ export function useCustomerPortal() {
   };
 
   return { openPortal };
+}
+
+/**
+ * Handle subscription plan changes (upgrades/downgrades)
+ */
+export function useSubscriptionUpdate() {
+  const queryClient = useQueryClient();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  /**
+   * Preview the proration for a plan change
+   */
+  const previewChange = async (
+    subscriptionId: string,
+    newPriceId: string,
+  ): Promise<ProrationPreview | null> => {
+    setError(null);
+
+    try {
+      console.log("[useSubscriptionUpdate] Calling preview with:", {
+        subscriptionId,
+        newPriceId,
+      });
+
+      const { data, error: fnError } = await supabase.functions.invoke(
+        "update-subscription",
+        {
+          body: {
+            subscriptionId,
+            newPriceId,
+            preview: true,
+          },
+        },
+      );
+
+      console.log("[useSubscriptionUpdate] Preview response:", {
+        data,
+        fnError,
+      });
+
+      if (fnError) throw new Error(fnError.message);
+      if (data?.error) throw new Error(data.error);
+
+      return data?.preview as ProrationPreview;
+    } catch (err) {
+      console.error("[useSubscriptionUpdate] Preview error:", err);
+      const message = err instanceof Error
+        ? err.message
+        : "Failed to preview changes";
+      setError(message);
+      return null;
+    }
+  };
+
+  /**
+   * Execute the subscription plan change
+   */
+  const confirmChange = async (
+    subscriptionId: string,
+    newPriceId: string,
+  ): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke(
+        "update-subscription",
+        {
+          body: {
+            subscriptionId,
+            newPriceId,
+            preview: false,
+          },
+        },
+      );
+
+      if (fnError) throw new Error(fnError.message);
+      if (data.error) throw new Error(data.error);
+
+      // Invalidate subscription queries to refetch updated data
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.subscription.all,
+      });
+
+      return true;
+    } catch (err) {
+      const message = err instanceof Error
+        ? err.message
+        : "Failed to update subscription";
+      setError(message);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    previewChange,
+    confirmChange,
+    isLoading,
+    error,
+    clearError: () => setError(null),
+  };
 }

@@ -7,6 +7,10 @@ export interface SubscriptionPlan {
     monthly: number;
     yearly: number;
   };
+  priceIds: {
+    monthly: string;
+    yearly: string;
+  };
   currency: string;
   features: string[];
   highlighted?: boolean;
@@ -38,3 +42,19 @@ export interface CustomerSubscription {
 
 // Billing interval
 export type BillingInterval = "monthly" | "yearly";
+
+// Proration preview from Stripe
+export interface ProrationPreview {
+  immediateAmount: number; // Amount to charge immediately (cents)
+  credit: number; // Credit from unused time (cents)
+  newPlanCost: number; // New plan cost for remainder (cents)
+  effectiveDate: string; // When change takes effect
+  isUpgrade: boolean;
+  currency: string;
+}
+
+// Plan change request
+export interface PlanChangeRequest {
+  subscriptionId: string;
+  newPriceId: string;
+}
