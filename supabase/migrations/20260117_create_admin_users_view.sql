@@ -12,6 +12,7 @@ SELECT
   s.status AS subscription_status,
   p.name AS product_name,
   s.items->'data'->0->'price'->'recurring'->>'interval' AS billing_interval,
+  s.current_period_start,
   s.current_period_end,
   s.cancel_at_period_end
 FROM auth.users u

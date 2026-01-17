@@ -7,6 +7,8 @@ import {
   Menu,
   X,
   Shield,
+  Users,
+  CreditCard,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -230,7 +232,14 @@ export function AppLayout() {
     if (isAdmin) {
       sections.push({
         title: "Admin",
-        items: [{ icon: Shield, label: "Admin", href: "/admin" }],
+        items: [
+          { icon: Users, label: "Users", href: "/admin/users" },
+          {
+            icon: CreditCard,
+            label: "Subscriptions",
+            href: "/admin/subscriptions",
+          },
+        ],
       });
     }
     return sections;

@@ -23,7 +23,10 @@ const BillingPage = lazy(() => import("@/pages/app/BillingPage"));
 const DashboardPage = lazy(() => import("@/pages/app/DashboardPage"));
 const ProjectsPage = lazy(() => import("@/pages/app/ProjectsPage"));
 const AnalyticsPage = lazy(() => import("@/pages/app/AnalyticsPage"));
-const AdminPage = lazy(() => import("@/pages/app/AdminPage"));
+const AdminUsersPage = lazy(() => import("@/pages/app/AdminUsersPage"));
+const AdminSubscriptionsPage = lazy(
+  () => import("@/pages/app/AdminSubscriptionsPage")
+);
 
 function App() {
   return (
@@ -45,7 +48,11 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/billing" element={<BillingPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route
+            path="/admin/subscriptions"
+            element={<AdminSubscriptionsPage />}
+          />
         </Route>
 
         {/* Routes WITHOUT Navbar (Auth pages) */}

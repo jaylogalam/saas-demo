@@ -1,13 +1,6 @@
 import { Suspense } from "react";
 import { Navigate } from "react-router-dom";
-import {
-  Users,
-  ShieldCheck,
-  AlertCircle,
-  Sparkles,
-  Clock,
-  XCircle,
-} from "lucide-react";
+import { Users } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -15,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/PageHeader";
 import {
   useAdminUsers,
@@ -23,45 +15,6 @@ import {
   type AdminUser,
 } from "@/hooks/useAdminUsers";
 import { formatDate } from "@/utils/formatDate";
-
-// ============================================================================
-// Status Badge Configuration
-// ============================================================================
-
-function getStatusConfig(status: string | null) {
-  switch (status) {
-    case "active":
-      return {
-        label: "Active",
-        color: "bg-emerald-500/15 text-emerald-600 border-emerald-500/20",
-        icon: ShieldCheck,
-      };
-    case "trialing":
-      return {
-        label: "Trial",
-        color: "bg-amber-500/15 text-amber-600 border-amber-500/20",
-        icon: Sparkles,
-      };
-    case "past_due":
-      return {
-        label: "Past Due",
-        color: "bg-red-500/15 text-red-600 border-red-500/20",
-        icon: AlertCircle,
-      };
-    case "canceled":
-      return {
-        label: "Canceled",
-        color: "bg-gray-500/15 text-gray-600 border-gray-500/20",
-        icon: XCircle,
-      };
-    default:
-      return {
-        label: "Free",
-        color: "bg-blue-500/15 text-blue-600 border-blue-500/20",
-        icon: Clock,
-      };
-  }
-}
 
 // ============================================================================
 // Loading Skeleton
@@ -82,7 +35,6 @@ function AdminSkeleton() {
                   <div className="h-4 w-48 bg-muted rounded" />
                   <div className="h-3 w-32 bg-muted rounded" />
                 </div>
-                <div className="h-6 w-20 bg-muted rounded-full" />
               </div>
             ))}
           </div>
@@ -101,9 +53,6 @@ interface UserRowProps {
 }
 
 function UserRow({ user }: UserRowProps) {
-  const statusConfig = getStatusConfig(user.subscription_status);
-  const StatusIcon = statusConfig.icon;
-
   return (
     <tr className="border-b last:border-0 hover:bg-muted/30 transition-colors">
       <td className="p-4">
@@ -115,19 +64,8 @@ function UserRow({ user }: UserRowProps) {
       <td className="p-4 text-sm text-muted-foreground">
         {formatDate(user.joined_at)}
       </td>
-      <td className="p-4">
-        <span className="text-sm font-medium">
-          {user.product_name || "Free"}
-        </span>
-      </td>
-      <td className="p-4">
-        <Badge className={statusConfig.color} variant="outline">
-          <StatusIcon className="mr-1 size-3" />
-          {statusConfig.label}
-        </Badge>
-      </td>
-      <td className="p-4 text-sm text-muted-foreground capitalize">
-        {user.billing_interval || "—"}
+      <td className="p-4 text-sm text-muted-foreground font-mono text-xs">
+        {user.user_id.slice(0, 8)}...
       </td>
     </tr>
   );
@@ -161,9 +99,7 @@ function UsersTable({ users }: UsersTableProps) {
           <tr className="border-b bg-muted/50">
             <th className="p-4 text-left text-sm font-semibold">User</th>
             <th className="p-4 text-left text-sm font-semibold">Joined</th>
-            <th className="p-4 text-left text-sm font-semibold">Plan</th>
-            <th className="p-4 text-left text-sm font-semibold">Status</th>
-            <th className="p-4 text-left text-sm font-semibold">Billing</th>
+            <th className="p-4 text-left text-sm font-semibold">User ID</th>
           </tr>
         </thead>
         <tbody>
@@ -177,64 +113,34 @@ function UsersTable({ users }: UsersTableProps) {
 }
 
 // ============================================================================
-// Admin Page Content
+// Admin Users Page Content
 // ============================================================================
 
-function AdminPageContent() {
+function AdminUsersPageContent() {
   const { data: isAdmin, isLoading: isAdminLoading } = useIsAdmin();
   const { data: users, isLoading: isUsersLoading } = useAdminUsers();
 
-  // Check admin access
-  if (isAdminLoading) {
-    return <AdminSkeleton />;
-  }
+  if (isAdminLoading) return <AdminSkeleton />;
+  if (!isAdmin) return <Navigate to="/dashboard" replace />;
+  if (isUsersLoading) return <AdminSkeleton />;
 
-  if (!isAdmin) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  // Loading users
-  if (isUsersLoading) {
-    return <AdminSkeleton />;
-  }
-
-  const userCount = users?.length ?? 0;
-  const subscribedCount =
-    users?.filter((u) => u.subscription_status).length ?? 0;
+  // Deduplicate users (a user may appear multiple times if they have multiple subscriptions)
+  const uniqueUsers = users
+    ? Array.from(new Map(users.map((u) => [u.user_id, u])).values())
+    : [];
+  const userCount = uniqueUsers.length;
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Admin Dashboard"
-        description="Manage users and view subscription details"
-      />
+      <PageHeader title="App Users" description="View all registered users" />
 
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Total Users</CardDescription>
-            <CardTitle className="text-3xl">{userCount}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Active Subscriptions</CardDescription>
-            <CardTitle className="text-3xl">{subscribedCount}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Conversion Rate</CardDescription>
-            <CardTitle className="text-3xl">
-              {userCount > 0
-                ? Math.round((subscribedCount / userCount) * 100)
-                : 0}
-              %
-            </CardTitle>
-          </CardHeader>
-        </Card>
-      </div>
+      {/* Stats Card */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardDescription>Total Users</CardDescription>
+          <CardTitle className="text-3xl">{userCount}</CardTitle>
+        </CardHeader>
+      </Card>
 
       {/* Users Table */}
       <Card>
@@ -244,11 +150,11 @@ function AdminPageContent() {
             All Users
           </CardTitle>
           <CardDescription>
-            View and manage all registered users
+            All registered users in your application
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <UsersTable users={users ?? []} />
+          <UsersTable users={uniqueUsers} />
         </CardContent>
       </Card>
     </div>
@@ -256,15 +162,15 @@ function AdminPageContent() {
 }
 
 // ============================================================================
-// Main Export with Suspense
+// Main Export
 // ============================================================================
 
-const AdminPage = () => {
+const AdminUsersPage = () => {
   return (
     <Suspense fallback={<AdminSkeleton />}>
-      <AdminPageContent />
+      <AdminUsersPageContent />
     </Suspense>
   );
 };
 
-export default AdminPage;
+export default AdminUsersPage;
