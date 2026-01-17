@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { useResetPasswordRequest } from "@/features/auth/hooks/useAuth";
+import { useResetPasswordRequest } from "@/features/auth/hooks";
 import { ArrowLeft, Mail } from "lucide-react";
 
 export function ForgotPasswordForm({

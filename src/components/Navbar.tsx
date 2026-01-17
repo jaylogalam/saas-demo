@@ -3,7 +3,7 @@ import { ProfileDropdown } from "./ProfileDropdown";
 import { SubscriptionBadge } from "./SubscriptionBadge";
 import { Button } from "@/components/ui/button";
 import { useUserInfo } from "@/hooks/useUserInfo";
-import { useSignOut } from "@/features/auth/hooks/useAuth";
+import { useSignOut } from "@/features/auth/hooks";
 import { AppLogo } from "@/components/AppLogo";
 
 export function Navbar() {
