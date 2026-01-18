@@ -52,7 +52,7 @@ export function ResetPasswordForm({
             with your new password.
           </p>
         </div>
-        <Button onClick={() => navigate("/login")}>Continue to login</Button>
+        <Button onClick={() => navigate("/dashboard")}>Continue</Button>
       </div>
     );
   }

@@ -5,8 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { useResetPasswordRequest } from "@/features/auth/hooks";
-import { ArrowLeft, Mail } from "lucide-react";
+import {
+  useResetPasswordRequest,
+  useVerifyOTP,
+  useResendOTP,
+} from "@/features/auth/hooks";
+import { OTPVerificationCard } from "@/features/auth/components/OTPVerificationCard";
+import { ArrowLeft } from "lucide-react";
 
 export function ForgotPasswordForm({
   className,
@@ -20,32 +25,30 @@ export function ForgotPasswordForm({
     resetPasswordRequestError,
   } = useResetPasswordRequest();
 
+  const { handleVerifyOTP, verifyOTPStatus, verifyOTPError } = useVerifyOTP();
+
+  const { handleResendOTP, resendOTPStatus, resendOTPError } = useResendOTP();
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     handleResetPasswordRequest(email);
   };
 
-  // Show success message after email is sent
+  // Show OTP verification card after email is sent
   if (resetPasswordRequestStatus === "success") {
     return (
-      <div className={cn("flex flex-col gap-6", className)}>
-        <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex size-16 items-center justify-center rounded-full bg-primary/10">
-            <Mail className="size-8 text-primary" />
-          </div>
-          <h1 className="text-2xl font-bold">Check your email</h1>
-          <p className="text-muted-foreground text-sm text-balance">
-            We've sent a password reset link to{" "}
-            <span className="font-medium text-foreground">{email}</span>
-          </p>
-        </div>
-        <Button variant="outline" asChild>
-          <Link to="/login">
-            <ArrowLeft className="mr-2 size-4" />
-            Back to login
-          </Link>
-        </Button>
-      </div>
+      <OTPVerificationCard
+        email={email}
+        onVerify={(token) =>
+          handleVerifyOTP({ email, token, type: "recovery" })
+        }
+        onResend={() => handleResendOTP({ email, type: "recovery" })}
+        isVerifying={verifyOTPStatus === "pending"}
+        isResending={resendOTPStatus === "pending"}
+        error={verifyOTPError?.message || resendOTPError?.message}
+        resendSuccess={resendOTPStatus === "success"}
+        className={className}
+      />
     );
   }
 
@@ -61,7 +64,7 @@ export function ForgotPasswordForm({
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Forgot your password?</h1>
           <p className="text-muted-foreground text-sm text-balance">
-            Enter your email address and we'll send you a link to reset your
+            Enter your email address and we'll send you a code to reset your
             password.
           </p>
         </div>
@@ -81,7 +84,7 @@ export function ForgotPasswordForm({
         </Field>
         <Field>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Sending..." : "Send reset link"}
+            {isLoading ? "Sending..." : "Send reset code"}
           </Button>
         </Field>
         <div className="text-center">

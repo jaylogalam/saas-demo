@@ -59,8 +59,8 @@ export function SignupForm({
     return (
       <OTPVerificationCard
         email={email}
-        onVerify={(token) => handleVerifyOTP(email, token)}
-        onResend={() => handleResendOTP(email)}
+        onVerify={(token) => handleVerifyOTP({ email, token, type: "signup" })}
+        onResend={() => handleResendOTP({ email, type: "signup" })}
         isVerifying={verifyOTPStatus === "pending"}
         isResending={resendOTPStatus === "pending"}
         error={verifyOTPError?.message}
