@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,65 +24,47 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  // Form state
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
-  const signUpMutation = useSignUp();
-  const googleMutation = useSignInWithGoogle();
-  const verifyMutation = useVerifyOTP();
-  const resendMutation = useResendOTP();
+  // Hooks
+  const { handleSignUp, signUpStatus, signUpError } = useSignUp();
+  const { handleGoogleSignIn, googleSignInStatus, googleSignInError } =
+    useSignInWithGoogle();
+  const { handleVerifyOTP, verifyOTPStatus, verifyOTPError } = useVerifyOTP();
+  const { handleResendOTP, resendOTPStatus, resendOTPError } = useResendOTP();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Form submission handler
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError(null);
-
-    if (password.length < 8) {
-      setValidationError("Password must be at least 8 characters long");
-      return;
-    }
-
-    signUpMutation.mutate({ email, password, fullName });
-  };
-
-  const handleGoogleSignUp = () => {
-    googleMutation.mutate();
-  };
-
-  const handleVerifyOTP = (otp: string) => {
-    verifyMutation.mutate(
-      { email, token: otp },
-      {
-        onSuccess: () => {
-          navigate("/");
-        },
-      },
-    );
-  };
-
-  const handleResendOTP = () => {
-    resendMutation.mutate(email);
+    handleSignUp(email, password, fullName);
   };
 
   const error =
     validationError ||
-    signUpMutation.error?.message ||
-    googleMutation.error?.message;
-  const isLoading = signUpMutation.isPending || googleMutation.isPending;
+    signUpError?.message ||
+    googleSignInError?.message ||
+    verifyOTPError?.message ||
+    resendOTPError?.message;
+
+  const isLoading =
+    signUpStatus === "pending" || googleSignInStatus === "pending";
 
   // Show OTP verification card after successful signup
-  if (signUpMutation.isSuccess) {
+  if (signUpStatus === "success") {
     return (
       <OTPVerificationCard
         email={email}
-        onVerify={handleVerifyOTP}
-        onResend={handleResendOTP}
-        isVerifying={verifyMutation.isPending}
-        isResending={resendMutation.isPending}
-        error={verifyMutation.error?.message}
-        resendSuccess={resendMutation.isSuccess}
+        onVerify={(token) => handleVerifyOTP(email, token)}
+        onResend={() => handleResendOTP(email)}
+        isVerifying={verifyOTPStatus === "pending"}
+        isResending={resendOTPStatus === "pending"}
+        error={verifyOTPError?.message}
+        resendSuccess={resendOTPStatus === "success"}
         className={className}
       />
     );
@@ -91,7 +73,7 @@ export function SignupForm({
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
-      onSubmit={handleSubmit}
+      onSubmit={handleFormSubmit}
       {...props}
     >
       <FieldGroup>
@@ -139,9 +121,7 @@ export function SignupForm({
         </Field>
         <Field>
           <Button type="submit" disabled={isLoading}>
-            {signUpMutation.isPending
-              ? "Creating account..."
-              : "Create Account"}
+            {isLoading ? "Creating account..." : "Create Account"}
           </Button>
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
@@ -149,7 +129,7 @@ export function SignupForm({
           <Button
             variant="outline"
             type="button"
-            onClick={handleGoogleSignUp}
+            onClick={() => handleGoogleSignIn()}
             disabled={isLoading}
           >
             <GoogleIcon />

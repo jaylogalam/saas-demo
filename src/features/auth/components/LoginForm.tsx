@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,32 +20,23 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const { handleSignIn, signInStatus, signInError } = useSignIn();
+  const { handleGoogleSignIn, googleSignInStatus, googleSignInError } =
+    useSignInWithGoogle();
 
-  const signInMutation = useSignIn();
-  const googleMutation = useSignInWithGoogle();
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    signInMutation.mutate(
-      { email, password },
-      {
-        onSuccess: () => navigate("/"),
-      },
-    );
+    handleSignIn(email, password);
   };
 
-  const handleGoogleSignIn = () => {
-    googleMutation.mutate();
-  };
-
-  const error = signInMutation.error?.message || googleMutation.error?.message;
-  const isLoading = signInMutation.isPending || googleMutation.isPending;
+  const error = signInError?.message || googleSignInError?.message;
+  const isLoading =
+    signInStatus === "pending" || googleSignInStatus === "pending";
 
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
-      onSubmit={handleSubmit}
+      onSubmit={handleFormSubmit}
       {...props}
     >
       <FieldGroup>
@@ -70,6 +61,7 @@ export function LoginForm({
         <Field>
           <div className="flex items-center">
             <FieldLabel htmlFor="password">Password</FieldLabel>
+            {/* TODO: Fix if user is not registered */}
             <Link
               to="/forgot-password"
               className="ml-auto text-sm underline-offset-4 hover:underline"
@@ -87,7 +79,7 @@ export function LoginForm({
         </Field>
         <Field>
           <Button type="submit" disabled={isLoading}>
-            {signInMutation.isPending ? "Signing in..." : "Login"}
+            {isLoading ? "Signing in..." : "Login"}
           </Button>
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
@@ -95,7 +87,7 @@ export function LoginForm({
           <Button
             variant="outline"
             type="button"
-            onClick={handleGoogleSignIn}
+            onClick={() => handleGoogleSignIn()}
             disabled={isLoading}
           >
             <GoogleIcon />

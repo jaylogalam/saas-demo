@@ -17,32 +17,29 @@ export function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  // Form state
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const updateMutation = useUpdatePassword();
+  const { handleUpdatePassword, updatePasswordStatus, updatePasswordError } =
+    useUpdatePassword();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError(null);
-
-    if (password.length < 8) {
-      setValidationError("Password must be at least 8 characters long");
-      return;
-    }
 
     if (password !== confirmPassword) {
       setValidationError("Passwords do not match");
       return;
     }
 
-    updateMutation.mutate(password);
+    handleUpdatePassword(password);
   };
 
   // Show success message after password is updated
-  if (updateMutation.isSuccess) {
+  if (updatePasswordStatus === "success") {
     return (
       <div className={cn("flex flex-col gap-6", className)}>
         <div className="flex flex-col items-center gap-4 text-center">
@@ -60,12 +57,14 @@ export function ResetPasswordForm({
     );
   }
 
-  const error = validationError || updateMutation.error?.message;
+  const error = validationError || updatePasswordError?.message;
+
+  const isLoading = updatePasswordStatus === "pending";
 
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
-      onSubmit={handleSubmit}
+      onSubmit={handleFormSubmit}
       {...props}
     >
       <FieldGroup>
@@ -100,8 +99,8 @@ export function ResetPasswordForm({
           />
         </Field>
         <Field>
-          <Button type="submit" disabled={updateMutation.isPending}>
-            {updateMutation.isPending ? "Updating..." : "Update password"}
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update password"}
           </Button>
         </Field>
         <div className="text-center">

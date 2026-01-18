@@ -118,8 +118,8 @@ export function OTPVerificationCard({
                     {isResending
                       ? "Sending..."
                       : countdown > 0
-                      ? `Resend in ${countdown}s`
-                      : "Resend"}
+                        ? `Resend in ${countdown}s`
+                        : "Resend"}
                   </button>
                 </FieldDescription>
               )}

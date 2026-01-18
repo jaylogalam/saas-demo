@@ -14,15 +14,19 @@ export function ForgotPasswordForm({
 }: React.ComponentProps<"form">) {
   const [email, setEmail] = useState("");
 
-  const resetMutation = useResetPasswordRequest();
+  const {
+    handleResetPasswordRequest,
+    resetPasswordRequestStatus,
+    resetPasswordRequestError,
+  } = useResetPasswordRequest();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    resetMutation.mutate(email);
+    handleResetPasswordRequest(email);
   };
 
   // Show success message after email is sent
-  if (resetMutation.isSuccess) {
+  if (resetPasswordRequestStatus === "success") {
     return (
       <div className={cn("flex flex-col gap-6", className)}>
         <div className="flex flex-col items-center gap-4 text-center">
@@ -45,10 +49,12 @@ export function ForgotPasswordForm({
     );
   }
 
+  const isLoading = resetPasswordRequestStatus === "pending";
+
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
-      onSubmit={handleSubmit}
+      onSubmit={handleFormSubmit}
       {...props}
     >
       <FieldGroup>
@@ -59,8 +65,8 @@ export function ForgotPasswordForm({
             password.
           </p>
         </div>
-        {resetMutation.error && (
-          <FormAlert type="error" message={resetMutation.error.message} />
+        {resetPasswordRequestError && (
+          <FormAlert type="error" message={resetPasswordRequestError.message} />
         )}
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -74,8 +80,8 @@ export function ForgotPasswordForm({
           />
         </Field>
         <Field>
-          <Button type="submit" disabled={resetMutation.isPending}>
-            {resetMutation.isPending ? "Sending..." : "Send reset link"}
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Sending..." : "Send reset link"}
           </Button>
         </Field>
         <div className="text-center">

@@ -8,7 +8,11 @@ import { queryKeys } from "@/lib/queryKeys";
 export function useUpdatePassword() {
     const queryClient = useQueryClient();
 
-    return useMutation({
+    const {
+        mutate: updatePassword,
+        status: updatePasswordStatus,
+        error: updatePasswordError,
+    } = useMutation({
         mutationFn: async (newPassword: string) => {
             const { error } = await supabase.auth.updateUser({
                 password: newPassword,
@@ -21,4 +25,10 @@ export function useUpdatePassword() {
             });
         },
     });
+
+    const handleUpdatePassword = (newPassword: string) => {
+        updatePassword(newPassword);
+    };
+
+    return { handleUpdatePassword, updatePasswordStatus, updatePasswordError };
 }

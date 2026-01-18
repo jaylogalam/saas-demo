@@ -5,7 +5,11 @@ import { supabase } from "@/lib/supabase";
  * Resend OTP verification email
  */
 export function useResendOTP() {
-    return useMutation({
+    const {
+        mutate: resendOTP,
+        status: resendOTPStatus,
+        error: resendOTPError,
+    } = useMutation({
         mutationFn: async (email: string) => {
             const { error } = await supabase.auth.resend({
                 type: "signup",
@@ -14,4 +18,10 @@ export function useResendOTP() {
             if (error) throw error;
         },
     });
+
+    const handleResendOTP = (email: string) => {
+        resendOTP(email);
+    };
+
+    return { handleResendOTP, resendOTPStatus, resendOTPError };
 }

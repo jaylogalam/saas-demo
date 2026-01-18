@@ -16,20 +16,27 @@ export function useSignIn() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
-    return useMutation({
-        mutationFn: async ({ email, password }: SignInCredentials) => {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
-            if (error) throw error;
-            return data;
-        },
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: queryKeys.auth.session(),
-            });
-            navigate("/dashboard");
-        },
-    });
+    const { mutate: signIn, status: signInStatus, error: signInError } =
+        useMutation({
+            mutationFn: async ({ email, password }: SignInCredentials) => {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password,
+                });
+                if (error) throw error;
+                return data;
+            },
+            onSuccess: async () => {
+                await queryClient.invalidateQueries({
+                    queryKey: queryKeys.auth.session(),
+                });
+                navigate("/dashboard");
+            },
+        });
+
+    const handleSignIn = (email: string, password: string) => {
+        signIn({ email, password });
+    };
+
+    return { handleSignIn, signInStatus, signInError };
 }

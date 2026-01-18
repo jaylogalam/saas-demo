@@ -5,7 +5,11 @@ import { supabase } from "@/lib/supabase";
  * Sign in with Google OAuth
  */
 export function useSignInWithGoogle() {
-    return useMutation({
+    const {
+        mutate: googleSignIn,
+        status: googleSignInStatus,
+        error: googleSignInError,
+    } = useMutation({
         mutationFn: async () => {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: "google",
@@ -17,4 +21,10 @@ export function useSignInWithGoogle() {
             return data;
         },
     });
+
+    const handleGoogleSignIn = () => {
+        googleSignIn();
+    };
+
+    return { handleGoogleSignIn, googleSignInStatus, googleSignInError };
 }

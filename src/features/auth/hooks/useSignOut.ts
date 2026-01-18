@@ -11,18 +11,23 @@ export function useSignOut() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
-    const { mutate: handleLogout } = useMutation({
-        mutationFn: async () => {
-            const { error } = await supabase.auth.signOut();
-            if (error) throw error;
-        },
-        onSuccess: () => {
-            navigate("/");
-            queryClient.invalidateQueries({
-                queryKey: queryKeys.auth.session(),
-            });
-        },
-    });
+    const { mutate: signOut, status: signOutStatus, error: signOutError } =
+        useMutation({
+            mutationFn: async () => {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+            },
+            onSuccess: () => {
+                navigate("/");
+                queryClient.invalidateQueries({
+                    queryKey: queryKeys.auth.session(),
+                });
+            },
+        });
 
-    return { handleLogout };
+    const handleLogout = () => {
+        signOut();
+    };
+
+    return { handleLogout, signOutStatus, signOutError };
 }
