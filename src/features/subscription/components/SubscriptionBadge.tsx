@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useUserSubscription } from "@/features/subscription/hooks";
 import { formatUnixTimestamp } from "@/utils/formatDate";
-import type { SupabaseSubscription } from "@/types/database.types";
+import type { SupabaseSubscription } from "@/types/stripe.types";
 
 interface SubscriptionBadgeProps {
   variant?: "compact" | "detailed";

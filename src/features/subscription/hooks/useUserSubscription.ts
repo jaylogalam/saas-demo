@@ -6,7 +6,7 @@ import type {
     StripeCustomer,
     StripeProduct,
     StripeSubscription,
-} from "@/types/database.types";
+} from "@/types/stripe.types";
 
 // ============================================================================
 // Types

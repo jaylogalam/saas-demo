@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { queryKeys } from "@/lib/queryKeys";
 import type { SubscriptionPlan } from "@/types/subscription.types";
-import type { StripePrice, StripeProduct } from "@/types/database.types";
+import type { StripePrice, StripeProduct } from "@/types/stripe.types";
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 

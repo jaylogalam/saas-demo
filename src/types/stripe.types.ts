@@ -71,8 +71,3 @@ export interface StripeSubscription {
   cancel_at_period_end: boolean;
   created: number;
 }
-
-// Legacy type aliases for backwards compatibility
-export type SupabaseProduct = StripeProduct;
-export type SupabasePrice = StripePrice;
-export type SupabaseSubscription = StripeSubscription;
