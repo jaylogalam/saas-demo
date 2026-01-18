@@ -19,16 +19,7 @@ export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
   const { data: subscription } = useUserSubscription();
   const { user } = useUserStore();
   const isSubscribed = !!subscription;
-
   const { handleLogout } = useSignOut();
-
-  const initials =
-    user?.name
-      ?.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2) || "U";
 
   return (
     <DropdownMenu>
