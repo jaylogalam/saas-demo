@@ -8,77 +8,27 @@ import {
 } from "@/components/ui/tooltip";
 import { useUserSubscription } from "@/features/subscription/hooks";
 import { formatUnixTimestamp } from "@/utils/formatDate";
-import type { SupabaseSubscription } from "@/types/stripe.types";
+import type { SubscriptionStatus } from "../types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface SubscriptionBadgeProps {
   variant?: "compact" | "detailed";
   className?: string;
 }
 
-function getStatusColor(status: SupabaseSubscription["status"]): string {
-  switch (status) {
-    case "active":
-      return "bg-emerald-500";
-    case "trialing":
-      return "bg-amber-500";
-    case "past_due":
-    case "unpaid":
-      return "bg-red-500";
-    case "canceled":
-    case "paused":
-      return "bg-gray-400";
-    default:
-      return "bg-gray-400";
-  }
-}
-
-function getStatusLabel(status: SupabaseSubscription["status"]): string {
-  switch (status) {
-    case "active":
-      return "Active";
-    case "trialing":
-      return "Trial";
-    case "past_due":
-      return "Past Due";
-    case "unpaid":
-      return "Unpaid";
-    case "canceled":
-      return "Canceled";
-    case "paused":
-      return "Paused";
-    default:
-      return status;
-  }
-}
-
 export function SubscriptionBadge({
   variant = "detailed",
   className = "",
 }: SubscriptionBadgeProps) {
-  const { data, isLoading } = useUserSubscription();
+  const { userSubscription, userSubscriptionStatus } = useUserSubscription();
 
-  if (isLoading) {
-    return (
-      <div
-        className={`h-5 w-16 animate-pulse rounded-full bg-muted ${className}`}
-      />
-    );
-  }
+  if (userSubscriptionStatus === "pending")
+    return <Skeleton className={`h-5 w-16 ${className}`} />;
 
-  if (!data) {
-    return (
-      <Badge
-        variant="secondary"
-        className={`text-xs font-normal text-muted-foreground ${className}`}
-      >
-        Free
-      </Badge>
-    );
-  }
+  if (!userSubscription) return null;
 
-  const { subscription, productName } = data;
-  const statusColor = getStatusColor(subscription.status);
-  const statusLabel = getStatusLabel(subscription.status);
+  const statusColor = getStatusColor(userSubscription.status);
+  const statusLabel = getStatusLabel(userSubscription.status);
 
   if (variant === "compact") {
     return (
@@ -88,13 +38,13 @@ export function SubscriptionBadge({
             <span
               className={`rounded-md bg-primary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-primary-foreground ${className}`}
             >
-              {productName}
+              {userSubscription.name}
             </span>
           </TooltipTrigger>
           <TooltipContent>
             <p className="text-xs">
               {statusLabel} • Renews{" "}
-              {formatUnixTimestamp(subscription.current_period_end)}
+              {formatUnixTimestamp(userSubscription.currentPeriodEnd)}
             </p>
           </TooltipContent>
         </Tooltip>
@@ -112,22 +62,58 @@ export function SubscriptionBadge({
           >
             <span className={`size-1.5 rounded-full ${statusColor}`} />
             <Sparkles className="size-3" />
-            {productName}
+            {userSubscription.name}
           </Badge>
         </TooltipTrigger>
         <TooltipContent>
           <p className="text-xs">
             {statusLabel} •{" "}
-            {subscription.status === "canceled"
+            {userSubscription.status === "canceled"
               ? `Expires ${formatUnixTimestamp(
-                  subscription.current_period_end,
+                  userSubscription.currentPeriodEnd,
                 )}`
               : `Renews ${formatUnixTimestamp(
-                  subscription.current_period_end,
+                  userSubscription.currentPeriodEnd,
                 )}`}
           </p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
+}
+
+function getStatusColor(status: SubscriptionStatus): string {
+  switch (status) {
+    case "active":
+      return "bg-emerald-500";
+    case "trialing":
+      return "bg-amber-500";
+    case "past_due":
+    case "unpaid":
+      return "bg-red-500";
+    case "canceled":
+    case "paused":
+      return "bg-gray-400";
+    default:
+      return "bg-gray-400";
+  }
+}
+
+function getStatusLabel(status: SubscriptionStatus): string {
+  switch (status) {
+    case "active":
+      return "Active";
+    case "trialing":
+      return "Trial";
+    case "past_due":
+      return "Past Due";
+    case "unpaid":
+      return "Unpaid";
+    case "canceled":
+      return "Canceled";
+    case "paused":
+      return "Paused";
+    default:
+      return status;
+  }
 }

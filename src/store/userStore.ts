@@ -20,9 +20,9 @@ export const useUserStore = create<UserState>((set) => ({
           id: user.id,
           email: user.email,
           name: user.user_metadata?.name as string,
-          avatar_url: user.user_metadata?.avatar_url as string,
-          created_at: user.created_at as string,
-          email_confirmed_at: user.email_confirmed_at as string,
+          avatarUrl: user.user_metadata?.avatar_url as string,
+          createdAt: user.created_at as string,
+          emailConfirmedAt: user.email_confirmed_at as string,
         } as User)
         : null,
       userLoading: false,

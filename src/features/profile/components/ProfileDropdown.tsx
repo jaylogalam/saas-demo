@@ -16,9 +16,9 @@ import { useSignOut } from "@/features/auth/hooks";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
-  const { data: subscription } = useUserSubscription();
+  const { userSubscription } = useUserSubscription();
   const { user } = useUserStore();
-  const isSubscribed = !!subscription;
+  const isSubscribed = !!userSubscription;
   const { handleLogout } = useSignOut();
 
   return (
@@ -37,7 +37,7 @@ export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
                 : undefined
             }
           >
-            <AvatarImage src={user?.avatar_url} alt={user?.name || "User"} />
+            <AvatarImage src={user?.avatarUrl} alt={user?.name || "User"} />
             <AvatarFallback className="bg-primary text-primary-foreground font-medium">
               <Skeleton className="h-8 w-8 rounded-full" />
             </AvatarFallback>

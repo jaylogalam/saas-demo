@@ -1,34 +1,57 @@
-import { useSubscriptionStore } from "@/store/subscriptionStore";
+import { useSubscriptionStore } from "@/features/subscription/store/subscriptionStore";
 import { useUserStore } from "@/store/userStore";
+import { redirect } from "react-router-dom";
 import type {
-    BillingInterval,
-    SubscriptionPlan,
-} from "@/types/subscription.types";
+  BillingInterval,
+  SubscriptionPlan,
+} from "@/features/subscription/types/subscription.types";
+import { useUserSubscription } from "./useUserSubscription";
+import { toast } from "sonner";
 
 /**
  * Handle checkout redirect to Stripe Payment Link
  */
 export function useCheckout() {
-    const { user } = useUserStore();
-    const { billingInterval } = useSubscriptionStore();
+  // State
+  const { billingInterval } = useSubscriptionStore();
+  const { user } = useUserStore();
 
-    const checkout = (plan: SubscriptionPlan, interval?: BillingInterval) => {
-        const selectedInterval = interval ?? billingInterval;
-        const paymentLink = plan.paymentLinks[selectedInterval];
+  // Hooks
+  const { userSubscription } = useUserSubscription();
 
-        if (
-            !paymentLink || paymentLink.includes("XXXX") || paymentLink === ""
-        ) {
-            alert("Payment is not configured yet. Please contact support.");
-            return;
-        }
+  const handleCheckout = (
+    plan: SubscriptionPlan,
+    interval?: BillingInterval,
+  ) => {
+    // Check if user is logged in
+    if (!user) {
+      redirect("/login");
+      return;
+    }
 
-        const url = new URL(paymentLink);
-        if (user?.id) url.searchParams.set("client_reference_id", user.id);
-        if (user?.email) url.searchParams.set("prefilled_email", user.email);
+    // Check if user is already subscribed to a different plan
+    if (!!userSubscription) {
+      alert("You are already subscribed to a different plan.");
+      return;
+    }
 
-        window.open(url.toString(), "_blank");
-    };
+    // Check if payment link is available
+    const selectedInterval = interval ?? billingInterval;
+    const paymentLink = plan.paymentLinks[selectedInterval];
 
-    return { checkout };
+    if (!paymentLink) {
+      toast.error(
+        "Payment is not configured yet. Please contact support.",
+      );
+      return;
+    }
+
+    const url = new URL(paymentLink);
+    if (user?.id) url.searchParams.set("client_reference_id", user.id);
+    if (user?.email) url.searchParams.set("prefilled_email", user.email);
+
+    window.open(url.toString(), "_blank");
+  };
+
+  return { handleCheckout };
 }

@@ -16,7 +16,7 @@ import type {
   BillingInterval,
   ProrationPreview,
   SubscriptionPlan,
-} from "@/types/subscription.types";
+} from "@/features/subscription/types/subscription.types";
 
 interface PlanChangeModalProps {
   open: boolean;

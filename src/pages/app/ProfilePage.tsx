@@ -66,9 +66,9 @@ const ProfilePage = () => {
 
   const email = user.email || "";
   const name = user.name || "User";
-  const avatarUrl = user.avatar_url || "";
-  const createdAt = user.created_at;
-  const emailVerified = user.email_confirmed_at !== null;
+  const avatarUrl = user.avatarUrl || "";
+  const createdAt = user.createdAt;
+  const emailVerified = user.emailConfirmedAt !== null;
 
   const initials = name
     .split(" ")

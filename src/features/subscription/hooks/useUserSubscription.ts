@@ -2,32 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { queryKeys } from "@/lib/queryKeys";
 import { useUserStore } from "@/store/userStore";
-import type {
-    StripeCustomer,
-    StripeProduct,
-    StripeSubscription,
-} from "@/types/stripe.types";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface UserSubscription {
-    subscription: StripeSubscription;
-    productName: string;
-    priceInterval: "day" | "week" | "month" | "year" | null;
-}
-
-// ============================================================================
-// Constants
-// ============================================================================
-
-const FIVE_MINUTES = 1000 * 60 * 5;
-const ACTIVE_STATUSES = ["active", "trialing"] as const;
-
-// ============================================================================
-// Hook
-// ============================================================================
+import { formatSubscriptionInterval } from "../utils/formatSubscriptionInterval";
+import type { UserSubscription } from "../types";
 
 /**
  * Fetch the current user's subscription via email-based customer lookup
@@ -37,60 +13,86 @@ const ACTIVE_STATUSES = ["active", "trialing"] as const;
  * 2. Any active/trialing subscription for that customer
  * 3. The product name for display
  */
+
 export function useUserSubscription() {
-    const { user } = useUserStore();
+  const { user } = useUserStore();
 
-    return useQuery({
-        queryKey: queryKeys.subscription.user(user?.id),
-        queryFn: async (): Promise<UserSubscription | null> => {
-            if (!user?.email) return null;
+  const {
+    data: userSubscription,
+    status: userSubscriptionStatus,
+    refetch: refetchUserSubscription,
+  } = useQuery({
+    queryKey: queryKeys.subscription.user(user?.id),
+    queryFn: async (): Promise<UserSubscription | null> => {
+      if (!user?.email) return null;
 
-            // Find Stripe customer by email
-            const { data: customers } = await supabase
-                .from("stripe_customers")
-                .select("id")
-                .eq("email", user?.email)
-                .limit(1);
+      // Get Stripe customer by email
+      const { data: customer } = await supabase
+        .from("stripe_customers")
+        .select("id")
+        .eq("email", user?.email)
+        .limit(1)
+        .single();
+      if (!customer) return null;
 
-            const customer = customers?.[0] as StripeCustomer | undefined;
-            if (!customer) return null;
+      // Get Stripe subscription by customer id
+      const { data: subscription } = await supabase
+        .from("stripe_subscriptions")
+        .select("*")
+        .eq("customer", customer.id)
+        .in("status", ["active", "trialing"])
+        .order("created", { ascending: false })
+        .limit(1)
+        .single();
+      if (!subscription) return null;
 
-            // Get active subscription for this customer
-            const { data: subscription } = await supabase
-                .from("stripe_subscriptions")
-                .select("*")
-                .eq("customer", customer.id)
-                .in("status", ACTIVE_STATUSES)
-                .order("created", { ascending: false })
-                .limit(1)
-                .single();
+      // Get Stripe price item and product id
+      const productId = subscription.items.data[0].price.product;
+      const priceID = subscription.items.data[0].price.id;
+      if (!productId || !priceID) return null;
 
-            if (!subscription) return null;
+      // Get Stripe product details
+      const { data: product } = await supabase
+        .from("stripe_products")
+        .select("*")
+        .eq("id", productId)
+        .single();
+      if (!product) return null;
 
-            const sub = subscription as StripeSubscription;
-            const priceItem = sub.items?.data?.[0];
-            const productId = priceItem?.price?.product;
+      // Get Stripe price details
+      const { data: price } = await supabase
+        .from("stripe_prices")
+        .select("*")
+        .eq("id", priceID)
+        .single();
+      if (!price) return null;
 
-            // Get product name
-            let productName = "Subscription";
-            if (productId) {
-                const { data: product } = await supabase
-                    .from("stripe_products")
-                    .select("name")
-                    .eq("id", productId)
-                    .single();
+      // Return user subscription
+      return {
+        // Product details
+        name: product.name,
+        description: product.description,
+        features: product.metadata?.features,
 
-                productName = (product as StripeProduct)?.name ??
-                    "Subscription";
-            }
+        // Price details
+        price: price.unit_amount,
+        currency: price.currency,
+        interval: formatSubscriptionInterval(price.recurring?.interval),
 
-            return {
-                subscription: sub,
-                productName,
-                priceInterval: priceItem?.price?.recurring?.interval ?? null,
-            };
-        },
-        enabled: !!user?.email,
-        staleTime: FIVE_MINUTES,
-    });
+        // Subscription details
+        id: subscription.id,
+        status: subscription.status,
+        currentPeriodEnd: subscription.current_period_end,
+        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+      } as UserSubscription;
+    },
+    enabled: !!user?.email,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  return {
+    userSubscription,
+    userSubscriptionStatus,
+    refetchUserSubscription,
+  };
 }

@@ -2,7 +2,7 @@ export interface User {
     id: string;
     name: string;
     email: string;
-    avatar_url: string;
-    created_at: string;
-    email_confirmed_at: string;
+    avatarUrl: string;
+    createdAt: string;
+    emailConfirmedAt: string;
 }

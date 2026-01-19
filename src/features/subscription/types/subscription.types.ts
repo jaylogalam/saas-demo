@@ -1,4 +1,5 @@
-// Subscription plan definition
+import type { StripeSubscription } from "@/types/stripe.types";
+
 export interface SubscriptionPlan {
   id: string;
   name: string;
@@ -20,6 +21,32 @@ export interface SubscriptionPlan {
   };
 }
 
+export interface UserSubscription {
+  // Product details
+  name: string;
+  description: string;
+  features: string[];
+
+  // Price details
+  price: string;
+  currency: string;
+  interval: "monthly" | "yearly";
+
+  // Subscription details
+  id: string;
+  status:
+    | "incomplete"
+    | "incomplete_expired"
+    | "trialing"
+    | "active"
+    | "past_due"
+    | "canceled"
+    | "unpaid"
+    | "paused";
+  currentPeriodEnd: number;
+  cancelAtPeriodEnd: boolean;
+}
+
 // Subscription status from Stripe
 export type SubscriptionStatus =
   | "active"
@@ -38,6 +65,12 @@ export interface CustomerSubscription {
   planId: string;
   currentPeriodEnd: Date;
   cancelAtPeriodEnd: boolean;
+}
+
+export interface UserSubscription {
+  subscription: StripeSubscription;
+  productName: string;
+  priceInterval: "day" | "week" | "month" | "year" | null;
 }
 
 // Billing interval

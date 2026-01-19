@@ -1,90 +1,95 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { queryKeys } from "@/lib/queryKeys";
-import type { SubscriptionPlan } from "@/types/subscription.types";
 import type { StripePrice, StripeProduct } from "@/types/stripe.types";
+import type { SubscriptionPlan } from "../types";
 
-const FIVE_MINUTES = 1000 * 60 * 5;
+export function useSubscriptionPlans() {
+  const { data: subscriptionPlans, status: subscriptionPlansStatus } = useQuery(
+    {
+      queryKey: queryKeys.subscription.plans(),
+      queryFn: async (): Promise<SubscriptionPlan[]> => {
+        const [productsResult, pricesResult] = await Promise.all([
+          // Get Stripe products
+          supabase
+            .from("stripe_products")
+            .select("*")
+            .eq("active", true)
+            .order("name"),
 
-/**
- * Transform Stripe products and prices into SubscriptionPlan format
- */
-function transformToSubscriptionPlans(
-    products: StripeProduct[],
-    prices: StripePrice[],
-): SubscriptionPlan[] {
-    return products
-        .map((product) => {
-            const productPrices = prices.filter((p) =>
-                p.product === product.id
-            );
-            const monthlyPrice = productPrices.find(
-                (p) => p.recurring?.interval === "month",
-            );
-            const yearlyPrice = productPrices.find(
-                (p) => p.recurring?.interval === "year",
-            );
+          // Get Stripe prices
+          supabase
+            .from("stripe_prices")
+            .select("*")
+            .eq("active", true)
+            .eq("type", "recurring"),
+        ]);
 
-            // Parse metadata
-            const features = product.metadata?.features
-                ?.split(",")
-                .map((f) => f.trim())
-                .filter(Boolean) ?? [];
-            const highlighted = product.metadata?.highlighted === "true";
+        // Handle errors
+        if (productsResult.error) throw productsResult.error;
+        if (pricesResult.error) throw pricesResult.error;
 
-            return {
-                id: product.id,
-                name: product.name,
-                description: product.description ?? "",
-                price: {
-                    monthly: (monthlyPrice?.unit_amount ?? 0) / 100,
-                    yearly: (yearlyPrice?.unit_amount ?? 0) / 100,
-                },
-                priceIds: {
-                    monthly: monthlyPrice?.id ?? "",
-                    yearly: yearlyPrice?.id ?? "",
-                },
-                currency: monthlyPrice?.currency ?? yearlyPrice?.currency ??
-                    "usd",
-                features,
-                highlighted,
-                paymentLinks: {
-                    monthly: product.metadata?.payment_link_monthly ?? "",
-                    yearly: product.metadata?.payment_link_yearly ?? "",
-                },
-            };
-        })
-        .sort((a, b) => a.price.monthly - b.price.monthly);
+        // Return as formatted subscription plans
+        return toSubscriptionPlan(
+          productsResult.data as StripeProduct[],
+          pricesResult.data as StripePrice[],
+        );
+      },
+      staleTime: 1000 * 60 * 5,
+    },
+  );
+
+  return {
+    subscriptionPlans,
+    subscriptionPlansStatus,
+  };
 }
 
 /**
- * Fetch all subscription plans from Stripe
+ * Convert Stripe products and prices to subscription plans
  */
-export function useSubscriptionPlans() {
-    return useQuery({
-        queryKey: queryKeys.subscription.plans(),
-        queryFn: async (): Promise<SubscriptionPlan[]> => {
-            const [productsResult, pricesResult] = await Promise.all([
-                supabase
-                    .from("stripe_products")
-                    .select("*")
-                    .eq("active", true)
-                    .order("name"),
-                supabase
-                    .from("stripe_prices")
-                    .select("*")
-                    .eq("active", true)
-                    .eq("type", "recurring"),
-            ]);
+export function toSubscriptionPlan(
+  products: StripeProduct[],
+  prices: StripePrice[],
+): SubscriptionPlan[] {
+  return products
+    .map((product) => {
+      const productPrices = prices.filter((p) => p.product === product.id);
+      const monthlyPrice = productPrices.find(
+        (p) => p.recurring?.interval === "month",
+      );
+      const yearlyPrice = productPrices.find(
+        (p) => p.recurring?.interval === "year",
+      );
 
-            if (productsResult.error) throw productsResult.error;
-            if (pricesResult.error) throw pricesResult.error;
+      // Parse metadata
+      const features = product.metadata?.features
+        ?.split(",")
+        .map((f) => f.trim())
+        .filter(Boolean) ?? [];
+      const highlighted = product.metadata?.highlighted === "true";
 
-            return transformToSubscriptionPlans(
-                productsResult.data as StripeProduct[],
-                pricesResult.data as StripePrice[],
-            );
+      return {
+        id: product.id,
+        name: product.name,
+        description: product.description ?? "",
+        price: {
+          monthly: (monthlyPrice?.unit_amount ?? 0) / 100,
+          yearly: (yearlyPrice?.unit_amount ?? 0) / 100,
         },
-        staleTime: FIVE_MINUTES,
-    });
+        priceIds: {
+          monthly: monthlyPrice?.id ?? "",
+          yearly: yearlyPrice?.id ?? "",
+        },
+        currency: monthlyPrice?.currency ?? yearlyPrice?.currency ??
+          "usd",
+        features,
+        highlighted,
+        paymentLinks: {
+          monthly: product.metadata?.payment_link_monthly ?? "",
+          yearly: product.metadata?.payment_link_yearly ?? "",
+        },
+      };
+    })
+    .sort((a, b) => a.price.monthly - b.price.monthly);
 }

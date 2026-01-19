@@ -91,9 +91,9 @@ function NoSubscription() {
 }
 
 const BillingPage = () => {
-  const { data, isLoading } = useUserSubscription();
+  const { userSubscription, userSubscriptionStatus } = useUserSubscription();
 
-  if (isLoading) {
+  if (userSubscriptionStatus === "pending") {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <BillingSkeleton />
@@ -101,7 +101,7 @@ const BillingPage = () => {
     );
   }
 
-  if (!data) {
+  if (!userSubscription) {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <PageHeader
@@ -115,13 +115,8 @@ const BillingPage = () => {
     );
   }
 
-  const { subscription, productName, priceInterval } = data;
-  const statusConfig = getStatusConfig(subscription.status);
+  const statusConfig = getStatusConfig(userSubscription.status);
   const StatusIcon = statusConfig.icon;
-
-  const isActive =
-    subscription.status === "active" || subscription.status === "trialing";
-  const isCanceled = subscription.status === "canceled";
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
@@ -149,39 +144,51 @@ const BillingPage = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <p className="text-2xl font-bold">{productName}</p>
-              {priceInterval && (
+              <p className="text-2xl font-bold">{userSubscription.name}</p>
+              {userSubscription.interval && (
                 <p className="text-sm text-muted-foreground">
-                  Billed {priceInterval === "month" ? "monthly" : "yearly"}
+                  Billed{" "}
+                  {userSubscription.interval === "monthly"
+                    ? "monthly"
+                    : "yearly"}
                 </p>
               )}
             </div>
             <Separator />
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">
-                {isCanceled ? "Expires on" : "Next billing date"}
+                {userSubscription.cancelAtPeriodEnd
+                  ? "Expires on"
+                  : "Next billing date"}
               </span>
               <span className="font-medium">
-                {formatUnixTimestamp(subscription.current_period_end)}
+                {formatUnixTimestamp(userSubscription.currentPeriodEnd)}
               </span>
             </div>
-            {isActive && !subscription.cancel_at_period_end && (
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                >
-                  Cancel
-                </Button>
-                <Button variant="outline" size="sm" className="flex-1" asChild>
-                  <Link to="/pricing">
-                    Change Plan
-                    <ArrowUpRight className="ml-1 size-3 sm:size-4" />
-                  </Link>
-                </Button>
-              </div>
-            )}
+            {userSubscription.status === "active" ||
+              (userSubscription.status === "trialing" &&
+                !userSubscription.cancelAtPeriodEnd && (
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      asChild
+                    >
+                      <Link to="/pricing">
+                        Change Plan
+                        <ArrowUpRight className="ml-1 size-3 sm:size-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                ))}
           </CardContent>
         </Card>
 

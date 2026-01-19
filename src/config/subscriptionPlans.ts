@@ -14,7 +14,7 @@
  * 3. Products and prices sync to Supabase via webhook
  */
 
-import type { SubscriptionPlan } from "@/types/subscription.types";
+import type { SubscriptionPlan } from "@/features/subscription/types/subscription.types";
 
 // Legacy fallback plans (not used in production)
 export const subscriptionPlans: SubscriptionPlan[] = [];

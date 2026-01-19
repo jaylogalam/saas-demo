@@ -20,13 +20,12 @@ import {
 import type {
   SubscriptionPlan,
   BillingInterval,
-} from "@/types/subscription.types";
+} from "@/features/subscription/types/subscription.types";
 import { useCheckout } from "@/features/subscription/hooks";
 import { useUserSubscription } from "@/features/subscription/hooks";
-import { useNavigate } from "react-router-dom";
 import { Skeleton } from "../../../components/ui/skeleton";
 import { PlanChangeModal } from "./PlanChangeModal";
-import { useUserStore } from "@/store/userStore";
+import { formatSubscriptionPrice } from "../utils/formatSubscriptionPrice";
 
 // Feature tooltips for complex features
 const featureTooltips: Record<string, string> = {
@@ -43,50 +42,25 @@ interface PricingCardProps {
 }
 
 export function PricingCard({ plan, billingInterval }: PricingCardProps) {
-  const { checkout } = useCheckout();
-  const { user } = useUserStore();
-  const { data: userSubscription, refetch } = useUserSubscription();
-  const navigate = useNavigate();
+  // Store and hooks
+  const { userSubscription, refetchUserSubscription } = useUserSubscription();
 
+  // Modal state
   const [showPlanChangeModal, setShowPlanChangeModal] = useState(false);
+  const { handleCheckout } = useCheckout();
 
-  const price = plan.price[billingInterval];
-  const isYearly = billingInterval === "yearly";
-  const monthlyEquivalent = isYearly ? Math.round(price / 12) : price;
-
-  // Check if user is subscribed to this specific plan
-  const isSubscribed = !!userSubscription;
-  // Compare plan name AND billing interval - yearly plan shows "Change Plan" if subscribed to monthly
-  const subscriptionInterval =
-    userSubscription?.priceInterval === "month" ? "monthly" : "yearly";
   const isCurrentPlan =
-    userSubscription?.productName === plan.name &&
-    subscriptionInterval === billingInterval;
+    userSubscription?.name === plan.name &&
+    userSubscription?.interval === billingInterval.replace("ly", "");
 
   // Get current plan price for the modal
   const currentPlanPrice = userSubscription
     ? ((
-        userSubscription.subscription.items?.data?.[0]?.price as {
+        userSubscription.price as {
           unit_amount?: number;
         }
       )?.unit_amount ?? 0)
     : 0;
-
-  const handleSubscribe = () => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    // If already subscribed, open the plan change modal
-    if (isSubscribed && !isCurrentPlan) {
-      setShowPlanChangeModal(true);
-      return;
-    }
-
-    // New subscription - use checkout
-    checkout(plan, billingInterval);
-  };
 
   return (
     <>
@@ -120,28 +94,26 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
             <div className="text-center mb-6">
               <div className="flex items-baseline justify-center gap-1">
                 <span className="text-5xl font-bold tracking-tight">
-                  {new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: plan.currency || "usd",
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  }).format(isYearly ? price : monthlyEquivalent)}
+                  {formatSubscriptionPrice(
+                    plan.price[billingInterval],
+                    plan.currency,
+                  )}
                 </span>
                 <span className="text-muted-foreground text-lg">
-                  {isYearly ? "/year" : "/mo"}
+                  {billingInterval === "yearly" ? "/year" : "/mo"}
                 </span>
               </div>
-              {isYearly && (
+              {/* Monthly equivalent */}
+              {billingInterval === "yearly" && (
                 <div className="flex items-center justify-center gap-2 mt-2">
                   <span className="text-sm text-muted-foreground">
-                    {new Intl.NumberFormat("en-US", {
-                      style: "currency",
-                      currency: plan.currency || "usd",
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                    }).format(monthlyEquivalent)}
+                    {formatSubscriptionPrice(
+                      plan.price[billingInterval] / 12,
+                      plan.currency,
+                    )}
                     /mo
                   </span>
+                  {/* TODO: Calculate actual savings on yearly plan */}
                   <Badge variant="secondary" className="text-xs">
                     Save 17%
                   </Badge>
@@ -192,9 +164,9 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
                 className="w-full"
                 size="lg"
                 variant={plan.highlighted ? "default" : "outline"}
-                onClick={handleSubscribe}
+                onClick={() => handleCheckout(plan, billingInterval)}
               >
-                {isSubscribed ? "Change Plan" : "Get Started"}
+                {userSubscription ? "Change Plan" : "Get Started"}
               </Button>
             )}
           </CardFooter>
@@ -207,15 +179,15 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
           open={showPlanChangeModal}
           onOpenChange={setShowPlanChangeModal}
           currentPlan={{
-            name: userSubscription.productName,
+            name: userSubscription.name,
             price: currentPlanPrice / 100,
-            interval: subscriptionInterval,
+            interval: userSubscription.interval,
           }}
           newPlan={plan}
           newInterval={billingInterval}
-          subscriptionId={userSubscription.subscription.id}
+          subscriptionId={userSubscription.id}
           newPriceId={plan.priceIds[billingInterval]}
-          onSuccess={() => refetch()}
+          onSuccess={() => refetchUserSubscription()}
         />
       )}
     </>
