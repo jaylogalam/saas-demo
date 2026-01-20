@@ -34,7 +34,12 @@ export default function PricingPage() {
       </section>
 
       {/* Billing Toggle */}
-      <BillingToggle status={subscriptionPlansStatus} />
+      <BillingToggle
+        isLoading={
+          subscriptionPlansStatus === "pending" ||
+          userSubscriptionStatus === "pending"
+        }
+      />
 
       {/* Pricing Cards */}
       <section className="container mx-auto px-4 sm:px-6 pb-20">
@@ -60,4 +65,3 @@ export default function PricingPage() {
     </div>
   );
 }
-
