@@ -1,57 +1,97 @@
-import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AppLogo } from "@/components/icons/AppLogo";
+import { Menu, X } from "lucide-react";
 import { ProfileDropdown } from "@/features/profile/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/features/subscription/components/SubscriptionBadge";
-import { DesktopSidebar } from "../../features/sidebar/DesktopSidebar";
-import { MobileSidebar } from "../../features/sidebar/MobileSidebar";
+import {
+  DesktopSidebar,
+  DesktopSidebarContent,
+  DesktopSidebarHeader,
+  MobileSidebar,
+  MobileSidebarContent,
+  MobileSidebarHeader,
+  MobileSidebarOverlay,
+  MobileSidebarToggler,
+} from "@/features/sidebar";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
+import { cn } from "@/utils/cn";
+
+///////////////////////////////////////
+/*        Exported Component         */
+///////////////////////////////////////
 
 export function AppLayout() {
   const isMobile = useIsMobile();
-  const sections = useSidebar();
 
-  return isMobile ? <AppMobileLayout /> : <AppDesktopLayout />;
+  if (isMobile) return <AppMobileLayout />;
+
+  return <AppDesktopLayout />;
 }
 
+//////////////////////////////////////
+/*          Desktop Layout          */
+//////////////////////////////////////
+
 function AppDesktopLayout() {
+  const sections = useSidebar();
+
   return (
-    <div className="flex h-screen overflow-hidden">
-      <DesktopSidebar />
-    </div>
+    <AppLayoutContainer>
+      {/* Sidebar Components */}
+      <DesktopSidebar>
+        <DesktopSidebarHeader>
+          <AppLogo />
+        </DesktopSidebarHeader>
+
+        <DesktopSidebarContent sections={sections} />
+      </DesktopSidebar>
+
+      {/* Main Content */}
+      <AppLayoutContent>
+        <AppLayoutHeader>
+          <div className="hidden lg:block" />
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <SubscriptionBadge subscriptionName="Free" />
+            <ProfileDropdown showNavItems={true} />
+          </div>
+        </AppLayoutHeader>
+
+        <AppLayoutOutlet />
+      </AppLayoutContent>
+    </AppLayoutContainer>
   );
 }
 
-function AppMobileLayout() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+//////////////////////////////////////
+/*           Mobile Layout          */
+//////////////////////////////////////
 
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-  };
+function AppMobileLayout() {
+  const sections = useSidebar();
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {mobileMenuOpen ? (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={closeMobileMenu}
-        />
-      ) : null}
+    <AppLayoutContainer>
+      {/* Sidebar Components */}
+      <MobileSidebarOverlay />
+      <MobileSidebar>
+        <MobileSidebarHeader>
+          <AppLogo />
+          <MobileSidebarToggler>
+            <X size={20} />
+          </MobileSidebarToggler>
+        </MobileSidebarHeader>
 
-      <MobileSidebar isOpen={mobileMenuOpen} onClose={closeMobileMenu} />
+        <MobileSidebarContent sections={sections} />
+      </MobileSidebar>
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="h-14 sm:h-16 border-b bg-background flex items-center justify-between px-4 sm:px-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setMobileMenuOpen(true)}
-          >
+      {/* Main Content */}
+      <AppLayoutContent>
+        <AppLayoutHeader>
+          <MobileSidebarToggler>
             <Menu size={20} />
-          </Button>
+          </MobileSidebarToggler>
 
           <div className="hidden lg:block" />
 
@@ -59,14 +99,77 @@ function AppMobileLayout() {
             <SubscriptionBadge subscriptionName="Free" />
             <ProfileDropdown showNavItems={true} />
           </div>
-        </header>
+        </AppLayoutHeader>
 
-        <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
-          <div className="max-w-6xl mx-auto">
-            <Outlet />
-          </div>
-        </main>
-      </div>
+        <AppLayoutOutlet />
+      </AppLayoutContent>
+    </AppLayoutContainer>
+  );
+}
+
+////////////////////////////////
+/*    Component Prop Types    */
+////////////////////////////////
+
+type AppLayoutContainerProps = React.HTMLAttributes<HTMLDivElement>;
+type AppLayoutContentProps = React.HTMLAttributes<HTMLDivElement>;
+type AppLayoutHeaderProps = React.HTMLAttributes<HTMLHeadElement>;
+
+/////////////////////////////////////
+/*    Component Implementations    */
+/////////////////////////////////////
+
+function AppLayoutContainer({
+  children,
+  className,
+  ...props
+}: AppLayoutContainerProps) {
+  return (
+    <div className={cn("flex h-screen overflow-hidden", className)} {...props}>
+      {children}
     </div>
+  );
+}
+
+function AppLayoutContent({
+  children,
+  className,
+  ...props
+}: AppLayoutContentProps) {
+  return (
+    <div
+      className={cn("flex-1 flex flex-col overflow-hidden", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+function AppLayoutHeader({
+  children,
+  className,
+  ...props
+}: AppLayoutHeaderProps) {
+  return (
+    <header
+      className={cn(
+        "h-14 border-b bg-background flex items-center justify-between px-4",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </header>
+  );
+}
+
+function AppLayoutOutlet() {
+  return (
+    <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
+      <div className="max-w-6xl mx-auto">
+        <Outlet />
+      </div>
+    </main>
   );
 }

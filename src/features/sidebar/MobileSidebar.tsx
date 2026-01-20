@@ -1,40 +1,93 @@
-import { Button } from "../../components/ui/button";
-import { AppLogo } from "../../components/icons/AppLogo";
-import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Sidebar } from "./Sidebar";
-import type { SidebarSection } from "./sidebar.types";
+import { useMobileSidebarStore } from "./storeMobileSidebar";
+import { cn } from "@/utils/cn";
+import type {
+  MobileSidebarContentProps,
+  MobileSidebarHeaderProps,
+  MobileSidebarOverlayProps,
+  MobileSidebarProps,
+  MobileSidebarTogglerProps,
+} from "./sidebar.types";
 
-interface MobileSidebarProps {
-  sections: SidebarSection[];
-  isOpen: boolean;
-  onClose: () => void;
-}
+export function MobileSidebar({ children, ...props }: MobileSidebarProps) {
+  const isOpen = useMobileSidebarStore((state) => state.isOpen);
 
-export function MobileSidebar({
-  sections,
-  isOpen,
-  onClose,
-}: MobileSidebarProps) {
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 w-72 border-r bg-background transform transition-transform duration-300 ease-in-out lg:hidden ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
+      className={cn(
+        "fixed inset-y-0 left-0 z-50 w-72 border-r bg-background transform transition-transform duration-300 ease-in-out",
+        isOpen ? "translate-x-0" : "-translate-x-full",
+      )}
+      {...props}
     >
-      <div className="flex items-center justify-between p-4 border-b">
-        <AppLogo />
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onClose}
-          className="lg:hidden"
-        >
-          <X size={20} />
-        </Button>
-      </div>
-
-      {/* Sidebar Navigation */}
-      <Sidebar sections={sections} onItemClick={onClose} />
+      {children}
     </aside>
+  );
+}
+
+export function MobileSidebarHeader({
+  children,
+  className,
+  ...props
+}: MobileSidebarHeaderProps) {
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-between p-4 border-b",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function MobileSidebarContent({
+  sections,
+  className,
+  ...props
+}: MobileSidebarContentProps) {
+  const close = useMobileSidebarStore((state) => state.close);
+  return (
+    <Sidebar
+      sections={sections}
+      className={className}
+      onClick={close}
+      {...props}
+    />
+  );
+}
+
+export function MobileSidebarToggler({
+  className,
+  ...props
+}: MobileSidebarTogglerProps) {
+  const toggle = useMobileSidebarStore((state) => state.toggle);
+  return (
+    <Button
+      className={className}
+      variant="ghost"
+      size="icon"
+      onClick={toggle}
+      {...props}
+    />
+  );
+}
+
+export function MobileSidebarOverlay({
+  className,
+  ...props
+}: MobileSidebarOverlayProps) {
+  const isOpen = useMobileSidebarStore((state) => state.isOpen);
+  const close = useMobileSidebarStore((state) => state.close);
+  if (!isOpen) return null;
+  return (
+    <div
+      className={cn("fixed inset-0 z-40 bg-black/50", className)}
+      onClick={close}
+      {...props}
+    />
   );
 }
