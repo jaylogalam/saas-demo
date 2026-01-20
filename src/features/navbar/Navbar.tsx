@@ -1,21 +1,9 @@
-import type { ReactElement, ReactNode } from "react";
 import { cn } from "@/utils/cn";
-
-type NavbarProps = {
-  children: React.ReactNode;
-  className?: string;
-};
-
-type NavbarLinkListProps = {
-  children: ReactElement<NavbarLinkItemProps>[];
-  className?: string;
-};
-
-type NavbarLinkItemProps = {
-  children: ReactNode;
-  to: string;
-  className?: string;
-};
+import type {
+  NavbarLinkItemProps,
+  NavbarLinkListProps,
+  NavbarProps,
+} from "./navbar.types";
 
 export function Navbar({ children, className }: NavbarProps) {
   return (
