@@ -1,15 +1,12 @@
-import { Skeleton } from "@/components/ui/skeleton";
-
 interface SubscriptionBadgeProps {
-  subscriptionName: string;
+  subscriptionName: string | null;
   isLoading?: boolean;
 }
 
 export function SubscriptionBadge({
   subscriptionName,
-  isLoading = false,
 }: SubscriptionBadgeProps) {
-  if (isLoading) return <Skeleton className={`h-5 w-16`} />;
+  if (!subscriptionName) return null;
 
   return (
     <span

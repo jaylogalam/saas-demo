@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { queryKeys } from "@/lib/queryKeys";
 import { useUserStore } from "@/store/userStore";
-import { formatSubscriptionInterval } from "../utils/formatSubscriptionInterval";
 import type { UserSubscription } from "../types";
+
+// TODO: Refactor as setting or custom hook and use it at shared hooks folder
 
 /**
  * Fetch the current user's subscription via email-based customer lookup
@@ -21,72 +22,24 @@ export function useUserSubscription() {
     data: userSubscription,
     status: userSubscriptionStatus,
     refetch: refetchUserSubscription,
-  } = useQuery({
+  } = useSuspenseQuery({
     queryKey: queryKeys.subscription.user(user?.id),
-    queryFn: async (): Promise<UserSubscription | null> => {
+    queryFn: async (): Promise<UserSubscription[] | null> => {
       if (!user?.email) return null;
 
-      // Get Stripe customer by email
-      const { data: customer } = await supabase
-        .from("stripe_customers")
-        .select("id")
-        .eq("email", user?.email)
-        .limit(1)
-        .single();
-      if (!customer) return null;
-
-      // Get Stripe subscription by customer id
-      const { data: subscription } = await supabase
-        .from("stripe_subscriptions")
+      // Get User Subscription
+      const email = user.email;
+      const { data } = await supabase
+        .from("user_subscriptions")
         .select("*")
-        .eq("customer", customer.id)
-        .in("status", ["active", "trialing"])
-        .order("created", { ascending: false })
-        .limit(1)
-        .single();
-      if (!subscription) return null;
+        .eq("customer_email", email)
+        .order("price", { ascending: false });
+      if (!data) return null;
 
-      // Get Stripe price item and product id
-      const productId = subscription.items.data[0].price.product;
-      const priceID = subscription.items.data[0].price.id;
-      if (!productId || !priceID) return null;
+      console.log(data);
 
-      // Get Stripe product details
-      const { data: product } = await supabase
-        .from("stripe_products")
-        .select("*")
-        .eq("id", productId)
-        .single();
-      if (!product) return null;
-
-      // Get Stripe price details
-      const { data: price } = await supabase
-        .from("stripe_prices")
-        .select("*")
-        .eq("id", priceID)
-        .single();
-      if (!price) return null;
-
-      // Return user subscription
-      return {
-        // Product details
-        name: product.name,
-        description: product.description,
-        features: product.metadata?.features,
-
-        // Price details
-        price: price.unit_amount,
-        currency: price.currency,
-        interval: formatSubscriptionInterval(price.recurring?.interval),
-
-        // Subscription details
-        id: subscription.id,
-        status: subscription.status,
-        currentPeriodEnd: subscription.current_period_end,
-        cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      } as UserSubscription;
+      return data as UserSubscription[];
     },
-    enabled: !!user?.email,
     staleTime: 1000 * 60 * 5,
   });
 
