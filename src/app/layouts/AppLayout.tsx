@@ -24,7 +24,6 @@ export function AppLayout() {
       ) : null}
 
       <DesktopSidebar />
-
       <MobileSidebar isOpen={mobileMenuOpen} onClose={closeMobileMenu} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -41,7 +40,7 @@ export function AppLayout() {
           <div className="hidden lg:block" />
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <SubscriptionBadge variant="compact" />
+            <SubscriptionBadge subscriptionName="Free" />
             <ProfileDropdown showNavItems={true} />
           </div>
         </header>

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PageHeader } from "@/components/layouts/PageHeader";
+import { PageHeader } from "@/app/layouts/PageHeader";
 import {
   useAdminUsers,
   useAdmin,

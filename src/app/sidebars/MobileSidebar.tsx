@@ -1,5 +1,5 @@
-import { Button } from "../ui/button";
-import { AppLogo } from "../icons/AppLogo";
+import { Button } from "../../components/ui/button";
+import { AppLogo } from "../../components/icons/AppLogo";
 import { X } from "lucide-react";
 import { Sidebar } from "./Sidebar";
 

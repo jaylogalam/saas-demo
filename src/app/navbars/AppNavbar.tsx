@@ -10,7 +10,7 @@ export function AppNavbar({ title = "Dashboard" }: AppNavbarProps) {
     <header className="h-16 border-b bg-background flex items-center justify-between px-6">
       <h1 className="text-lg font-semibold">{title}</h1>
       <div className="flex items-center gap-3">
-        <SubscriptionBadge variant="compact" />
+        <SubscriptionBadge subscriptionName="Free" />
         <ProfileDropdown />
       </div>
     </header>
