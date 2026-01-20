@@ -7,12 +7,14 @@ import {
   DesktopSidebar,
   DesktopSidebarContent,
   DesktopSidebarHeader,
+} from "@/features/sidebar/DesktopSidebar";
+import {
   MobileSidebar,
   MobileSidebarContent,
   MobileSidebarHeader,
   MobileSidebarOverlay,
   MobileSidebarToggler,
-} from "@/features/sidebar";
+} from "@/features/sidebar/MobileSidebar";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
 import { cn } from "@/utils/cn";

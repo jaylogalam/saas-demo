@@ -3,7 +3,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AppLogo } from "@/components/icons/AppLogo";
 import { ProfileDropdown } from "@/features/profile/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/features/subscription/components/SubscriptionBadge";
-import { Navbar, NavbarLinkItem, NavbarLinkList } from "@/features/navbar";
+import {
+  Navbar,
+  NavbarLinkItem,
+  NavbarLinkList,
+} from "@/features/navbar/Navbar";
 import { useUserStore } from "@/store/userStore";
 import { Link, Outlet } from "react-router-dom";
 import { Suspense } from "react";
