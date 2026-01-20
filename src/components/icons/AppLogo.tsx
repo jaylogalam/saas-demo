@@ -16,10 +16,12 @@ export function AppLogo({
   return (
     <Link
       to={to}
-      className="flex items-center gap-2 transition-opacity hover:opacity-90"
+      className="flex shrink-0 items-center gap-2 transition-opacity hover:opacity-90"
     >
       <img src="/logo.svg" alt="Logo" className={sizeClasses} />
-      <span className="text-xl font-bold tracking-tight">{name}</span>
+      <span className="text-xl font-bold tracking-tight whitespace-nowrap">
+        {name}
+      </span>
     </Link>
   );
 }
