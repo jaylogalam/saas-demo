@@ -1,12 +1,80 @@
-import { PublicNavbar } from "../navbars/PublicNavbar";
-import { Outlet } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AppLogo } from "@/components/icons/AppLogo";
+import { ProfileDropdown } from "@/features/profile/components/ProfileDropdown";
+import { SubscriptionBadge } from "@/features/subscription/components/SubscriptionBadge";
+import { Navbar, NavbarLinkItem, NavbarLinkList } from "@/features/navbar";
+import { useUserStore } from "@/store/userStore";
+import { Link, Outlet } from "react-router-dom";
+import { Suspense } from "react";
 
-// Layout with public navbar (shows for all users on landing page)
+///////////////////////////////////////
+/*        Exported Component         */
+///////////////////////////////////////
+
 export function PublicLayout() {
+  const user = useUserStore((state) => state.user);
+
+  return (
+    <PublicLayoutContainer>
+      <Navbar>
+        <AppLogo />
+
+        <NavbarLinkList>
+          <NavbarLinkItem to="/pricing">Pricing</NavbarLinkItem>
+          <NavbarLinkItem to="/about">About</NavbarLinkItem>
+        </NavbarLinkList>
+
+        <Suspense fallback={<Skeleton className="h-9 w-9" />}>
+          {user ? <PublicNavbarProfile /> : <PublicNavbarAuthLinks />}
+        </Suspense>
+      </Navbar>
+      <Outlet />
+    </PublicLayoutContainer>
+  );
+}
+
+///////////////////////////////////////
+/*          Component Props          */
+///////////////////////////////////////
+
+type PublicLayoutContainerProps = {
+  children: React.ReactNode;
+};
+
+///////////////////////////////////////
+/*     Component Implementations     */
+///////////////////////////////////////
+
+export function PublicLayoutContainer({
+  children,
+}: PublicLayoutContainerProps) {
   return (
     <>
-      <PublicNavbar />
+      {children}
       <Outlet />
+    </>
+  );
+}
+
+function PublicNavbarProfile() {
+  return (
+    <div className="flex items-center gap-4">
+      <SubscriptionBadge subscriptionName="Free" />
+      <ProfileDropdown />
+    </div>
+  );
+}
+
+function PublicNavbarAuthLinks() {
+  return (
+    <>
+      <Button variant="ghost" asChild>
+        <Link to="/login">Log in</Link>
+      </Button>
+      <Button asChild>
+        <Link to="/signup">Get Started</Link>
+      </Button>
     </>
   );
 }

@@ -57,8 +57,6 @@ function AppDesktopLayout() {
             <ProfileDropdown showNavItems={true} />
           </div>
         </AppLayoutHeader>
-
-        <AppLayoutOutlet />
       </AppLayoutContent>
     </AppLayoutContainer>
   );
@@ -131,21 +129,6 @@ function AppLayoutContainer({
   );
 }
 
-function AppLayoutContent({
-  children,
-  className,
-  ...props
-}: AppLayoutContentProps) {
-  return (
-    <div
-      className={cn("flex-1 flex flex-col overflow-hidden", className)}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-
 function AppLayoutHeader({
   children,
   className,
@@ -161,6 +144,21 @@ function AppLayoutHeader({
     >
       {children}
     </header>
+  );
+}
+
+function AppLayoutContent({
+  children,
+  className,
+  ...props
+}: AppLayoutContentProps) {
+  return (
+    <div
+      className={cn("flex-1 flex flex-col overflow-hidden", className)}
+      {...props}
+    >
+      {children}
+    </div>
   );
 }
 
