@@ -13,5 +13,5 @@ export const useSidebar = () => {
             : [SidebarPlatformSection];
     }, [admin]);
 
-    return { sections };
+    return sections;
 };

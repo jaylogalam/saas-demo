@@ -1,18 +1,18 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
-import { useSidebar } from "@/hooks/useSidebar";
+import type { SidebarSection } from "./sidebar.types";
 
 interface SidebarProps {
+  sections: SidebarSection[];
   onItemClick?: () => void;
 }
 
-export function Sidebar({ onItemClick }: SidebarProps) {
+export function Sidebar({ sections, onItemClick }: SidebarProps) {
   const currentPath = location.pathname;
-  const { sections } = useSidebar();
 
   return (
     <nav className="flex-1 p-4 space-y-6 overflow-y-auto">
-      {sections.map((section) => (
+      {sections.map((section: any) => (
         <div key={section.title} className="space-y-2">
           <h4 className="px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             {section.title}

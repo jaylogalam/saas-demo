@@ -4,10 +4,27 @@ import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProfileDropdown } from "@/features/profile/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/features/subscription/components/SubscriptionBadge";
-import { DesktopSidebar } from "../sidebars/DesktopSidebar";
-import { MobileSidebar } from "../sidebars/MobileSidebar";
+import { DesktopSidebar } from "../../features/sidebar/DesktopSidebar";
+import { MobileSidebar } from "../../features/sidebar/MobileSidebar";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { useSidebar } from "@/hooks/useSidebar";
 
 export function AppLayout() {
+  const isMobile = useIsMobile();
+  const sections = useSidebar();
+
+  return isMobile ? <AppMobileLayout /> : <AppDesktopLayout />;
+}
+
+function AppDesktopLayout() {
+  return (
+    <div className="flex h-screen overflow-hidden">
+      <DesktopSidebar />
+    </div>
+  );
+}
+
+function AppMobileLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const closeMobileMenu = () => {
@@ -23,7 +40,6 @@ export function AppLayout() {
         />
       ) : null}
 
-      <DesktopSidebar />
       <MobileSidebar isOpen={mobileMenuOpen} onClose={closeMobileMenu} />
 
       <div className="flex-1 flex flex-col overflow-hidden">

@@ -2,13 +2,19 @@ import { Button } from "../../components/ui/button";
 import { AppLogo } from "../../components/icons/AppLogo";
 import { X } from "lucide-react";
 import { Sidebar } from "./Sidebar";
+import type { SidebarSection } from "./sidebar.types";
 
 interface MobileSidebarProps {
+  sections: SidebarSection[];
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
+export function MobileSidebar({
+  sections,
+  isOpen,
+  onClose,
+}: MobileSidebarProps) {
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-50 w-72 border-r bg-background transform transition-transform duration-300 ease-in-out lg:hidden ${
@@ -28,7 +34,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
       </div>
 
       {/* Sidebar Navigation */}
-      <Sidebar onItemClick={onClose} />
+      <Sidebar sections={sections} onItemClick={onClose} />
     </aside>
   );
 }
