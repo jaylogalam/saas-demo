@@ -13,10 +13,6 @@ import { Link, Outlet } from "react-router-dom";
 import { Suspense } from "react";
 import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
 
-///////////////////////////////////////
-/*        Exported Component         */
-///////////////////////////////////////
-
 export function PublicLayout() {
   const user = useSuspenseUser();
 
@@ -40,21 +36,7 @@ export function PublicLayout() {
   );
 }
 
-///////////////////////////////////////
-/*          Component Props          */
-///////////////////////////////////////
-
-type PublicLayoutContainerProps = {
-  children: React.ReactNode;
-};
-
-///////////////////////////////////////
-/*     Component Implementations     */
-///////////////////////////////////////
-
-export function PublicLayoutContainer({
-  children,
-}: PublicLayoutContainerProps) {
+export function PublicLayoutContainer({ children }: React.PropsWithChildren) {
   return <div>{children}</div>;
 }
 
