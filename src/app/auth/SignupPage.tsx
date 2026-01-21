@@ -1,17 +1,13 @@
 import { SignupForm } from "@/features/auth/components/SignupForm";
 import { AppLogo } from "@/components/icons/AppLogo";
-import { useUserStore } from "@/store/userStore";
+import { useSessionUser } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 
 export default function SignupPage() {
-  const { user, userLoading } = useUserStore();
+  const user = useSessionUser();
 
-  if (!userLoading && user) {
+  if (user) {
     return <Navigate to="/dashboard" replace />;
-  }
-
-  if (userLoading) {
-    return null; // Or a spinner
   }
 
   return (

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { useUserStore } from "@/store/userStore";
+import { useSessionUser } from "@/hooks/useAuth";
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 
@@ -8,7 +8,7 @@ const FIVE_MINUTES = 1000 * 60 * 5;
  * Hook: Check if current user is admin
  */
 export function useAdmin() {
-    const { user } = useUserStore();
+    const user = useSessionUser();
 
     const { data: admin, isLoading: adminLoading } = useQuery({
         queryKey: ["admin", "is-admin", user?.id],

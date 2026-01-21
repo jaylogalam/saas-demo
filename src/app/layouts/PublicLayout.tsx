@@ -8,7 +8,7 @@ import {
   NavbarLinkItem,
   NavbarLinkList,
 } from "@/features/navbar/Navbar";
-import { useUserStore } from "@/store/userStore";
+import { useSuspenseSessionUser } from "@/hooks/useAuth";
 import { Link, Outlet } from "react-router-dom";
 import { Suspense } from "react";
 import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
@@ -18,7 +18,7 @@ import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
 ///////////////////////////////////////
 
 export function PublicLayout() {
-  const user = useUserStore((state) => state.user);
+  const user = useSuspenseSessionUser();
 
   return (
     <PublicLayoutContainer>

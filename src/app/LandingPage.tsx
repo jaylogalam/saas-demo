@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useUserStore } from "@/store/userStore";
+import { useSuspenseSessionUser } from "@/hooks/useAuth";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 
 const LandingPage = () => {
-  const { user, userLoading } = useUserStore();
+  const user = useSuspenseSessionUser();
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
@@ -15,16 +16,7 @@ const LandingPage = () => {
       </div>
 
       <div className="container mx-auto px-6 py-20 text-center">
-        {userLoading ? (
-          <div className="flex flex-col items-center">
-            <Skeleton className="h-20 w-3/4 max-w-2xl mb-6 rounded-lg" />
-            <Skeleton className="h-8 w-1/2 max-w-lg mb-10 rounded-md" />
-            <div className="flex gap-4">
-              <Skeleton className="h-11 w-40 rounded-md" />
-              <Skeleton className="h-11 w-40 rounded-md" />
-            </div>
-          </div>
-        ) : (
+        <Suspense fallback={<LandingPageSkeleton />}>
           <>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 max-w-3xl mx-auto leading-tight">
               Build something{" "}
@@ -55,10 +47,23 @@ const LandingPage = () => {
               </Button>
             </div>
           </>
-        )}
+        </Suspense>
       </div>
     </div>
   );
 };
+
+function LandingPageSkeleton() {
+  return (
+    <div className="flex flex-col items-center">
+      <Skeleton className="h-20 w-3/4 max-w-2xl mb-6 rounded-lg" />
+      <Skeleton className="h-8 w-1/2 max-w-lg mb-10 rounded-md" />
+      <div className="flex gap-4">
+        <Skeleton className="h-11 w-40 rounded-md" />
+        <Skeleton className="h-11 w-40 rounded-md" />
+      </div>
+    </div>
+  );
+}
 
 export default LandingPage;

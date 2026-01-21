@@ -39,7 +39,7 @@ export function AppLayout() {
 function AppDesktopLayout() {
   const sections = useSidebar();
   const { data: userSubscription } = useSuspenseUserSubscription();
-  const subscriptionName = userSubscription && userSubscription[0].name;
+  const subscriptionName = userSubscription && userSubscription[0]?.name;
 
   return (
     <AppLayoutContainer>
@@ -74,7 +74,7 @@ function AppDesktopLayout() {
 function AppMobileLayout() {
   const sections = useSidebar();
   const { data: userSubscription } = useSuspenseUserSubscription();
-  const subscriptionName = userSubscription && userSubscription[0].name;
+  const subscriptionName = userSubscription && userSubscription[0]?.name;
 
   return (
     <AppLayoutContainer>
