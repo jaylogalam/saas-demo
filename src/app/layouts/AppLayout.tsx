@@ -17,7 +17,6 @@ import {
 } from "@/features/sidebar/MobileSidebar";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
-import { cn } from "@/utils/cn";
 import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
 
 ///////////////////////////////////////
