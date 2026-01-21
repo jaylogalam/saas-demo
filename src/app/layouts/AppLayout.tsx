@@ -62,6 +62,8 @@ function AppDesktopLayout() {
             <ProfileDropdown showNavItems={true} />
           </div>
         </AppLayoutHeader>
+
+        <AppLayoutOutlet />
       </AppLayoutContent>
     </AppLayoutContainer>
   );
