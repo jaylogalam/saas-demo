@@ -3,6 +3,7 @@ import {
   CreditCard,
   FolderOpen,
   LayoutDashboard,
+  Palette,
   Users,
 } from "lucide-react";
 
@@ -28,5 +29,6 @@ export const SidebarAdminSection = {
       label: "Subscriptions",
       href: "/admin/subscriptions",
     },
+    { icon: Palette, label: "Test UI", href: "/admin/test-ui" },
   ],
 };

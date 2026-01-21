@@ -25,6 +25,7 @@ const AdminUsersPage = lazy(() => import("@/app/admin/AdminUsersPage"));
 const AdminSubscriptionsPage = lazy(
   () => import("@/app/admin/AdminSubscriptionsPage"),
 );
+const TestUIPage = lazy(() => import("@/app/admin/TestUIPage"));
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
             path="/admin/subscriptions"
             element={<AdminSubscriptionsPage />}
           />
+          <Route path="/admin/test-ui" element={<TestUIPage />} />
         </Route>
 
         {/* Routes WITHOUT Navbar (Auth pages) */}
