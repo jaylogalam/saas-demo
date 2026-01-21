@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { PageHeader } from "@/app/layouts/PageHeader";
+import { PageHeader } from "@/components/PageHeader";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import type { AdminUserView } from "@/types/auth.types";
 import { useAdminUserList } from "@/hooks/auth/admin/useUserList";
