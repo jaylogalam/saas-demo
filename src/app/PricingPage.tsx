@@ -5,13 +5,13 @@ import {
 import { useSubscriptionPlans } from "@/features/subscription/hooks";
 import { useSubscriptionStore } from "@/features/subscription/store/subscriptionStore";
 import { BillingToggle } from "@/features/subscription/components/BillingToggle";
-import { useUserSubscription } from "@/features/subscription/hooks";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 
 export default function PricingPage() {
   const { billingInterval } = useSubscriptionStore();
 
   const { subscriptionPlans, subscriptionPlansStatus } = useSubscriptionPlans();
-  const { userSubscriptionStatus } = useUserSubscription();
+  const { status: userSubscriptionStatus } = useUserSubscription();
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">

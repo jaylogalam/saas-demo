@@ -22,7 +22,7 @@ import type {
   BillingInterval,
 } from "@/features/subscription/types/subscription.types";
 import { useCheckout } from "@/features/subscription/hooks";
-import { useUserSubscription } from "@/features/subscription/hooks";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { Skeleton } from "../../../components/ui/skeleton";
 import { PlanChangeModal } from "./PlanChangeModal";
 import { formatSubscriptionPrice } from "../utils/formatSubscriptionPrice";
@@ -43,7 +43,9 @@ interface PricingCardProps {
 
 export function PricingCard({ plan, billingInterval }: PricingCardProps) {
   // Store and hooks
-  const { userSubscription, refetchUserSubscription } = useUserSubscription();
+  const { data: userSubscriptions, refetch: refetchUserSubscription } =
+    useUserSubscription();
+  const userSubscription = userSubscriptions?.[0];
 
   // Modal state
   const [showPlanChangeModal, setShowPlanChangeModal] = useState(false);

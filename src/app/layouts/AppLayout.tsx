@@ -18,7 +18,7 @@ import {
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
 import { cn } from "@/utils/cn";
-import { useUserSubscription } from "@/features/subscription/hooks";
+import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
 
 ///////////////////////////////////////
 /*        Exported Component         */
@@ -38,7 +38,7 @@ export function AppLayout() {
 
 function AppDesktopLayout() {
   const sections = useSidebar();
-  const { userSubscription } = useUserSubscription();
+  const { data: userSubscription } = useSuspenseUserSubscription();
   const subscriptionName = userSubscription && userSubscription[0].name;
 
   return (
@@ -73,7 +73,7 @@ function AppDesktopLayout() {
 
 function AppMobileLayout() {
   const sections = useSidebar();
-  const { userSubscription } = useUserSubscription();
+  const { data: userSubscription } = useSuspenseUserSubscription();
   const subscriptionName = userSubscription && userSubscription[0].name;
 
   return (

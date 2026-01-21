@@ -11,7 +11,7 @@ import {
 import { useUserStore } from "@/store/userStore";
 import { Link, Outlet } from "react-router-dom";
 import { Suspense } from "react";
-import { useUserSubscription } from "@/features/subscription/hooks";
+import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
 
 ///////////////////////////////////////
 /*        Exported Component         */
@@ -63,8 +63,8 @@ export function PublicLayoutContainer({
 }
 
 function PublicNavbarProfile() {
-  const { userSubscription } = useUserSubscription();
-  const subscriptionName = userSubscription && userSubscription[0].name;
+  const { data: userSubscriptions } = useSuspenseUserSubscription();
+  const subscriptionName = userSubscriptions && userSubscriptions[0].name;
 
   return (
     <div className="flex items-center gap-4">

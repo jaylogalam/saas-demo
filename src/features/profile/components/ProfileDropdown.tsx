@@ -10,13 +10,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUserSubscription } from "@/features/subscription/hooks";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { useUserStore } from "@/store/userStore";
 import { useSignOut } from "@/features/auth/hooks";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
-  const { userSubscription } = useUserSubscription();
+  const { data: userSubscriptions } = useUserSubscription();
+  const userSubscription = userSubscriptions?.[0];
   const { user } = useUserStore();
   const isSubscribed = !!userSubscription;
   const { handleLogout } = useSignOut();

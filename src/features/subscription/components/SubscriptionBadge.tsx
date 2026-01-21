@@ -1,6 +1,5 @@
 interface SubscriptionBadgeProps {
   subscriptionName: string | null;
-  isLoading?: boolean;
 }
 
 export function SubscriptionBadge({

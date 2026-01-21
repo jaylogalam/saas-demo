@@ -5,7 +5,7 @@ import type {
   BillingInterval,
   SubscriptionPlan,
 } from "@/features/subscription/types/subscription.types";
-import { useUserSubscription } from "./useUserSubscription";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { toast } from "sonner";
 
 /**
@@ -17,7 +17,8 @@ export function useCheckout() {
   const { user } = useUserStore();
 
   // Hooks
-  const { userSubscription } = useUserSubscription();
+  const { data: userSubscriptions } = useUserSubscription();
+  const userSubscription = userSubscriptions?.[0];
 
   const handleCheckout = (
     plan: SubscriptionPlan,
