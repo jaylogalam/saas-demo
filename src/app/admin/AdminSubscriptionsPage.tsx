@@ -18,8 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/app/layouts/PageHeader";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import type { AdminUserView } from "@/types/auth.types";
-import { useAdminUserList } from "@/hooks/useUserList";
-import { useSuspenseAdmin } from "@/hooks/useAuth";
+import { useAdminUserList } from "@/hooks/auth/admin/useUserList";
+import { useSuspenseAdmin } from "@/hooks/auth/useAdmin";
 
 // ============================================================================
 // Status Badge Configuration

@@ -1,16 +1,16 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { useSessionUser, useSuspenseSessionUser } from "@/hooks/useAuth";
+import { useSuspenseUser, useUser } from "@/hooks/auth/useUser";
 import { useUserSubscriptionQueryOptions } from "@/features/subscription/hooks/useUserSubscription";
 
 export const useUserSubscription = () => {
-    const user = useSessionUser();
+    const user = useUser();
     return useQuery(
         useUserSubscriptionQueryOptions(user?.email || ""),
     );
 };
 
 export const useSuspenseUserSubscription = () => {
-    const user = useSuspenseSessionUser();
+    const user = useSuspenseUser();
     return useSuspenseQuery(
         useUserSubscriptionQueryOptions(user?.email || ""),
     );

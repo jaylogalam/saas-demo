@@ -1,10 +1,10 @@
 import { SignupForm } from "@/features/auth/components/SignupForm";
 import { AppLogo } from "@/components/icons/AppLogo";
-import { useSessionUser } from "@/hooks/useAuth";
+import { useUser } from "@/hooks/auth/useUser";
 import { Navigate } from "react-router-dom";
 
 export default function SignupPage() {
-  const user = useSessionUser();
+  const user = useUser();
 
   if (user) {
     return <Navigate to="/dashboard" replace />;

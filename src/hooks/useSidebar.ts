@@ -2,7 +2,7 @@ import {
     SidebarAdminSection,
     SidebarPlatformSection,
 } from "@/app/constants/sidebar.const";
-import { useSuspenseAdmin } from "@/hooks/useAuth";
+import { useSuspenseAdmin } from "@/hooks/auth/useAdmin";
 import { useMemo } from "react";
 
 export const useSidebar = () => {

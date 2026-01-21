@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSuspenseSessionUser } from "@/hooks/useAuth";
+import { useSuspenseUser } from "@/hooks/auth/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 
 const LandingPage = () => {
-  const user = useSuspenseSessionUser();
+  const user = useSuspenseUser();
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">

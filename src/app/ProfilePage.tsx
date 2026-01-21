@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useSuspenseSessionUser } from "@/hooks/useAuth";
+import { useSuspenseUser } from "@/hooks/auth/useUser";
 import { useUpdateDisplayName } from "@/features/profile/hooks/useUpdateProfile";
 import { formatDate } from "@/utils/formatDate";
 import { PageHeader } from "@/app/layouts/PageHeader";
@@ -38,7 +38,7 @@ function ProfileSkeleton() {
 }
 
 const ProfilePage = () => {
-  const user = useSuspenseSessionUser();
+  const user = useSuspenseUser();
   const updateDisplayName = useUpdateDisplayName();
 
   const [isEditingName, setIsEditingName] = useState(false);

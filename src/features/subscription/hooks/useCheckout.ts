@@ -1,5 +1,5 @@
 import { useSubscriptionStore } from "@/features/subscription/store/subscriptionStore";
-import { useSessionUser } from "@/hooks/useAuth";
+import { useUser } from "@/hooks/auth/useUser";
 import { redirect } from "react-router-dom";
 import type {
   BillingInterval,
@@ -14,7 +14,7 @@ import { toast } from "sonner";
 export function useCheckout() {
   // State
   const { billingInterval } = useSubscriptionStore();
-  const user = useSessionUser();
+  const user = useUser();
 
   // Hooks
   const { data: userSubscriptions } = useUserSubscription();

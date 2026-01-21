@@ -9,10 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PageHeader } from "@/app/layouts/PageHeader";
-import { useAdminUserList } from "@/hooks/useUserList";
 import { formatDate } from "@/utils/formatDate";
 import type { AdminUserView } from "@/types/auth.types";
-import { useSuspenseAdmin } from "@/hooks/useAuth";
+import { useAdminUserList } from "@/hooks/auth/admin/useUserList";
+import { useSuspenseAdmin } from "@/hooks/auth/useAdmin";
 
 // ============================================================================
 // Loading Skeleton

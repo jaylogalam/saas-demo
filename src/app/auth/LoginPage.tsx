@@ -1,10 +1,10 @@
 import { LoginForm } from "@/features/auth/components/LoginForm";
 import { AppLogo } from "@/components/icons/AppLogo";
-import { useSessionUser } from "@/hooks/useAuth";
+import { useUser } from "@/hooks/auth/useUser";
 import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const user = useSessionUser();
+  const user = useUser();
 
   if (user) {
     return <Navigate to="/dashboard" replace />;
