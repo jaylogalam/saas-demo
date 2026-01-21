@@ -8,7 +8,6 @@ export const useSessionQueryOptions = () => {
         queryKey: queryKeys.auth.session(),
         queryFn: async (): Promise<Session | null> => {
             const { data } = await supabase.auth.getSession();
-            if (!data.session) return null;
             return data.session;
         },
         staleTime: 1000 * 60 * 5, // 5 minutes
