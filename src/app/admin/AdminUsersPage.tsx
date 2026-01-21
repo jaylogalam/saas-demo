@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PageHeader } from "@/components/page";
+import { Page, PageHeader } from "@/components/ui/page";
 import { formatDate } from "@/utils/formatDate";
 import type { AdminUserView } from "@/types/auth.types";
 import { useAdminUserList } from "@/hooks/auth/admin/useUserList";
@@ -21,6 +21,55 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+// ============================================================================
+// Main Export
+// ============================================================================
+
+const AdminUsersPage = () => {
+  const admin = useSuspenseAdmin();
+  const { data: users } = useAdminUserList();
+
+  if (!admin) return <Navigate to="/dashboard" replace />;
+
+  // Deduplicate users (a user may appear multiple times if they have multiple subscriptions)
+  const uniqueUsers = users
+    ? Array.from(new Map(users.map((u) => [u.user_id, u])).values())
+    : [];
+  const userCount = uniqueUsers.length;
+
+  return (
+    <Suspense fallback={<AdminSkeleton />}>
+      <Page variant="admin">
+        <PageHeader title="App Users" description="View all registered users" />
+
+        {/* Stats Card */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>Total Users</CardDescription>
+            <CardTitle className="text-3xl">{userCount}</CardTitle>
+          </CardHeader>
+        </Card>
+
+        {/* Users Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="size-5" />
+              All Users
+            </CardTitle>
+            <CardDescription>
+              All registered users in your application
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <UsersTable users={uniqueUsers} />
+          </CardContent>
+        </Card>
+      </Page>
+    </Suspense>
+  );
+};
 
 // ============================================================================
 // Loading Skeleton
@@ -47,29 +96,6 @@ function AdminSkeleton() {
         </CardContent>
       </Card>
     </div>
-  );
-}
-
-// ============================================================================
-// User Row Component
-// ============================================================================
-
-interface UserRowProps {
-  user: AdminUserView;
-}
-
-function UserRow({ user }: UserRowProps) {
-  return (
-    <TableRow>
-      <TableCell>
-        <p className="text-white font-medium">{user.full_name || "—"}</p>
-        <p>{user.email}</p>
-      </TableCell>
-      <TableCell>{formatDate(user.joined_at)}</TableCell>
-      <TableCell className="font-mono text-xs">
-        {user.user_id.slice(0, 8)}...
-      </TableCell>
-    </TableRow>
   );
 }
 
@@ -115,62 +141,26 @@ function UsersTable({ users }: UsersTableProps) {
 }
 
 // ============================================================================
-// Admin Users Page Content
+// User Row Component
 // ============================================================================
 
-function AdminUsersPageContent() {
-  const admin = useSuspenseAdmin();
-  const { data: users } = useAdminUserList();
-
-  if (!admin) return <Navigate to="/dashboard" replace />;
-
-  // Deduplicate users (a user may appear multiple times if they have multiple subscriptions)
-  const uniqueUsers = users
-    ? Array.from(new Map(users.map((u) => [u.user_id, u])).values())
-    : [];
-  const userCount = uniqueUsers.length;
-
-  return (
-    <div className="space-y-6">
-      <PageHeader title="App Users" description="View all registered users" />
-
-      {/* Stats Card */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Total Users</CardDescription>
-          <CardTitle className="text-3xl">{userCount}</CardTitle>
-        </CardHeader>
-      </Card>
-
-      {/* Users Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="size-5" />
-            All Users
-          </CardTitle>
-          <CardDescription>
-            All registered users in your application
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-0">
-          <UsersTable users={uniqueUsers} />
-        </CardContent>
-      </Card>
-    </div>
-  );
+interface UserRowProps {
+  user: AdminUserView;
 }
 
-// ============================================================================
-// Main Export
-// ============================================================================
-
-const AdminUsersPage = () => {
+function UserRow({ user }: UserRowProps) {
   return (
-    <Suspense fallback={<AdminSkeleton />}>
-      <AdminUsersPageContent />
-    </Suspense>
+    <TableRow>
+      <TableCell>
+        <p className="text-white font-medium">{user.full_name || "—"}</p>
+        <p>{user.email}</p>
+      </TableCell>
+      <TableCell>{formatDate(user.joined_at)}</TableCell>
+      <TableCell className="font-mono text-xs">
+        {user.user_id.slice(0, 8)}...
+      </TableCell>
+    </TableRow>
   );
-};
+}
 
 export default AdminUsersPage;

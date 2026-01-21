@@ -2,6 +2,7 @@ import { SignupForm } from "@/features/auth/components/SignupForm";
 import { AppLogo } from "@/components/icons/AppLogo";
 import { useUser } from "@/hooks/auth/useUser";
 import { Navigate } from "react-router-dom";
+import { Page } from "@/components/ui/page";
 
 export default function SignupPage() {
   const user = useUser();
@@ -11,7 +12,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="grid min-h-svh">
+    <Page variant="auth">
       <div className="flex flex-col gap-4 p-6 md:p-4 md:px-8">
         <div className="flex justify-center gap-2 md:justify-start">
           <AppLogo />
@@ -22,6 +23,6 @@ export default function SignupPage() {
           </div>
         </div>
       </div>
-    </div>
+    </Page>
   );
 }

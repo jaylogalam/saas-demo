@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PageHeader } from "@/components/page";
+import { PageHeader } from "@/components/ui/page";
 import { useSuspenseAdmin } from "@/hooks/auth/useAdmin";
 
 // ============================================================================

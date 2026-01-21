@@ -1,9 +1,10 @@
 import { ForgotPasswordForm } from "@/features/auth/components/ForgotPasswordForm";
 import { AppLogo } from "@/components/icons/AppLogo";
+import { Page } from "@/components/ui/page";
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="grid min-h-svh">
+    <Page variant="auth">
       <div className="flex flex-col gap-4 p-6 md:p-4 md:px-8">
         <div className="flex justify-center gap-2 md:justify-start">
           <AppLogo />
@@ -14,6 +15,6 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
       </div>
-    </div>
+    </Page>
   );
 }

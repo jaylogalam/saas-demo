@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { PageHeader } from "@/components/PageHeader";
+import { Page, PageHeader } from "@/components/ui/page";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import type { AdminUserView } from "@/types/auth.types";
 import { useAdminUserList } from "@/hooks/auth/admin/useUserList";
@@ -28,6 +28,81 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+// ============================================================================
+// Main Export
+// ============================================================================
+
+const AdminSubscriptionsPage = () => {
+  const admin = useSuspenseAdmin();
+  const { data: adminUserList } = useAdminUserList();
+
+  if (!admin) return <Navigate to="/dashboard" replace />;
+
+  const allUsers = adminUserList ?? [];
+  const subscribedCount = allUsers.filter((u) => u.subscription_status).length;
+  const activeCount = allUsers.filter(
+    (u) =>
+      u.subscription_status === "active" ||
+      u.subscription_status === "trialing",
+  ).length;
+
+  return (
+    <Suspense fallback={<AdminSkeleton />}>
+      <Page variant="admin">
+        <PageHeader
+          title="User Subscriptions"
+          description="View all subscription details"
+        />
+
+        {/* Stats Cards */}
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Total Subscriptions</CardDescription>
+              <CardTitle className="text-3xl">{subscribedCount}</CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Active / Trialing</CardDescription>
+              <CardTitle className="text-3xl">{activeCount}</CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Conversion Rate</CardDescription>
+              <CardTitle className="text-3xl">
+                {allUsers.length > 0
+                  ? Math.round((subscribedCount / allUsers.length) * 100)
+                  : 0}
+                %
+              </CardTitle>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* Subscriptions Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CreditCard className="size-5" />
+              All Subscriptions
+            </CardTitle>
+            <CardDescription>
+              Subscription details for all paying users
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <SubscriptionsTable users={allUsers} />
+          </CardContent>
+        </Card>
+      </Page>
+    </Suspense>
+  );
+};
+
+export default AdminSubscriptionsPage;
 
 // ============================================================================
 // Status Badge Configuration
@@ -93,50 +168,6 @@ function AdminSkeleton() {
 }
 
 // ============================================================================
-// Subscription Row Component
-// ============================================================================
-
-interface SubscriptionRowProps {
-  user: AdminUserView;
-}
-
-function SubscriptionRow({ user }: SubscriptionRowProps) {
-  const statusConfig = getStatusConfig(user.subscription_status);
-  if (!statusConfig) return null; // Skip users without subscriptions
-
-  const StatusIcon = statusConfig.icon;
-
-  return (
-    <TableRow variant="body">
-      <TableCell>
-        <p className="text-foreground font-medium">{user.full_name || "—"}</p>
-        <p>{user.email}</p>
-      </TableCell>
-      <TableCell>
-        <span className="font-medium">{user.product_name}</span>
-      </TableCell>
-      <TableCell>
-        <Badge className={statusConfig.color} variant="outline">
-          <StatusIcon className="mr-1 size-3" />
-          {statusConfig.label}
-        </Badge>
-      </TableCell>
-      <TableCell capitalize>{user.billing_interval || "—"}</TableCell>
-      <TableCell>
-        {user.current_period_start
-          ? formatUnixTimestamp(user.current_period_start)
-          : "—"}
-      </TableCell>
-      <TableCell>
-        {user.current_period_end
-          ? formatUnixTimestamp(user.current_period_end)
-          : "—"}
-      </TableCell>
-    </TableRow>
-  );
-}
-
-// ============================================================================
 // Subscriptions Table Component
 // ============================================================================
 
@@ -183,86 +214,45 @@ function SubscriptionsTable({ users }: SubscriptionsTableProps) {
 }
 
 // ============================================================================
-// Admin Subscriptions Page Content
+// Subscription Row Component
 // ============================================================================
 
-function AdminSubscriptionsPageContent() {
-  const admin = useSuspenseAdmin();
-  const { data: adminUserList } = useAdminUserList();
-
-  if (!admin) return <Navigate to="/dashboard" replace />;
-
-  const allUsers = adminUserList ?? [];
-  const subscribedCount = allUsers.filter((u) => u.subscription_status).length;
-  const activeCount = allUsers.filter(
-    (u) =>
-      u.subscription_status === "active" ||
-      u.subscription_status === "trialing",
-  ).length;
-
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        title="User Subscriptions"
-        description="View all subscription details"
-      />
-
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Total Subscriptions</CardDescription>
-            <CardTitle className="text-3xl">{subscribedCount}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Active / Trialing</CardDescription>
-            <CardTitle className="text-3xl">{activeCount}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Conversion Rate</CardDescription>
-            <CardTitle className="text-3xl">
-              {allUsers.length > 0
-                ? Math.round((subscribedCount / allUsers.length) * 100)
-                : 0}
-              %
-            </CardTitle>
-          </CardHeader>
-        </Card>
-      </div>
-
-      {/* Subscriptions Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="size-5" />
-            All Subscriptions
-          </CardTitle>
-          <CardDescription>
-            Subscription details for all paying users
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-0">
-          <SubscriptionsTable users={allUsers} />
-        </CardContent>
-      </Card>
-    </div>
-  );
+interface SubscriptionRowProps {
+  user: AdminUserView;
 }
 
-// ============================================================================
-// Main Export
-// ============================================================================
+function SubscriptionRow({ user }: SubscriptionRowProps) {
+  const statusConfig = getStatusConfig(user.subscription_status);
+  if (!statusConfig) return null; // Skip users without subscriptions
 
-const AdminSubscriptionsPage = () => {
+  const StatusIcon = statusConfig.icon;
+
   return (
-    <Suspense fallback={<AdminSkeleton />}>
-      <AdminSubscriptionsPageContent />
-    </Suspense>
+    <TableRow variant="body">
+      <TableCell>
+        <p className="text-foreground font-medium">{user.full_name || "—"}</p>
+        <p>{user.email}</p>
+      </TableCell>
+      <TableCell>
+        <span className="font-medium">{user.product_name}</span>
+      </TableCell>
+      <TableCell>
+        <Badge className={statusConfig.color} variant="outline">
+          <StatusIcon className="mr-1 size-3" />
+          {statusConfig.label}
+        </Badge>
+      </TableCell>
+      <TableCell capitalize>{user.billing_interval || "—"}</TableCell>
+      <TableCell>
+        {user.current_period_start
+          ? formatUnixTimestamp(user.current_period_start)
+          : "—"}
+      </TableCell>
+      <TableCell>
+        {user.current_period_end
+          ? formatUnixTimestamp(user.current_period_end)
+          : "—"}
+      </TableCell>
+    </TableRow>
   );
-};
-
-export default AdminSubscriptionsPage;
+}
