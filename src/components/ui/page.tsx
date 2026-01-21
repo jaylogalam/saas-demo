@@ -12,13 +12,14 @@ type PageHeaderProps = {
 const pageVariants = cva("", {
   variants: {
     variant: {
-      default: "",
-      admin: "space-y-6",
+      app: "flex-1 min-h-0 px-12 py-8 space-y-8 overflow-y-auto",
       auth: "grid min-h-svh",
+      public:
+        "place-items-center place-content-center min-h-[calc(100vh-5rem)]",
     },
   },
   defaultVariants: {
-    variant: "default",
+    variant: "app",
   },
 });
 

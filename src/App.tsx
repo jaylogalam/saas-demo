@@ -8,13 +8,13 @@ import { PublicLayout } from "@/app/layouts/PublicLayout";
 import { AppLayout } from "@/app/layouts/AppLayout";
 
 /* Lazy Loaded Pages */
-const LandingPage = lazy(() => import("@/app/LandingPage"));
+const LandingPage = lazy(() => import("@/app/public/LandingPage"));
 const LoginPage = lazy(() => import("@/app/auth/LoginPage"));
 const SignupPage = lazy(() => import("@/app/auth/SignupPage"));
 const ForgotPasswordPage = lazy(() => import("@/app/auth/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("@/app/auth/ResetPasswordPage"));
-const PricingPage = lazy(() => import("@/app/PricingPage"));
-const AboutPage = lazy(() => import("@/app/AboutPage"));
+const PricingPage = lazy(() => import("@/app/public/PricingPage"));
+const AboutPage = lazy(() => import("@/app/public/AboutPage"));
 const ProfilePage = lazy(() => import("@/app/ProfilePage"));
 const SettingsPage = lazy(() => import("@/app/SettingsPage"));
 const BillingPage = lazy(() => import("@/app/BillingPage"));

@@ -34,6 +34,7 @@ export function PublicLayout() {
           {user ? <PublicNavbarProfile /> : <PublicNavbarAuthLinks />}
         </Suspense>
       </Navbar>
+
       <Outlet />
     </PublicLayoutContainer>
   );
@@ -54,12 +55,7 @@ type PublicLayoutContainerProps = {
 export function PublicLayoutContainer({
   children,
 }: PublicLayoutContainerProps) {
-  return (
-    <>
-      {children}
-      <Outlet />
-    </>
-  );
+  return <div>{children}</div>;
 }
 
 function PublicNavbarProfile() {

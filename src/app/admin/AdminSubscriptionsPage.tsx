@@ -49,7 +49,7 @@ const AdminSubscriptionsPage = () => {
 
   return (
     <Suspense fallback={<AdminSkeleton />}>
-      <Page variant="admin">
+      <Page>
         <PageHeader
           title="User Subscriptions"
           description="View all subscription details"

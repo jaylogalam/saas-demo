@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
 import { formatUnixTimestamp } from "@/utils/formatDate";
-import { PageHeader } from "@/components/ui/page";
+import { Page, PageHeader } from "@/components/ui/page";
 import { EmptyState } from "@/components/EmptyState";
 import { Suspense } from "react";
 
@@ -97,7 +97,7 @@ const BillingPage = () => {
 
   if (!userSubscription) {
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <Page>
         <PageHeader
           title="Billing"
           description="Manage your subscription and billing information"
@@ -105,7 +105,7 @@ const BillingPage = () => {
         <Card>
           <NoSubscription />
         </Card>
-      </div>
+      </Page>
     );
   }
 
@@ -114,7 +114,7 @@ const BillingPage = () => {
 
   return (
     <Suspense fallback={<BillingSkeleton />}>
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <Page>
         <PageHeader
           title="Billing"
           description="Manage your subscription and billing information"
@@ -244,7 +244,7 @@ const BillingPage = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </Page>
     </Suspense>
   );
 };

@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useSuspenseUser } from "@/hooks/auth/useUser";
 import { useUpdateDisplayName } from "@/features/profile/hooks/useUpdateProfile";
 import { formatDate } from "@/utils/formatDate";
-import { PageHeader } from "@/components/ui/page";
+import { Page, PageHeader } from "@/components/ui/page";
 import { EmptyState } from "@/components/EmptyState";
 import { Check } from "lucide-react";
 
@@ -46,13 +46,13 @@ const ProfilePage = () => {
 
   if (!user?.id) {
     return (
-      <div className="mx-auto max-w-3xl">
+      <Page>
         <EmptyState
           icon={User}
           title="Not Signed In"
           description="Please sign in to view your profile."
         />
-      </div>
+      </Page>
     );
   }
 
@@ -83,7 +83,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <Page>
       <Suspense fallback={<ProfileSkeleton />}>
         <PageHeader
           title="Profile"
@@ -195,7 +195,7 @@ const ProfilePage = () => {
           </CardContent>
         </Card>
       </Suspense>
-    </div>
+    </Page>
   );
 };
 

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PageHeader } from "@/components/ui/page";
+import { Page, PageHeader } from "@/components/ui/page";
 import { useSuspenseAdmin } from "@/hooks/auth/useAdmin";
 
 // ============================================================================
@@ -39,7 +39,7 @@ function TestUIPageContent() {
   if (!admin) return <Navigate to="/dashboard" replace />;
 
   return (
-    <div className="space-y-6">
+    <Page>
       <PageHeader
         title="Test UI"
         description="A playground for testing UI components"
@@ -60,7 +60,7 @@ function TestUIPageContent() {
           </p>
         </CardContent>
       </Card>
-    </div>
+    </Page>
   );
 }
 

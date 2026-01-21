@@ -6,6 +6,7 @@ import { useSubscriptionPlans } from "@/features/subscription/hooks";
 import { useSubscriptionStore } from "@/features/subscription/store/subscriptionStore";
 import { BillingToggle } from "@/features/subscription/components/BillingToggle";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { Page } from "@/components/ui/page";
 
 export default function PricingPage() {
   const { billingInterval } = useSubscriptionStore();
@@ -14,9 +15,9 @@ export default function PricingPage() {
   const { status: userSubscriptionStatus } = useUserSubscription();
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <Page variant="public">
       {/* Header Section */}
-      <section className="relative overflow-hidden pt-20 pb-12">
+      <section className="relative w-full overflow-hidden pt-20 pb-12">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[400px] bg-primary/5 blur-[120px] rounded-full" />
 
         <div className="container mx-auto px-4 sm:px-6 relative z-10 text-center">
@@ -62,6 +63,6 @@ export default function PricingPage() {
           </div>
         )}
       </section>
-    </div>
+    </Page>
   );
 }

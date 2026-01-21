@@ -1,12 +1,14 @@
 import { Construction } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Page, PageHeader } from "@/components/ui/page";
 
 const ProjectsPage = () => {
   return (
-    <>
-      <p className="text-muted-foreground mb-8">
-        Manage all your projects in one place.
-      </p>
+    <Page>
+      <PageHeader
+        title="Projects"
+        description="Manage all your projects in one place."
+      />
 
       <Card className="border-dashed">
         <CardContent className="py-20 text-center">
@@ -22,7 +24,7 @@ const ProjectsPage = () => {
           </p>
         </CardContent>
       </Card>
-    </>
+    </Page>
   );
 };
 

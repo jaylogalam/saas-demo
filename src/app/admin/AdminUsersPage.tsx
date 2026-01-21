@@ -40,7 +40,7 @@ const AdminUsersPage = () => {
 
   return (
     <Suspense fallback={<AdminSkeleton />}>
-      <Page variant="admin">
+      <Page>
         <PageHeader title="App Users" description="View all registered users" />
 
         {/* Stats Card */}
@@ -62,9 +62,9 @@ const AdminUsersPage = () => {
               All registered users in your application
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-0">
-            <UsersTable users={uniqueUsers} />
-          </CardContent>
+          {/* <CardContent className="p-0"> */}
+          <UsersTable users={uniqueUsers} />
+          {/* </CardContent> */}
         </Card>
       </Page>
     </Suspense>

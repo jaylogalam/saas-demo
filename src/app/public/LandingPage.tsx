@@ -4,19 +4,20 @@ import { Button } from "@/components/ui/button";
 import { useSuspenseUser } from "@/hooks/auth/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
+import { Page } from "@/components/ui/page";
 
 const LandingPage = () => {
   const user = useSuspenseUser();
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-      {/* Background gradient */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/10 blur-[100px] rounded-full" />
-      </div>
+    <Suspense fallback={<LandingPageSkeleton />}>
+      <Page variant="public">
+        {/* Background gradient */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/10 blur-[100px] rounded-full" />
+        </div>
 
-      <div className="container mx-auto px-6 py-20 text-center">
-        <Suspense fallback={<LandingPageSkeleton />}>
+        <div className="container mx-auto px-6 py-20 text-center">
           <>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 max-w-3xl mx-auto leading-tight">
               Build something{" "}
@@ -47,9 +48,9 @@ const LandingPage = () => {
               </Button>
             </div>
           </>
-        </Suspense>
-      </div>
-    </div>
+        </div>
+      </Page>
+    </Suspense>
   );
 };
 

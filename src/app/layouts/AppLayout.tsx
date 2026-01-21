@@ -63,7 +63,7 @@ function AppDesktopLayout() {
           </div>
         </AppLayoutHeader>
 
-        <AppLayoutOutlet />
+        <Outlet />
       </AppLayoutContent>
     </AppLayoutContainer>
   );
@@ -108,7 +108,7 @@ function AppMobileLayout() {
           </div>
         </AppLayoutHeader>
 
-        <AppLayoutOutlet />
+        <Outlet />
       </AppLayoutContent>
     </AppLayoutContainer>
   );
@@ -126,57 +126,18 @@ type AppLayoutHeaderProps = React.HTMLAttributes<HTMLHeadElement>;
 /*    Component Implementations    */
 /////////////////////////////////////
 
-function AppLayoutContainer({
-  children,
-  className,
-  ...props
-}: AppLayoutContainerProps) {
-  return (
-    <div className={cn("flex h-screen overflow-hidden", className)} {...props}>
-      {children}
-    </div>
-  );
+function AppLayoutContainer({ children }: AppLayoutContainerProps) {
+  return <div className="flex h-screen overflow-hidden">{children}</div>;
 }
 
-function AppLayoutHeader({
-  children,
-  className,
-  ...props
-}: AppLayoutHeaderProps) {
+function AppLayoutHeader({ children }: AppLayoutHeaderProps) {
   return (
-    <header
-      className={cn(
-        "h-14 border-b bg-background flex items-center justify-between px-4",
-        className,
-      )}
-      {...props}
-    >
+    <header className="h-14 border-b bg-background flex items-center justify-between px-4">
       {children}
     </header>
   );
 }
 
-function AppLayoutContent({
-  children,
-  className,
-  ...props
-}: AppLayoutContentProps) {
-  return (
-    <div
-      className={cn("flex-1 flex flex-col overflow-hidden", className)}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-
-function AppLayoutOutlet() {
-  return (
-    <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
-      <div className="max-w-6xl mx-auto">
-        <Outlet />
-      </div>
-    </main>
-  );
+function AppLayoutContent({ children }: AppLayoutContentProps) {
+  return <div className="flex-1 flex flex-col overflow-hidden">{children}</div>;
 }

@@ -1,16 +1,17 @@
 import { Construction } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Page, PageHeader } from "@/components/ui/page";
 
 const DashboardPage = () => {
   return (
-    <>
-      <p className="text-muted-foreground mb-8">
-        Welcome back! Here's an overview of your account.
-      </p>
+    <Page>
+      <PageHeader
+        title="Dashboard"
+        description="Welcome back! Here's an overview of your account."
+      />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -43,8 +44,6 @@ const DashboardPage = () => {
         </Card>
       </div>
 
-      <Separator className="my-8" />
-
       {/* WIP Section */}
       <Card className="border-dashed">
         <CardContent className="py-16 text-center">
@@ -60,7 +59,7 @@ const DashboardPage = () => {
           </p>
         </CardContent>
       </Card>
-    </>
+    </Page>
   );
 };
 

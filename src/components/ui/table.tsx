@@ -39,7 +39,9 @@ const tableCellVariants = cva("p-4", {
 });
 
 export function Table({ className, ...props }: TableProps) {
-  return <table className={cn("w-full", className)} {...props} />;
+  return (
+    <table className={cn("w-full overflow-hidden", className)} {...props} />
+  );
 }
 
 export function TableHeader({ className, ...props }: TableHeaderProps) {
