@@ -1,14 +1,15 @@
 import { queryKeys } from "@/lib/queryKeys";
 import { queryOptions } from "@tanstack/react-query";
-import type { Session, SupabaseClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
+import type { Session } from "@supabase/supabase-js";
 
-export const useSessionQueryOptions = (supabaseClient: SupabaseClient) => {
+export const useSessionQueryOptions = () => {
     return queryOptions({
         queryKey: queryKeys.auth.session(),
         queryFn: async (): Promise<Session | null> => {
             const {
                 data: { session },
-            } = await supabaseClient.auth.getSession();
+            } = await supabase.auth.getSession();
             if (!session) return null;
             return session;
         },
