@@ -1,8 +1,8 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
-import type { User } from "@/types/user.types";
+import type { User } from "@/types/auth.types";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { useSessionQueryOptions } from "@/features/auth/hooks/useSession";
+import { useAdminQueryOptions } from "@/features/auth/hooks/useAdmin";
 
 /**
  * Transform Supabase User to our User type
@@ -22,7 +22,7 @@ function transformUser(user: SupabaseUser): User {
  * Hook to get the current user with loading state
  */
 export const useSessionUser = () => {
-    const { data: session } = useQuery(useSessionQueryOptions(supabase));
+    const { data: session } = useQuery(useSessionQueryOptions());
     if (!session?.user) return null;
     return transformUser(session.user);
 };
@@ -33,8 +33,20 @@ export const useSessionUser = () => {
  */
 export const useSuspenseSessionUser = () => {
     const { data: session } = useSuspenseQuery(
-        useSessionQueryOptions(supabase),
+        useSessionQueryOptions(),
     );
     if (!session?.user) return null;
     return transformUser(session.user);
+};
+
+export const useAdmin = () => {
+    const user = useSessionUser();
+    const { data } = useQuery(useAdminQueryOptions(user?.id || ""));
+    return data;
+};
+
+export const useSuspenseAdmin = () => {
+    const user = useSuspenseSessionUser();
+    const { data } = useSuspenseQuery(useAdminQueryOptions(user?.id || ""));
+    return data;
 };

@@ -2,11 +2,11 @@ import {
     SidebarAdminSection,
     SidebarPlatformSection,
 } from "@/app/constants/sidebar.const";
-import { useAdmin } from "@/features/auth/hooks/useAdmin";
+import { useSuspenseAdmin } from "@/hooks/useAuth";
 import { useMemo } from "react";
 
 export const useSidebar = () => {
-    const { admin } = useAdmin();
+    const admin = useSuspenseAdmin();
     const sections = useMemo(() => {
         return admin
             ? [SidebarPlatformSection, SidebarAdminSection]

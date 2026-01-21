@@ -9,12 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PageHeader } from "@/app/layouts/PageHeader";
-import {
-  useAdminUsers,
-  useAdmin,
-  type AdminUser,
-} from "@/features/auth/hooks/useAdmin";
+import { useAdminUserList } from "@/hooks/useUserList";
 import { formatDate } from "@/utils/formatDate";
+import type { AdminUserView } from "@/types/auth.types";
+import { useSuspenseAdmin } from "@/hooks/useAuth";
 
 // ============================================================================
 // Loading Skeleton
@@ -49,7 +47,7 @@ function AdminSkeleton() {
 // ============================================================================
 
 interface UserRowProps {
-  user: AdminUser;
+  user: AdminUserView;
 }
 
 function UserRow({ user }: UserRowProps) {
@@ -76,7 +74,7 @@ function UserRow({ user }: UserRowProps) {
 // ============================================================================
 
 interface UsersTableProps {
-  users: AdminUser[];
+  users: AdminUserView[];
 }
 
 function UsersTable({ users }: UsersTableProps) {
@@ -117,12 +115,10 @@ function UsersTable({ users }: UsersTableProps) {
 // ============================================================================
 
 function AdminUsersPageContent() {
-  const { admin, adminLoading } = useAdmin();
-  const { data: users, isLoading: isUsersLoading } = useAdminUsers();
+  const admin = useSuspenseAdmin();
+  const { data: users } = useAdminUserList();
 
-  if (adminLoading) return <AdminSkeleton />;
   if (!admin) return <Navigate to="/dashboard" replace />;
-  if (isUsersLoading) return <AdminSkeleton />;
 
   // Deduplicate users (a user may appear multiple times if they have multiple subscriptions)
   const uniqueUsers = users

@@ -7,11 +7,9 @@ export const useSessionQueryOptions = () => {
     return queryOptions({
         queryKey: queryKeys.auth.session(),
         queryFn: async (): Promise<Session | null> => {
-            const {
-                data: { session },
-            } = await supabase.auth.getSession();
-            if (!session) return null;
-            return session;
+            const { data } = await supabase.auth.getSession();
+            if (!data.session) return null;
+            return data.session;
         },
         staleTime: 1000 * 60 * 5, // 5 minutes
     });

@@ -16,12 +16,10 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/app/layouts/PageHeader";
-import {
-  useAdminUsers,
-  useAdmin,
-  type AdminUser,
-} from "@/features/auth/hooks/useAdmin";
 import { formatUnixTimestamp } from "@/utils/formatDate";
+import type { AdminUserView } from "@/types/auth.types";
+import { useAdminUserList } from "@/hooks/useUserList";
+import { useSuspenseAdmin } from "@/hooks/useAuth";
 
 // ============================================================================
 // Status Badge Configuration
@@ -91,7 +89,7 @@ function AdminSkeleton() {
 // ============================================================================
 
 interface SubscriptionRowProps {
-  user: AdminUser;
+  user: AdminUserView;
 }
 
 function SubscriptionRow({ user }: SubscriptionRowProps) {
@@ -139,7 +137,7 @@ function SubscriptionRow({ user }: SubscriptionRowProps) {
 // ============================================================================
 
 interface SubscriptionsTableProps {
-  users: AdminUser[];
+  users: AdminUserView[];
 }
 
 function SubscriptionsTable({ users }: SubscriptionsTableProps) {
@@ -189,14 +187,12 @@ function SubscriptionsTable({ users }: SubscriptionsTableProps) {
 // ============================================================================
 
 function AdminSubscriptionsPageContent() {
-  const { admin, adminLoading } = useAdmin();
-  const { data: users, isLoading: isUsersLoading } = useAdminUsers();
+  const admin = useSuspenseAdmin();
+  const { data: adminUserList } = useAdminUserList();
 
-  if (adminLoading) return <AdminSkeleton />;
   if (!admin) return <Navigate to="/dashboard" replace />;
-  if (isUsersLoading) return <AdminSkeleton />;
 
-  const allUsers = users ?? [];
+  const allUsers = adminUserList ?? [];
   const subscribedCount = allUsers.filter((u) => u.subscription_status).length;
   const activeCount = allUsers.filter(
     (u) =>
