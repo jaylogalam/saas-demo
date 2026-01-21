@@ -10,11 +10,11 @@ type TableCellProps = React.ComponentProps<"td">;
 type TableHeadProps = React.ComponentProps<"th">;
 type TableCellVariantProps = VariantProps<typeof tableCellVariants>;
 
-const tableRowVariants = cva("border-b", {
+const tableRowVariants = cva("", {
   variants: {
     variant: {
       header: "bg-muted/50",
-      body: "bg-transparent last:border-0 hover:bg-muted/30 transition-colors",
+      body: "bg-transparent hover:bg-muted/30 transition-colors",
     },
   },
   defaultVariants: {
@@ -43,7 +43,7 @@ export function Table({ className, ...props }: TableProps) {
 }
 
 export function TableHeader({ className, ...props }: TableHeaderProps) {
-  return <thead className={cn("", className)} {...props} />;
+  return <thead className={cn("border-0", className)} {...props} />;
 }
 
 export function TableHead({ className, ...props }: TableHeadProps) {

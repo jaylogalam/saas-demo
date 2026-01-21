@@ -27,7 +27,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/Table";
+} from "@/components/ui/table";
 
 // ============================================================================
 // Status Badge Configuration

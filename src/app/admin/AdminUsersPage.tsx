@@ -20,7 +20,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/Table";
+} from "@/components/ui/table";
 
 // ============================================================================
 // Loading Skeleton
@@ -62,7 +62,7 @@ function UserRow({ user }: UserRowProps) {
   return (
     <TableRow>
       <TableCell>
-        <p className="font-medium">{user.full_name || "—"}</p>
+        <p className="text-white font-medium">{user.full_name || "—"}</p>
         <p>{user.email}</p>
       </TableCell>
       <TableCell>{formatDate(user.joined_at)}</TableCell>
