@@ -6,6 +6,7 @@ import "./index.css";
 /* Layout Components */
 import { PublicLayout } from "@/app/layouts/PublicLayout";
 import { AppLayout } from "@/app/layouts/AppLayout";
+import { ProtectedRoute, GuestRoute } from "@/app/layouts/RouteGuards";
 
 /* Lazy Loaded Pages */
 const LandingPage = lazy(() => import("@/app/public/LandingPage"));
@@ -39,25 +40,31 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
         </Route>
 
-        {/* Dashboard pages (have their own sidebar/navbar) */}
-        <Route element={<AppLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/billing" element={<BillingPage />} />
-          <Route path="/admin/users" element={<AdminUsersPage />} />
-          <Route
-            path="/admin/subscriptions"
-            element={<AdminSubscriptionsPage />}
-          />
-          <Route path="/admin/test-ui" element={<TestUIPage />} />
+        {/* Protected: Dashboard pages (require auth) */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/billing" element={<BillingPage />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route
+              path="/admin/subscriptions"
+              element={<AdminSubscriptionsPage />}
+            />
+            <Route path="/admin/test-ui" element={<TestUIPage />} />
+          </Route>
         </Route>
 
-        {/* Routes WITHOUT Navbar (Auth pages) */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
+        {/* Guest only: Auth pages (redirect if logged in) */}
+        <Route element={<GuestRoute />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+        </Route>
+
+        {/* Password reset routes (accessible to all) */}
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
