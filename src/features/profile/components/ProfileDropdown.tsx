@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { useSessionUser } from "@/hooks/useAuth";
-import { useSignOut } from "@/features/auth/hooks";
+import { useSignOut } from "@/features/auth/components/hooks";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {

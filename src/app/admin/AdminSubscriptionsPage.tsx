@@ -20,7 +20,7 @@ import {
   useAdminUsers,
   useAdmin,
   type AdminUser,
-} from "@/features/admin/hooks";
+} from "@/features/auth/hooks/useAdmin";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 
 // ============================================================================

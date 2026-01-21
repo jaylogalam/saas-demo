@@ -9,7 +9,7 @@ import {
   useResetPasswordRequest,
   useVerifyOTP,
   useResendOTP,
-} from "@/features/auth/hooks";
+} from "@/features/auth/components/hooks";
 import { OTPVerificationCard } from "@/features/auth/components/OTPVerificationCard";
 import { ArrowLeft } from "lucide-react";
 

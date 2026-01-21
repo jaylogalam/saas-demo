@@ -13,7 +13,7 @@ import {
   useAdminUsers,
   useAdmin,
   type AdminUser,
-} from "@/features/admin/hooks";
+} from "@/features/auth/hooks/useAdmin";
 import { formatDate } from "@/utils/formatDate";
 
 // ============================================================================

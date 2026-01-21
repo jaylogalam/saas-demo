@@ -12,7 +12,10 @@ import {
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
-import { useSignIn, useSignInWithGoogle } from "@/features/auth/hooks";
+import {
+  useSignIn,
+  useSignInWithGoogle,
+} from "@/features/auth/components/hooks";
 
 export function LoginForm({
   className,

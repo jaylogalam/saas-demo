@@ -17,7 +17,7 @@ import {
   useSignInWithGoogle,
   useVerifyOTP,
   useResendOTP,
-} from "@/features/auth/hooks";
+} from "@/features/auth/components/hooks";
 import { OTPVerificationCard } from "@/features/auth/components/OTPVerificationCard";
 
 export function SignupForm({
