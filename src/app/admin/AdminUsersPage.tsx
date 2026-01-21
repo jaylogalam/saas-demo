@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PageHeader } from "@/components/PageHeader";
+import { PageHeader } from "@/components/page";
 import { formatDate } from "@/utils/formatDate";
 import type { AdminUserView } from "@/types/auth.types";
 import { useAdminUserList } from "@/hooks/auth/admin/useUserList";

@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
 import { formatUnixTimestamp } from "@/utils/formatDate";
-import { PageHeader } from "@/components/PageHeader";
+import { PageHeader } from "@/components/page";
 import { EmptyState } from "@/components/EmptyState";
 import { Suspense } from "react";
 

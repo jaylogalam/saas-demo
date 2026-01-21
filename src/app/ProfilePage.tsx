@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useSuspenseUser } from "@/hooks/auth/useUser";
 import { useUpdateDisplayName } from "@/features/profile/hooks/useUpdateProfile";
 import { formatDate } from "@/utils/formatDate";
-import { PageHeader } from "@/components/PageHeader";
+import { PageHeader } from "@/components/page";
 import { EmptyState } from "@/components/EmptyState";
 import { Check } from "lucide-react";
 
