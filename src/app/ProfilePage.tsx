@@ -1,5 +1,5 @@
 import { Suspense, useState } from "react";
-import { User, Calendar, Pencil, Loader2 } from "lucide-react";
+import { Calendar, Pencil, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,49 +18,21 @@ import { useSuspenseUser } from "@/hooks/auth/useUser";
 import { useUpdateDisplayName } from "@/features/profile/hooks/useUpdateProfile";
 import { formatDate } from "@/utils/formatDate";
 import { Page, PageHeader } from "@/components/ui/page";
-import { EmptyState } from "@/components/EmptyState";
 import { Check } from "lucide-react";
 
-// Loading skeleton
-function ProfileSkeleton() {
-  return (
-    <div className="space-y-6 animate-pulse">
-      <div className="flex items-center gap-6">
-        <div className="size-24 rounded-full bg-muted" />
-        <div className="space-y-2">
-          <div className="h-6 w-40 bg-muted rounded" />
-          <div className="h-4 w-56 bg-muted rounded" />
-        </div>
-      </div>
-      <div className="h-48 bg-muted rounded-xl" />
-    </div>
-  );
-}
-
-const ProfilePage = () => {
+function ProfilePage() {
   const user = useSuspenseUser();
+
   const updateDisplayName = useUpdateDisplayName();
 
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState("");
 
-  if (!user?.id) {
-    return (
-      <Page>
-        <EmptyState
-          icon={User}
-          title="Not Signed In"
-          description="Please sign in to view your profile."
-        />
-      </Page>
-    );
-  }
-
-  const email = user.email || "";
-  const name = user.name || "User";
-  const avatarUrl = user.avatarUrl || "";
-  const createdAt = user.createdAt;
-  const emailVerified = user.emailConfirmedAt !== null;
+  const email = user!.email || "";
+  const name = user!.name || "User";
+  const avatarUrl = user!.avatarUrl || "";
+  const createdAt = user!.createdAt;
+  const emailVerified = user!.emailConfirmedAt !== null;
 
   const initials = name
     .split(" ")
@@ -84,7 +56,7 @@ const ProfilePage = () => {
 
   return (
     <Page>
-      <Suspense fallback={<ProfileSkeleton />}>
+      <Suspense fallback={<ProfilePageSkeleton />}>
         <PageHeader
           title="Profile"
           description="Manage your account information"
@@ -197,6 +169,22 @@ const ProfilePage = () => {
       </Suspense>
     </Page>
   );
-};
+}
+
+// Loading skeleton
+function ProfilePageSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="flex items-center gap-6">
+        <div className="size-24 rounded-full bg-muted" />
+        <div className="space-y-2">
+          <div className="h-6 w-40 bg-muted rounded" />
+          <div className="h-4 w-56 bg-muted rounded" />
+        </div>
+      </div>
+      <div className="h-48 bg-muted rounded-xl" />
+    </div>
+  );
+}
 
 export default ProfilePage;
