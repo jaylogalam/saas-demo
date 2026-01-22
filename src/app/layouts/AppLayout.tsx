@@ -58,7 +58,7 @@ function AppDesktopLayout() {
 
           <div className="flex items-center gap-2 sm:gap-3">
             <SubscriptionBadge subscriptionName={subscriptionName} />
-            <ProfileDropdown showNavItems={true} />
+            <ProfileDropdown />
           </div>
         </AppLayoutHeader>
 
@@ -103,7 +103,7 @@ function AppMobileLayout() {
 
           <div className="flex items-center gap-2 sm:gap-3">
             <SubscriptionBadge subscriptionName={subscriptionName} />
-            <ProfileDropdown showNavItems={true} />
+            <ProfileDropdown />
           </div>
         </AppLayoutHeader>
 

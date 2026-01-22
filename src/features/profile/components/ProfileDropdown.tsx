@@ -9,41 +9,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
-import { useUser } from "@/hooks/auth/useUser";
-import { Skeleton } from "@/components/ui/skeleton";
-import { SignOutButton } from "@/features/auth/components/SignOutButton";
+import { SignOutButton } from "@/components/SignOutButton";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { useSuspenseUser } from "@/hooks/auth/useUser";
 
-export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
-  const { data: userSubscriptions } = useUserSubscription();
-  const userSubscription = userSubscriptions?.[0];
-  const user = useUser();
-  const isSubscribed = !!userSubscription;
+export function ProfileDropdown() {
+  const user = useSuspenseUser();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-full outline-none ring-ring focus-visible:ring-2 transition-all hover:opacity-80">
-          <Avatar
-            className={`size-9 cursor-pointer border-2 transition-all ${
-              isSubscribed
-                ? "border-primary/20 shadow-[0_0_12px_rgba(var(--primary),0.5)]"
-                : "border-transparent hover:border-primary/20"
-            }`}
-            style={
-              isSubscribed
-                ? { boxShadow: "0 0 14px hsl(var(--primary) / 0.4)" }
-                : undefined
-            }
-          >
-            <AvatarImage src={user?.avatarUrl} alt={user?.name || "User"} />
-            <AvatarFallback className="bg-primary text-primary-foreground font-medium">
-              <Skeleton className="h-8 w-8 rounded-full" />
-            </AvatarFallback>
-          </Avatar>
-        </button>
+        <Avatar className="size-9 cursor-pointer transition-all rounded-full overflow-hidden">
+          <AvatarImage src={user?.avatarUrl ?? ""} alt={user?.name ?? ""} />
+          <AvatarFallback className="bg-muted flex items-center justify-center size-full rounded-full">
+            <User className="size-5 text-muted-foreground" />
+          </AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent className="w-56" align="end" sideOffset={8}>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
@@ -56,34 +39,30 @@ export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {showNavItems && (
-          <>
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-pointer" asChild>
-                <Link to="/profile">
-                  <User className="mr-2 size-4" />
-                  <span>Profile</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer" asChild>
-                <Link to="/billing">
-                  <CreditCard className="mr-2 size-4" />
-                  <span>Billing</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer" asChild>
-                <Link to="/settings">
-                  <Settings className="mr-2 size-4" />
-                  <span>Settings</span>
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-          </>
-        )}
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link to="/profile">
+              <User className="mr-2 size-4" />
+              <span>Profile</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/billing">
+              <CreditCard className="mr-2 size-4" />
+              <span>Billing</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/settings">
+              <Settings className="mr-2 size-4" />
+              <span>Settings</span>
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
         <DropdownMenuItem>
           <SignOutButton>
-            <LogOut className="mr-4 size-4 text-destructive" />
+            <LogOut className="size-4" />
             <span>Log out</span>
           </SignOutButton>
         </DropdownMenuItem>

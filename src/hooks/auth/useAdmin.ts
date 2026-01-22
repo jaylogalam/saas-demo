@@ -1,5 +1,4 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-
 import { useAdminQueryOptions } from "@/features/auth/hooks/useAdmin";
 import { useSuspenseUser } from "./useUser";
 

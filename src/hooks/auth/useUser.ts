@@ -19,7 +19,7 @@ export const useSuspenseUser = () => {
 
 function transformUser(user: SupabaseUser): User {
     return {
-        id: user.id,
+        id: user.id ?? "",
         email: user.email ?? "",
         name: (user.user_metadata?.name as string) ?? "",
         avatarUrl: (user.user_metadata?.avatar_url as string) ?? "",
