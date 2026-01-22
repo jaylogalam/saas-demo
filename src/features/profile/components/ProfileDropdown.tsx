@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { useUser } from "@/hooks/auth/useUser";
-import { useSignOut } from "@/features/auth/components/hooks";
+import { useSignOut } from "@/features/auth/_hooks/useSignOut";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
@@ -20,7 +20,7 @@ export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
   const userSubscription = userSubscriptions?.[0];
   const user = useUser();
   const isSubscribed = !!userSubscription;
-  const { handleLogout } = useSignOut();
+  const { signOut } = useSignOut();
 
   return (
     <DropdownMenu>
@@ -85,7 +85,7 @@ export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
         <DropdownMenuItem
           className="cursor-pointer"
           variant="destructive"
-          onClick={() => handleLogout()}
+          onClick={signOut}
         >
           <LogOut className="mr-2 size-4" />
           <span>Log out</span>

@@ -12,13 +12,11 @@ import {
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
-import {
-  useSignUp,
-  useSignInWithGoogle,
-  useVerifyOTP,
-  useResendOTP,
-} from "@/features/auth/components/hooks";
-import { OTPVerificationCard } from "@/features/auth/components/OTPVerificationCard";
+import { useSignUp } from "../_hooks/useSignUp";
+import { OTPVerificationCard } from "../components/OTPVerificationCard";
+import { useSignInWithGoogle } from "../_hooks/useSignInWithGoogle";
+import { useOTPVerify } from "../_hooks/useOTPVerify";
+import { useOTPSend } from "../_hooks/useOTPSend";
 
 export function SignupForm({
   className,
@@ -31,40 +29,40 @@ export function SignupForm({
   const [validationError, setValidationError] = useState<string | null>(null);
 
   // Hooks
-  const { handleSignUp, signUpStatus, signUpError } = useSignUp();
-  const { handleGoogleSignIn, googleSignInStatus, googleSignInError } =
+  const { signUp, signUpStatus, signUpError } = useSignUp();
+  const { signInWithGoogle, signInWithGoogleStatus, signInWithGoogleError } =
     useSignInWithGoogle();
-  const { handleVerifyOTP, verifyOTPStatus, verifyOTPError } = useVerifyOTP();
-  const { handleResendOTP, resendOTPStatus, resendOTPError } = useResendOTP();
+  const { OTPVerify, OTPVerifyStatus, OTPVerifyError } = useOTPVerify();
+  const { OTPSend, OTPSendStatus, OTPSendError } = useOTPSend();
 
   // Form submission handler
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError(null);
-    handleSignUp(email, password, fullName);
+    signUp({ email, password, fullName });
   };
 
   const error =
     validationError ||
     signUpError?.message ||
-    googleSignInError?.message ||
-    verifyOTPError?.message ||
-    resendOTPError?.message;
+    signInWithGoogleError?.message ||
+    OTPVerifyError?.message ||
+    OTPSendError?.message;
 
   const isLoading =
-    signUpStatus === "pending" || googleSignInStatus === "pending";
+    signUpStatus === "pending" || signInWithGoogleStatus === "pending";
 
   // Show OTP verification card after successful signup
   if (signUpStatus === "success") {
     return (
       <OTPVerificationCard
         email={email}
-        onVerify={(token) => handleVerifyOTP({ email, token, type: "signup" })}
-        onResend={() => handleResendOTP({ email, type: "signup" })}
-        isVerifying={verifyOTPStatus === "pending"}
-        isResending={resendOTPStatus === "pending"}
-        error={verifyOTPError?.message}
-        resendSuccess={resendOTPStatus === "success"}
+        onVerify={(token) => OTPVerify({ email, token, type: "signup" })}
+        onResend={() => OTPSend({ email, type: "signup" })}
+        isVerifying={OTPVerifyStatus === "pending"}
+        isResending={OTPSendStatus === "pending"}
+        error={OTPVerifyError?.message}
+        resendSuccess={OTPSendStatus === "success"}
         className={className}
       />
     );
@@ -129,7 +127,7 @@ export function SignupForm({
           <Button
             variant="outline"
             type="button"
-            onClick={() => handleGoogleSignIn()}
+            onClick={signInWithGoogle}
             disabled={isLoading}
           >
             <GoogleIcon />

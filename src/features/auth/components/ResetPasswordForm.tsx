@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { useUpdatePassword } from "@/features/auth/components/hooks";
+import { usePasswordUpdate } from "@/features/auth/_hooks/usePasswordUpdate";
 import { CheckCircle } from "lucide-react";
 
 export function ResetPasswordForm({
@@ -23,8 +23,8 @@ export function ResetPasswordForm({
   const [validationError, setValidationError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const { handleUpdatePassword, updatePasswordStatus, updatePasswordError } =
-    useUpdatePassword();
+  const { passwordUpdate, passwordUpdateStatus, passwordUpdateError } =
+    usePasswordUpdate();
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,11 +35,11 @@ export function ResetPasswordForm({
       return;
     }
 
-    handleUpdatePassword(password);
+    passwordUpdate(password);
   };
 
   // Show success message after password is updated
-  if (updatePasswordStatus === "success") {
+  if (passwordUpdateStatus === "success") {
     return (
       <div className={cn("flex flex-col gap-6", className)}>
         <div className="flex flex-col items-center gap-4 text-center">
@@ -57,9 +57,9 @@ export function ResetPasswordForm({
     );
   }
 
-  const error = validationError || updatePasswordError?.message;
+  const error = validationError || passwordUpdateError?.message;
 
-  const isLoading = updatePasswordStatus === "pending";
+  const isLoading = passwordUpdateStatus === "pending";
 
   return (
     <form

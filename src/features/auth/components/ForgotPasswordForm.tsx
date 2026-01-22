@@ -5,11 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import {
-  useResetPasswordRequest,
-  useVerifyOTP,
-  useResendOTP,
-} from "@/features/auth/components/hooks";
+import { usePasswordReset } from "@/features/auth/_hooks/usePasswordReset";
+import { useOTPVerify } from "@/features/auth/_hooks/useOTPVerify";
+import { useOTPSend } from "@/features/auth/_hooks/useOTPSend";
 import { OTPVerificationCard } from "@/features/auth/components/OTPVerificationCard";
 import { ArrowLeft } from "lucide-react";
 
@@ -19,40 +17,35 @@ export function ForgotPasswordForm({
 }: React.ComponentProps<"form">) {
   const [email, setEmail] = useState("");
 
-  const {
-    handleResetPasswordRequest,
-    resetPasswordRequestStatus,
-    resetPasswordRequestError,
-  } = useResetPasswordRequest();
+  const { passwordReset, passwordResetStatus, passwordResetError } =
+    usePasswordReset();
 
-  const { handleVerifyOTP, verifyOTPStatus, verifyOTPError } = useVerifyOTP();
+  const { OTPVerify, OTPVerifyStatus, OTPVerifyError } = useOTPVerify();
 
-  const { handleResendOTP, resendOTPStatus, resendOTPError } = useResendOTP();
+  const { OTPSend, OTPSendStatus, OTPSendError } = useOTPSend();
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    handleResetPasswordRequest(email);
+    passwordReset(email);
   };
 
   // Show OTP verification card after email is sent
-  if (resetPasswordRequestStatus === "success") {
+  if (passwordResetStatus === "success") {
     return (
       <OTPVerificationCard
         email={email}
-        onVerify={(token) =>
-          handleVerifyOTP({ email, token, type: "recovery" })
-        }
-        onResend={() => handleResendOTP({ email, type: "recovery" })}
-        isVerifying={verifyOTPStatus === "pending"}
-        isResending={resendOTPStatus === "pending"}
-        error={verifyOTPError?.message || resendOTPError?.message}
-        resendSuccess={resendOTPStatus === "success"}
+        onVerify={(token) => OTPVerify({ email, token, type: "recovery" })}
+        onResend={() => OTPSend({ email, type: "recovery" })}
+        isVerifying={OTPVerifyStatus === "pending"}
+        isResending={OTPSendStatus === "pending"}
+        error={OTPVerifyError?.message || OTPSendError?.message}
+        resendSuccess={OTPSendStatus === "success"}
         className={className}
       />
     );
   }
 
-  const isLoading = resetPasswordRequestStatus === "pending";
+  const isLoading = passwordResetStatus === "pending";
 
   return (
     <form
@@ -68,8 +61,8 @@ export function ForgotPasswordForm({
             password.
           </p>
         </div>
-        {resetPasswordRequestError && (
-          <FormAlert type="error" message={resetPasswordRequestError.message} />
+        {passwordResetError && (
+          <FormAlert type="error" message={passwordResetError.message} />
         )}
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>

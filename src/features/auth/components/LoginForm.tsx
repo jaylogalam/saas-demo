@@ -12,10 +12,8 @@ import {
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
-import {
-  useSignIn,
-  useSignInWithGoogle,
-} from "@/features/auth/components/hooks";
+import { useSignInWithEmail } from "@/features/auth/_hooks/useSignInWithEmail";
+import { useSignInWithGoogle } from "@/features/auth/_hooks/useSignInWithGoogle";
 
 export function LoginForm({
   className,
@@ -23,18 +21,19 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { handleSignIn, signInStatus, signInError } = useSignIn();
-  const { handleGoogleSignIn, googleSignInStatus, googleSignInError } =
+  const { signInWithEmail, signInWithEmailStatus, signInWithEmailError } =
+    useSignInWithEmail();
+  const { signInWithGoogle, signInWithGoogleStatus, signInWithGoogleError } =
     useSignInWithGoogle();
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    handleSignIn(email, password);
+    signInWithEmail(email, password);
   };
 
-  const error = signInError?.message || googleSignInError?.message;
+  const error = signInWithEmailError?.message || signInWithGoogleError?.message;
   const isLoading =
-    signInStatus === "pending" || googleSignInStatus === "pending";
+    signInWithEmailStatus === "pending" || signInWithGoogleStatus === "pending";
 
   return (
     <form
@@ -90,7 +89,7 @@ export function LoginForm({
           <Button
             variant="outline"
             type="button"
-            onClick={() => handleGoogleSignIn()}
+            onClick={signInWithGoogle}
             disabled={isLoading}
           >
             <GoogleIcon />
