@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/utils/cn";
+import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -10,8 +11,7 @@ import {
 } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { usePasswordUpdate } from "@/features/auth/_hooks/usePasswordUpdate";
-import { CheckCircle } from "lucide-react";
+import { usePasswordUpdate } from "../_hooks/usePasswordUpdate";
 
 export function ResetPasswordForm({
   className,

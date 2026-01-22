@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/utils/cn";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { usePasswordReset } from "@/features/auth/_hooks/usePasswordReset";
-import { useOTPVerify } from "@/features/auth/_hooks/useOTPVerify";
-import { useOTPSend } from "@/features/auth/_hooks/useOTPSend";
-import { OTPVerificationCard } from "@/features/auth/components/OTPVerificationCard";
-import { ArrowLeft } from "lucide-react";
+import { usePasswordReset } from "../_hooks/usePasswordReset";
+import { useOTPVerify } from "../_hooks/useOTPVerify";
+import { useOTPSend } from "../_hooks/useOTPSend";
+import { OTPVerificationCard } from "../components/OTPVerificationCard";
 
 export function ForgotPasswordForm({
   className,

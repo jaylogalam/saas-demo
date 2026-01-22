@@ -12,8 +12,8 @@ import {
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
-import { useSignInWithEmail } from "@/features/auth/_hooks/useSignInWithEmail";
-import { useSignInWithGoogle } from "@/features/auth/_hooks/useSignInWithGoogle";
+import { useSignInWithEmail } from "../_hooks/useSignInWithEmail";
+import { useSignInWithGoogle } from "../_hooks/useSignInWithGoogle";
 
 export function LoginForm({
   className,
