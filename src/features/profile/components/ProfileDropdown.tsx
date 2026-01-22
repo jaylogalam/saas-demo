@@ -12,15 +12,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { useUser } from "@/hooks/auth/useUser";
-import { useSignOut } from "@/features/auth/_hooks/useSignOut";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SignOutButton } from "@/features/auth/components/SignOutButton";
 
 export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
   const { data: userSubscriptions } = useUserSubscription();
   const userSubscription = userSubscriptions?.[0];
   const user = useUser();
   const isSubscribed = !!userSubscription;
-  const { signOut } = useSignOut();
 
   return (
     <DropdownMenu>
@@ -82,13 +81,11 @@ export function ProfileDropdown({ showNavItems }: { showNavItems?: boolean }) {
             <DropdownMenuSeparator />
           </>
         )}
-        <DropdownMenuItem
-          className="cursor-pointer"
-          variant="destructive"
-          onClick={signOut}
-        >
-          <LogOut className="mr-2 size-4" />
-          <span>Log out</span>
+        <DropdownMenuItem>
+          <SignOutButton>
+            <LogOut className="mr-4 size-4 text-destructive" />
+            <span>Log out</span>
+          </SignOutButton>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
