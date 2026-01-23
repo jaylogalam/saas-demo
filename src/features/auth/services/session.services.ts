@@ -21,21 +21,4 @@ export const SessionServices = {
       emailConfirmedAt: user.email_confirmed_at,
     };
   },
-
-  // TODO: Improve logic without needing userId
-  getAdmin: async (userId: string) => {
-    const { data, error } = await supabase
-      .from("admins")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
-
-    if (error) throw error;
-
-    // If no data, return no admin
-    if (!data) return false;
-
-    // If data, return admin
-    return true;
-  },
 };
