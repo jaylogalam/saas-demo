@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { usePasswordReset } from "../_hooks/usePasswordReset";
-import { useOTPVerify } from "../_hooks/useOTPVerify";
-import { useOTPSend } from "../_hooks/useOTPSend";
+import { usePasswordReset } from "../hooks/usePasswordReset";
+import { useOTPVerify } from "../hooks/useOTPVerify";
+import { useOTPSend } from "../hooks/useOTPSend";
 import { OTPVerificationCard } from "../components/OTPVerificationCard";
 
 export function ForgotPasswordForm({

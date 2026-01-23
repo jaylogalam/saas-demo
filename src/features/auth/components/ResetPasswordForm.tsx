@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { usePasswordUpdate } from "../_hooks/usePasswordUpdate";
+import { usePasswordUpdate } from "../hooks/usePasswordUpdate";
 
 export function ResetPasswordForm({
   className,

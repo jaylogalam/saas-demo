@@ -13,10 +13,10 @@ import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { OTPVerificationCard } from "../components/OTPVerificationCard";
-import { useSignUp } from "../_hooks/useSignUp";
-import { useSignInWithGoogle } from "../_hooks/useSignInWithGoogle";
-import { useOTPVerify } from "../_hooks/useOTPVerify";
-import { useOTPSend } from "../_hooks/useOTPSend";
+import { useSignUp } from "../hooks/useSignUp";
+import { useSignInWithGoogle } from "../hooks/useSignInWithGoogle";
+import { useOTPVerify } from "../hooks/useOTPVerify";
+import { useOTPSend } from "../hooks/useOTPSend";
 
 export function SignupForm({
   className,
