@@ -2,25 +2,15 @@ import { mutationOptions, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 import { useNavigate } from "react-router-dom";
 import { OtpServices } from "../services/otp.services";
+import type { OtpParams, OtpVerifyParams } from "../types/otp.types";
 
-interface OtpSendProps {
-  email: string;
-  type: "signup" | "recovery";
-}
-
-interface OtpVerifyProps {
-  email: string;
-  token: string;
-  type: "signup" | "recovery";
-}
-
-export const mutateOtpSend = (props: OtpSendProps) => {
+export const mutateOtpSend = (props: OtpParams) => {
   return mutationOptions({
     mutationFn: () => OtpServices.sendOtp(props),
   });
-}
+};
 
-export const queryOtpVerify = (props: OtpVerifyProps) => {
+export const mutateOtpVerify = (props: OtpVerifyParams) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -36,4 +26,4 @@ export const queryOtpVerify = (props: OtpVerifyProps) => {
       }
     },
   });
-}
+};
