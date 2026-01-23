@@ -14,7 +14,7 @@ interface OtpVerifyProps {
   type: "signup" | "recovery";
 }
 
-export const queryOtpSend = (props: OtpSendProps) => {
+export const mutateOtpSend = (props: OtpSendProps) => {
   return mutationOptions({
     mutationFn: () => OtpServices.sendOtp(props),
   });

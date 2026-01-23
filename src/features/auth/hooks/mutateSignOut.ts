@@ -7,7 +7,7 @@ import { SignOutServices } from "../services/sign-out.services";
  * Sign out current user
  * Automatically navigates to home page on success
  */
-export const querySignOut = () => {
+export const mutateSignOut = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -20,4 +20,4 @@ export const querySignOut = () => {
       });
     },
   });
-}
+};

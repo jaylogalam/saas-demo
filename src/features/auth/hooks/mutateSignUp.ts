@@ -10,7 +10,7 @@ interface SignUpCredentials {
 /**
  * Create a new account with email, password, and name
  */
-export const querySignUp = (props: SignUpCredentials) => {
+export const mutateSignUp = (props: SignUpCredentials) => {
   return mutationOptions({
     mutationFn: () => SignUpServices.signUp(props),
   });

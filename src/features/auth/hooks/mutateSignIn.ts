@@ -12,7 +12,7 @@ interface SignInWithPasswordProps {
  * Sign in with email and password
  * Automatically navigates to dashboard on success
  */
-export const querySignInWithPassword = (props: SignInWithPasswordProps) => {
+export const mutateSignInWithPassword = (props: SignInWithPasswordProps) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ export const querySignInWithPassword = (props: SignInWithPasswordProps) => {
       navigate("/dashboard");
     },
   });
-}
+};
 
 /**
  * Sign in with Google

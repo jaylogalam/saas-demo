@@ -5,24 +5,29 @@ import { PasswordServices } from "../services/password.services";
 /**
  * Request password reset email
  */
-export const queryPasswordReset = () => {
+export const mutatePasswordReset = () => {
   return mutationOptions({
-    mutationFn: (email: string) => PasswordServices.resetPassword({ email, redirectTo: `${window.location.origin}/reset-password` }),
+    mutationFn: (email: string) =>
+      PasswordServices.resetPassword({
+        email,
+        redirectTo: `${window.location.origin}/reset-password`,
+      }),
   });
-}
+};
 
 /**
  * Update password (used after reset link is clicked)
  */
-export const queryPasswordUpdate = () => {
+export const mutatePasswordUpdate = () => {
   const queryClient = useQueryClient();
 
   return mutationOptions({
-    mutationFn: (newPassword: string) => PasswordServices.updatePassword({ password: newPassword }),
+    mutationFn: (newPassword: string) =>
+      PasswordServices.updatePassword({ password: newPassword }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.auth.session(),
       });
     },
   });
-}
+};
