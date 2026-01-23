@@ -16,7 +16,7 @@ import { OTPVerificationCard } from "../components/OTPVerificationCard";
 import { useSignUp } from "../hooks/useSignUp";
 import { useSignInWithGoogle } from "../hooks/useSignInWithGoogle";
 import { useOTPVerify } from "../hooks/useOTPVerify";
-import { useOTPSend } from "../hooks/useOTPSend";
+import { useOTPSend } from "../hooks/queryOtp";
 
 export function SignupForm({
   className,

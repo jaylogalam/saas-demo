@@ -8,7 +8,7 @@ import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { usePasswordReset } from "../hooks/usePasswordReset";
 import { useOTPVerify } from "../hooks/useOTPVerify";
-import { useOTPSend } from "../hooks/useOTPSend";
+import { useOTPSend } from "../hooks/queryOtp";
 import { OTPVerificationCard } from "../components/OTPVerificationCard";
 
 export function ForgotPasswordForm({
