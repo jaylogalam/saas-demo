@@ -1,18 +1,17 @@
 import { supabase } from "@/lib/supabase";
 
-type ForgotPasswordProps = {
+type ResetPasswordProps = {
   email: string;
   redirectTo?: string;
 };
 
-type ResetPasswordProps = {
-  email: string;
+type UpdatePasswordProps = {
   password: string;
 };
 
 export const PasswordServices = {
   // TODO: Identify return type
-  forgotPassword: async ({ email, redirectTo }: ForgotPasswordProps) => {
+  resetPassword: async ({ email, redirectTo }: ResetPasswordProps) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: redirectTo,
     });
@@ -20,9 +19,8 @@ export const PasswordServices = {
   },
 
   // TODO: Identify return type
-  resetPassword: async ({ email, password }: ResetPasswordProps) => {
+  updatePassword: async ({ password }: UpdatePasswordProps) => {
     const { error } = await supabase.auth.updateUser({
-      email,
       password,
     });
     if (error) throw error;

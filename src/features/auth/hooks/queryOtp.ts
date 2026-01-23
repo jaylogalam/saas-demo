@@ -14,13 +14,13 @@ interface OtpVerifyProps {
   type: "signup" | "recovery";
 }
 
-export const queryOTPSend = (props: OtpSendProps) => {
+export const queryOtpSend = (props: OtpSendProps) => {
   return mutationOptions({
     mutationFn: () => OtpServices.sendOtp(props),
   });
 }
 
-export const queryOTPVerify = (props: OtpVerifyProps) => {
+export const queryOtpVerify = (props: OtpVerifyProps) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
