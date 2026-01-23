@@ -1,5 +1,5 @@
 import { cn } from "@/utils/cn";
-import { useSignOut } from "../features/auth/hooks/useSignOut";
+import { useSignOut } from "../features/auth/hooks/querySignOut";
 
 type SignOutButtonProps = React.ComponentProps<"button">;
 

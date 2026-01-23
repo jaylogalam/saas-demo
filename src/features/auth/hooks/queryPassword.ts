@@ -5,7 +5,7 @@ import { PasswordServices } from "../services/password.services";
 /**
  * Request password reset email
  */
-export function queryPasswordReset() {
+export const queryPasswordReset = () => {
   return mutationOptions({
     mutationFn: (email: string) => PasswordServices.resetPassword({ email, redirectTo: `${window.location.origin}/reset-password` }),
   });
@@ -14,7 +14,7 @@ export function queryPasswordReset() {
 /**
  * Update password (used after reset link is clicked)
  */
-export function queryPasswordUpdate() {
+export const queryPasswordUpdate = () => {
   const queryClient = useQueryClient();
 
   return mutationOptions({

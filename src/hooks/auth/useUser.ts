@@ -1,7 +1,7 @@
 import type { User } from "@/types/auth.types";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { useSessionQueryOptions } from "@/features/auth/hooks/useSession";
+import { useSessionQueryOptions } from "@/features/auth/hooks/querySession";
 
 export const useUser = () => {
     const { data: session } = useQuery(useSessionQueryOptions());
