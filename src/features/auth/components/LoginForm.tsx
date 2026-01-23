@@ -12,33 +12,34 @@ import {
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
-import { useSignInWithEmail } from "../hooks/mutateSignIn";
-import { useSignInWithGoogle } from "../hooks/useSignInWithGoogle";
+import { useSignInWithPassword, useSignInWithGoogle } from "../hooks/useSignIn";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"form">) {
+type LoginFormProps = React.ComponentProps<"form">;
+
+export function LoginForm({ className, ...props }: LoginFormProps) {
+  // Form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signInWithEmail, signInWithEmailStatus, signInWithEmailError } =
-    useSignInWithEmail();
-  const { signInWithGoogle, signInWithGoogleStatus, signInWithGoogleError } =
-    useSignInWithGoogle();
 
+  // Form hooks
+  const signInWithPassword = useSignInWithPassword();
+  const signInWithGoogle = useSignInWithGoogle();
+
+  // Form submission handler
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    signInWithEmail(email, password);
+    signInWithPassword.mutate({ email, password });
   };
 
-  const error = signInWithEmailError?.message || signInWithGoogleError?.message;
-  const isLoading =
-    signInWithEmailStatus === "pending" || signInWithGoogleStatus === "pending";
+  // Form error
+  const error = signInWithPassword.error?.message;
+  const isLoading = signInWithPassword.status === "pending";
 
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
       onSubmit={handleFormSubmit}
+      aria-disabled={isLoading}
       {...props}
     >
       <FieldGroup>
@@ -89,7 +90,7 @@ export function LoginForm({
           <Button
             variant="outline"
             type="button"
-            onClick={signInWithGoogle}
+            onClick={() => signInWithGoogle.mutate()}
             disabled={isLoading}
           >
             <GoogleIcon />

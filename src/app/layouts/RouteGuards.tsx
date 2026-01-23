@@ -1,12 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useSuspenseUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 /**
  * Protects routes that require authentication.
  * Redirects to /login if user is not logged in.
  */
 export function ProtectedRoute() {
-  const user = useSuspenseUser();
+  const { data: user } = useUser();
 
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -20,7 +20,7 @@ export function ProtectedRoute() {
  * Redirects to /dashboard if user is already logged in.
  */
 export function GuestRoute() {
-  const user = useSuspenseUser();
+  const { data: user } = useUser();
 
   if (user) {
     return <Navigate to="/dashboard" replace />;

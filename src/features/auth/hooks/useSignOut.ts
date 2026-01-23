@@ -1,17 +1,13 @@
-import { mutationOptions, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { queryKeys } from "@/lib/queryKeys";
 import { SignOutServices } from "../services/sign-out.services";
 
-/**
- * Sign out current user
- * Automatically navigates to home page on success
- */
-export const mutateSignOut = () => {
+export const useSignOut = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  return mutationOptions({
+  return useMutation({
     mutationFn: () => SignOutServices.signOut(),
     onSuccess: () => {
       navigate("/");

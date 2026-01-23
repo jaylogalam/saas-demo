@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSuspenseUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/features/auth/hooks/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 import { Page } from "@/components/ui/page";
 
 const LandingPage = () => {
-  const user = useSuspenseUser();
+  const { data: user } = useUser();
 
   return (
     <Suspense fallback={<LandingPageSkeleton />}>

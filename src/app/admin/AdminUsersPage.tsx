@@ -10,9 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Page, PageHeader } from "@/components/ui/page";
 import { formatDate } from "@/utils/formatDate";
-import type { AdminUserView } from "@/types/auth.types";
-import { useAdminUserList } from "@/hooks/auth/admin/useUserList";
-import { useSuspenseAdmin } from "@/hooks/auth/useAdmin";
 import {
   Table,
   TableBody,
@@ -21,13 +18,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { AdminUserView } from "@/features/auth/types/admin.types";
+import { useAdmin, useAdminUserList } from "@/features/auth/hooks/useAdmin";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 // ============================================================================
 // Main Export
 // ============================================================================
 
 const AdminUsersPage = () => {
-  const admin = useSuspenseAdmin();
+  const { data: user } = useUser();
+  const { data: admin } = useAdmin(user?.id ?? "");
   const { data: users } = useAdminUserList();
 
   if (!admin) return <Navigate to="/dashboard" replace />;

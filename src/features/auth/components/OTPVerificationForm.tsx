@@ -47,9 +47,11 @@ export function OTPVerificationCard({
   resendSuccess,
   ...props
 }: OTPVerificationCardProps) {
+  // Form state
   const [otp, setOtp] = useState("");
   const { countdown, reset, isComplete } = useCountdown(60, resendSuccess);
 
+  // Form submission handler
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (otp.trim()) {
@@ -57,6 +59,7 @@ export function OTPVerificationCard({
     }
   };
 
+  // Form resend handler
   const handleResend = () => {
     if (isComplete && onResend) {
       onResend();
@@ -64,6 +67,7 @@ export function OTPVerificationCard({
     }
   };
 
+  // Form resend logic
   const canResend = isComplete && !isResending;
 
   return (

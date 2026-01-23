@@ -1,4 +1,4 @@
-import { mutationOptions, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { queryKeys } from "@/lib/queryKeys";
 import { SignInServices } from "../services/sign-in.services";
@@ -8,16 +8,13 @@ interface SignInWithPasswordProps {
   password: string;
 }
 
-/**
- * Sign in with email and password
- * Automatically navigates to dashboard on success
- */
-export const mutateSignInWithPassword = (props: SignInWithPasswordProps) => {
+export const useSignInWithPassword = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  return mutationOptions({
-    mutationFn: () => SignInServices.signInWithPassword(props),
+  return useMutation({
+    mutationFn: (props: SignInWithPasswordProps) =>
+      SignInServices.signInWithPassword(props),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: queryKeys.auth.session(),
@@ -27,15 +24,11 @@ export const mutateSignInWithPassword = (props: SignInWithPasswordProps) => {
   });
 };
 
-/**
- * Sign in with Google
- * Automatically navigates to dashboard on success
- */
-export const querySignInWithGoogle = () => {
+export const useSignInWithGoogle = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  return mutationOptions({
+  return useMutation({
     mutationFn: () => SignInServices.signInWithGoogle(),
     onSuccess: async () => {
       await queryClient.invalidateQueries({

@@ -11,21 +11,23 @@ import {
 } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { usePasswordUpdate } from "../hooks/usePasswordUpdate";
+import { usePasswordUpdate } from "../hooks/usePassword";
 
 export function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const navigate = useNavigate();
+
   // Form state
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
-  const { passwordUpdate, passwordUpdateStatus, passwordUpdateError } =
-    usePasswordUpdate();
+  // Form hooks
+  const passwordUpdate = usePasswordUpdate();
 
+  // Form submission handler
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError(null);
@@ -35,11 +37,11 @@ export function ResetPasswordForm({
       return;
     }
 
-    passwordUpdate(password);
+    passwordUpdate.mutate(password);
   };
 
   // Show success message after password is updated
-  if (passwordUpdateStatus === "success") {
+  if (passwordUpdate.isSuccess) {
     return (
       <div className={cn("flex flex-col gap-6", className)}>
         <div className="flex flex-col items-center gap-4 text-center">
@@ -57,9 +59,9 @@ export function ResetPasswordForm({
     );
   }
 
-  const error = validationError || passwordUpdateError?.message;
+  const error = validationError || passwordUpdate.error?.message;
 
-  const isLoading = passwordUpdateStatus === "pending";
+  const isLoading = passwordUpdate.isPending;
 
   return (
     <form

@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Page, PageHeader } from "@/components/ui/page";
 import { EmptyState } from "@/components/EmptyState";
@@ -92,7 +92,7 @@ function NoSubscription() {
 }
 
 const BillingPage = () => {
-  const { data: userSubscriptions } = useSuspenseUserSubscription();
+  const { data: userSubscriptions } = useUserSubscription();
   const userSubscription = userSubscriptions?.[0];
 
   if (!userSubscription) {

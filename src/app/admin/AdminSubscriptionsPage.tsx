@@ -17,9 +17,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Page, PageHeader } from "@/components/ui/page";
 import { formatUnixTimestamp } from "@/utils/formatDate";
-import type { AdminUserView } from "@/types/auth.types";
-import { useAdminUserList } from "@/hooks/auth/admin/useUserList";
-import { useSuspenseAdmin } from "@/hooks/auth/useAdmin";
 import {
   Table,
   TableBody,
@@ -28,13 +25,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAdmin, useAdminUserList } from "@/features/auth/hooks/useAdmin";
+import { useUser } from "@/features/auth/hooks/useUser";
+import type { AdminUserView } from "@/features/auth/types/admin.types";
 
 // ============================================================================
 // Main Export
 // ============================================================================
 
 const AdminSubscriptionsPage = () => {
-  const admin = useSuspenseAdmin();
+  const { data: user } = useUser();
+  const { data: admin } = useAdmin(user?.id ?? "");
   const { data: adminUserList } = useAdminUserList();
 
   if (!admin) return <Navigate to="/dashboard" replace />;

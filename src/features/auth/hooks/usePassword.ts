@@ -1,12 +1,9 @@
-import { mutationOptions, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 import { PasswordServices } from "../services/password.services";
 
-/**
- * Request password reset email
- */
-export const mutatePasswordReset = () => {
-  return mutationOptions({
+export const usePasswordReset = () => {
+  return useMutation({
     mutationFn: (email: string) =>
       PasswordServices.resetPassword({
         email,
@@ -15,13 +12,10 @@ export const mutatePasswordReset = () => {
   });
 };
 
-/**
- * Update password (used after reset link is clicked)
- */
-export const mutatePasswordUpdate = () => {
+export const usePasswordUpdate = () => {
   const queryClient = useQueryClient();
 
-  return mutationOptions({
+  return useMutation({
     mutationFn: (newPassword: string) =>
       PasswordServices.updatePassword({ password: newPassword }),
     onSuccess: () => {

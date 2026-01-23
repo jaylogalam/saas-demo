@@ -17,7 +17,7 @@ import {
 } from "@/features/sidebar/MobileSidebar";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
-import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 
 ///////////////////////////////////////
 /*        Exported Component         */
@@ -37,7 +37,7 @@ export function AppLayout() {
 
 function AppDesktopLayout() {
   const sections = useSidebar();
-  const { data: userSubscription } = useSuspenseUserSubscription();
+  const { data: userSubscription } = useUserSubscription();
   const subscriptionName = userSubscription && userSubscription[0]?.name;
 
   return (
@@ -57,7 +57,7 @@ function AppDesktopLayout() {
           <div className="hidden lg:block" />
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <SubscriptionBadge subscriptionName={subscriptionName} />
+            <SubscriptionBadge subscriptionName={subscriptionName ?? ""} />
             <ProfileDropdown />
           </div>
         </AppLayoutHeader>
@@ -74,7 +74,7 @@ function AppDesktopLayout() {
 
 function AppMobileLayout() {
   const sections = useSidebar();
-  const { data: userSubscription } = useSuspenseUserSubscription();
+  const { data: userSubscription } = useUserSubscription();
   const subscriptionName = userSubscription && userSubscription[0]?.name;
 
   return (
@@ -102,7 +102,7 @@ function AppMobileLayout() {
           <div className="hidden lg:block" />
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <SubscriptionBadge subscriptionName={subscriptionName} />
+            <SubscriptionBadge subscriptionName={subscriptionName ?? ""} />
             <ProfileDropdown />
           </div>
         </AppLayoutHeader>

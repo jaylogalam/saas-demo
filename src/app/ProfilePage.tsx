@@ -14,14 +14,14 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useSuspenseUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/features/auth/hooks/useUser";
 import { useUpdateDisplayName } from "@/features/profile/hooks/useUpdateProfile";
 import { formatDate } from "@/utils/formatDate";
 import { Page, PageHeader } from "@/components/ui/page";
 import { Check } from "lucide-react";
 
 function ProfilePage() {
-  const user = useSuspenseUser();
+  const { data: user } = useUser();
 
   const updateDisplayName = useUpdateDisplayName();
 

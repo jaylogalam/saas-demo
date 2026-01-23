@@ -9,7 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Page, PageHeader } from "@/components/ui/page";
-import { useSuspenseAdmin } from "@/hooks/auth/useAdmin";
+import { useAdmin } from "@/features/auth/hooks/useAdmin";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 // ============================================================================
 // Loading Skeleton
@@ -34,7 +35,8 @@ function TestUISkeleton() {
 // ============================================================================
 
 function TestUIPageContent() {
-  const admin = useSuspenseAdmin();
+  const { data: user } = useUser();
+  const { data: admin } = useAdmin(user?.id ?? "");
 
   if (!admin) return <Navigate to="/dashboard" replace />;
 

@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SignOutButton } from "@/components/SignOutButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { useSuspenseUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 export function ProfileDropdown() {
-  const user = useSuspenseUser();
+  const { data: user } = useUser();
 
   return (
     <DropdownMenu>

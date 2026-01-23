@@ -8,13 +8,13 @@ import {
   NavbarLinkItem,
   NavbarLinkList,
 } from "@/features/navbar/Navbar";
-import { useSuspenseUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/features/auth/hooks/useUser";
 import { Link, Outlet } from "react-router-dom";
 import { Suspense } from "react";
-import { useSuspenseUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 
 export function PublicLayout() {
-  const user = useSuspenseUser();
+  const { data: user } = useUser();
 
   return (
     <PublicLayoutContainer>
@@ -41,12 +41,12 @@ export function PublicLayoutContainer({ children }: React.PropsWithChildren) {
 }
 
 function PublicNavbarProfile() {
-  const { data: userSubscriptions } = useSuspenseUserSubscription();
+  const { data: userSubscriptions } = useUserSubscription();
   const subscriptionName = userSubscriptions && userSubscriptions[0].name;
 
   return (
     <div className="flex items-center gap-4">
-      <SubscriptionBadge subscriptionName={subscriptionName} />
+      <SubscriptionBadge subscriptionName={subscriptionName ?? ""} />
       <ProfileDropdown />
     </div>
   );
