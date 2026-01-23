@@ -1,12 +1,11 @@
 import { queryOptions } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
-import type { Admin, AdminUserView } from "../types/admin.types";
 import { AdminServices } from "../services/admin.services";
+import type { Admin } from "../types/admin.types";
 
 /**
  * Hook: Check if current user is admin
  */
-export const useAdminQueryOptions = (userId: string) => {
+export const queryAdmin = (userId: string) => {
   return queryOptions({
     queryKey: ["admin", userId],
     queryFn: () => AdminServices.getAdmin(userId),
@@ -15,7 +14,7 @@ export const useAdminQueryOptions = (userId: string) => {
   });
 };
 
-export function useUserListQueryOptions(isAdmin: Admin) {
+export const queryAdminUserList = (isAdmin: Admin) => {
   return queryOptions({
     queryKey: ["admin", "user-list"],
     queryFn: () => AdminServices.getUserList(),
