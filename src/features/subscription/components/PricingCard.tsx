@@ -22,10 +22,11 @@ import type {
   BillingInterval,
 } from "@/features/subscription/types/subscription.types";
 import { useCheckout } from "@/features/subscription/hooks";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
 import { Skeleton } from "../../../components/ui/skeleton";
 import { PlanChangeModal } from "./PlanChangeModal";
 import { formatSubscriptionPrice } from "../utils/formatSubscriptionPrice";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 // Feature tooltips for complex features
 const featureTooltips: Record<string, string> = {
@@ -43,9 +44,9 @@ interface PricingCardProps {
 
 export function PricingCard({ plan, billingInterval }: PricingCardProps) {
   // Store and hooks
-  const { data: userSubscriptions, refetch: refetchUserSubscription } =
-    useUserSubscription();
-  const userSubscription = userSubscriptions?.[0];
+  const { data: user } = useUser();
+  const { data: userSubscription, refetch: refetchUserSubscription } =
+    useUserSubscription(user);
 
   // Modal state
   const [showPlanChangeModal, setShowPlanChangeModal] = useState(false);

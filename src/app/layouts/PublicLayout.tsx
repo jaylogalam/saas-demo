@@ -11,7 +11,7 @@ import {
 import { useUser } from "@/features/auth/hooks/useUser";
 import { Link, Outlet } from "react-router-dom";
 import { Suspense } from "react";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
 
 export function PublicLayout() {
   const { data: user } = useUser();
@@ -41,13 +41,15 @@ export function PublicLayoutContainer({ children }: React.PropsWithChildren) {
 }
 
 function PublicNavbarProfile() {
-  const { data: userSubscriptions } = useUserSubscription();
-  const subscriptionName = userSubscriptions && userSubscriptions[0].name;
+  const { data: user } = useUser();
+  if (!user) return null;
+
+  const { data: userSubscription } = useUserSubscription(user);
 
   return (
     <div className="flex items-center gap-4">
-      <SubscriptionBadge subscriptionName={subscriptionName ?? ""} />
-      <ProfileDropdown />
+      <SubscriptionBadge subscription={userSubscription} />
+      <ProfileDropdown user={user} />
     </div>
   );
 }

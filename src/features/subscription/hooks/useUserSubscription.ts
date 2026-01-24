@@ -1,25 +1,16 @@
-import { queryOptions } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
-import type { UserSubscription } from "../types";
+import { UserSubscriptionServices } from "../services/user-subscription.services";
+import type { User } from "@/features/auth/types/user.types";
 
 /**
  * Fetch the current user's subscription via email-based customer lookup
  */
 
-export const useUserSubscriptionQueryOptions = (userEmail: string) => {
-  return queryOptions({
-    queryKey: queryKeys.subscription.user(userEmail),
-    queryFn: async (): Promise<UserSubscription[] | null> => {
-      const { data } = await supabase
-        .from("user_subscriptions")
-        .select("*")
-        .eq("customer_email", userEmail)
-        .order("price", { ascending: false });
-      if (!data) return null;
-
-      return data as UserSubscription[];
-    },
+export const useUserSubscription = (user: Pick<User, "email"> | null) => {
+  return useSuspenseQuery({
+    queryKey: queryKeys.subscription.user(user?.email),
+    queryFn: () => UserSubscriptionServices.getUserSubscription(user),
     staleTime: 1000 * 60 * 5,
   });
 };

@@ -1,8 +1,9 @@
 import { supabase } from "@/lib/supabase";
+import type { User } from "@/features/auth/types/user.types";
 
 export const UserServices = {
   // TODO: Replace getSession to database query from users table
-  getUser: async () => {
+  getUser: async (): Promise<User | null> => {
     const { data, error } = await supabase.auth.getSession();
     if (error) throw error;
 

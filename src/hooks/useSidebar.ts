@@ -4,9 +4,10 @@ import {
 } from "@/app/constants/sidebar.const";
 import { useAdmin } from "@/features/auth/hooks/useAdmin";
 import { useUser } from "@/features/auth/hooks/useUser";
+import type { SidebarSection } from "@/features/sidebar/sidebar.types";
 import { useMemo } from "react";
 
-export const useSidebar = () => {
+export const useSidebar = (): SidebarSection[] => {
     const { data: user } = useUser();
     const { data: admin } = useAdmin(user?.id ?? "");
     const sections = useMemo(() => {

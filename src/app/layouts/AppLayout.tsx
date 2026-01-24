@@ -17,29 +17,53 @@ import {
 } from "@/features/sidebar/MobileSidebar";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
+import { useUser } from "@/features/auth/hooks/useUser";
+import type { SidebarSection } from "@/features/sidebar/sidebar.types";
+import type { User } from "@/features/auth/types/user.types";
+import type { UserSubscription } from "@/features/subscription/types";
+
+type AppLayoutProps = {
+  user: User | null;
+  sections: SidebarSection[];
+  subscription: UserSubscription | null;
+};
 
 ///////////////////////////////////////
 /*        Exported Component         */
 ///////////////////////////////////////
 
 export function AppLayout() {
+  const { data: user } = useUser();
+
+  const { data: userSubscription } = useUserSubscription(user);
+
   const isMobile = useIsMobile();
+  const sections = useSidebar();
 
-  if (isMobile) return <AppMobileLayout />;
+  if (isMobile)
+    return (
+      <AppMobileLayout
+        user={user}
+        sections={sections}
+        subscription={userSubscription}
+      />
+    );
 
-  return <AppDesktopLayout />;
+  return (
+    <AppDesktopLayout
+      user={user}
+      sections={sections}
+      subscription={userSubscription}
+    />
+  );
 }
 
 //////////////////////////////////////
 /*          Desktop Layout          */
 //////////////////////////////////////
 
-function AppDesktopLayout() {
-  const sections = useSidebar();
-  const { data: userSubscription } = useUserSubscription();
-  const subscriptionName = userSubscription && userSubscription[0]?.name;
-
+function AppDesktopLayout({ user, sections, subscription }: AppLayoutProps) {
   return (
     <AppLayoutContainer>
       {/* Sidebar Components */}
@@ -57,8 +81,8 @@ function AppDesktopLayout() {
           <div className="hidden lg:block" />
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <SubscriptionBadge subscriptionName={subscriptionName ?? ""} />
-            <ProfileDropdown />
+            <SubscriptionBadge subscription={subscription} />
+            <ProfileDropdown user={user} />
           </div>
         </AppLayoutHeader>
 
@@ -72,11 +96,7 @@ function AppDesktopLayout() {
 /*           Mobile Layout          */
 //////////////////////////////////////
 
-function AppMobileLayout() {
-  const sections = useSidebar();
-  const { data: userSubscription } = useUserSubscription();
-  const subscriptionName = userSubscription && userSubscription[0]?.name;
-
+function AppMobileLayout({ user, sections, subscription }: AppLayoutProps) {
   return (
     <AppLayoutContainer>
       {/* Sidebar Components */}
@@ -102,8 +122,8 @@ function AppMobileLayout() {
           <div className="hidden lg:block" />
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <SubscriptionBadge subscriptionName={subscriptionName ?? ""} />
-            <ProfileDropdown />
+            <SubscriptionBadge subscription={subscription} />
+            <ProfileDropdown user={user} />
           </div>
         </AppLayoutHeader>
 

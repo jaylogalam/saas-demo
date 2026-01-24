@@ -19,11 +19,12 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Page, PageHeader } from "@/components/ui/page";
 import { EmptyState } from "@/components/EmptyState";
 import { Suspense } from "react";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 function getStatusConfig(status: string) {
   switch (status) {
@@ -92,9 +93,9 @@ function NoSubscription() {
 }
 
 const BillingPage = () => {
-  const { data: userSubscriptions } = useUserSubscription();
-  const userSubscription = userSubscriptions?.[0];
+  const { data: user } = useUser();
 
+  const { data: userSubscription } = useUserSubscription(user);
   if (!userSubscription) {
     return (
       <Page>

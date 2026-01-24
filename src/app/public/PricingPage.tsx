@@ -5,14 +5,17 @@ import {
 import { useSubscriptionPlans } from "@/features/subscription/hooks";
 import { useSubscriptionStore } from "@/features/subscription/store/subscriptionStore";
 import { BillingToggle } from "@/features/subscription/components/BillingToggle";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { useUserSubscription } from "@/features/subscription/hooks/useUserSubscription";
 import { Page } from "@/components/ui/page";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 export default function PricingPage() {
+  const { data: user } = useUser();
+
   const { billingInterval } = useSubscriptionStore();
 
   const { subscriptionPlans, subscriptionPlansStatus } = useSubscriptionPlans();
-  const { status: userSubscriptionStatus } = useUserSubscription();
+  const { isPending } = useUserSubscription(user);
 
   return (
     <Page variant="public">
@@ -36,16 +39,12 @@ export default function PricingPage() {
 
       {/* Billing Toggle */}
       <BillingToggle
-        isLoading={
-          subscriptionPlansStatus === "pending" ||
-          userSubscriptionStatus === "pending"
-        }
+        isLoading={subscriptionPlansStatus === "pending" || isPending}
       />
 
       {/* Pricing Cards */}
       <section className="container mx-auto px-4 sm:px-6 pb-20">
-        {subscriptionPlansStatus === "pending" ||
-        userSubscriptionStatus === "pending" ? (
+        {subscriptionPlansStatus === "pending" || isPending ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto items-start justify-items-center">
             <PricingCardSkeleton />
             <PricingCardSkeleton />

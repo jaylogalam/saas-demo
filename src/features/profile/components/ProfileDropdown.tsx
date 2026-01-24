@@ -11,16 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SignOutButton } from "@/features/auth/components/SignOutButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { useUser } from "@/features/auth/hooks/useUser";
+import type { User as UserType } from "@/features/auth/types/user.types";
 
-export function ProfileDropdown() {
-  const { data: user } = useUser();
+type ProfileDropdownProps = {
+  user: Pick<UserType, "name" | "email" | "avatarUrl"> | null;
+};
+
+export function ProfileDropdown({ user }: ProfileDropdownProps) {
+  if (!user) return null;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="size-9 cursor-pointer transition-all rounded-full overflow-hidden">
-          <AvatarImage src={user?.avatarUrl ?? ""} alt={user?.name ?? ""} />
+          <AvatarImage src={user.avatarUrl} alt={user.name} />
           <AvatarFallback className="bg-muted flex items-center justify-center size-full rounded-full">
             <User className="size-5 text-muted-foreground" />
           </AvatarFallback>
@@ -29,17 +33,19 @@ export function ProfileDropdown() {
 
       <DropdownMenuContent className="w-56" align="end" sideOffset={8}>
         <DropdownMenuLabel className="font-normal">
+          {/* Profile Dropdown label */}
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
-              {user?.name || "Guest"}
-            </p>
+            <p className="text-sm font-medium leading-none">{user.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user?.email || "No email"}
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
+
         <DropdownMenuSeparator />
+
         <DropdownMenuGroup>
+          {/* Profile Dropdown items */}
           <DropdownMenuItem asChild>
             <Link to="/profile">
               <User className="mr-2 size-4" />
@@ -59,8 +65,11 @@ export function ProfileDropdown() {
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+
         <DropdownMenuSeparator />
+
         <DropdownMenuItem>
+          {/* Profile Dropdown sign out */}
           <SignOutButton>
             <LogOut className="size-4" />
             <span>Log out</span>
