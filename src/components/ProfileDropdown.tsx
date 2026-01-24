@@ -9,9 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SignOutButton } from "@/components/buttons/SignOutButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import type { User as UserType } from "@/types/user.types";
+import { useSignOut } from "@/hooks/auth/useSignOut";
 
 type ProfileDropdownProps = {
   user: Pick<UserType, "name" | "email" | "avatarUrl"> | null;
@@ -19,6 +19,8 @@ type ProfileDropdownProps = {
 
 export function ProfileDropdown({ user }: ProfileDropdownProps) {
   if (!user) return null;
+
+  const { mutate: signOut } = useSignOut();
 
   return (
     <DropdownMenu>
@@ -68,12 +70,15 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
+        <DropdownMenuItem asChild>
           {/* Profile Dropdown sign out */}
-          <SignOutButton>
+          <button
+            className="flex w-full items-center gap-4"
+            onClick={() => signOut()}
+          >
             <LogOut className="size-4" />
             <span>Log out</span>
-          </SignOutButton>
+          </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
