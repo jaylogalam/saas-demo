@@ -11,10 +11,8 @@ import {
 } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { OTPVerificationCard } from "./OTPVerificationForm";
 import { useSignUp } from "../hooks/useSignUp";
-import { useSignInWithGoogle } from "../hooks/useSignIn";
 import { useOtpSend, useOtpVerify } from "../hooks/useOtp";
 import { GoogleButton } from "./GoogleButton";
 
@@ -30,7 +28,6 @@ export function SignupForm({
 
   // Hooks
   const signUp = useSignUp();
-  const signInWithGoogle = useSignInWithGoogle();
   const otpSend = useOtpSend();
   const otpVerify = useOtpVerify();
 
@@ -44,12 +41,10 @@ export function SignupForm({
   const error =
     validationError ||
     signUp.error?.message ||
-    signInWithGoogle.error?.message ||
     otpVerify.error?.message ||
     otpSend.error?.message;
 
-  const isLoading =
-    signUp.status === "pending" || signInWithGoogle.status === "pending";
+  const isLoading = signUp.status === "pending";
 
   // Show OTP verification card after successful signup
   if (signUp.status === "success") {

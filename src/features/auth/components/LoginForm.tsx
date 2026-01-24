@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { GoogleIcon } from "@/components/icons/GoogleIcon";
-import { useSignInWithPassword, useSignInWithGoogle } from "../hooks/useSignIn";
+import { useSignInWithPassword } from "../hooks/useSignIn";
 import { GoogleButton } from "./GoogleButton";
 
 type LoginFormProps = React.ComponentProps<"form">;
@@ -24,7 +23,6 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
 
   // Form hooks
   const signInWithPassword = useSignInWithPassword();
-  const signInWithGoogle = useSignInWithGoogle();
 
   // Form submission handler
   const handleFormSubmit = async (e: React.FormEvent) => {
