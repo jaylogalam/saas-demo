@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
-import { GoogleButton } from "@/components/forms/GoogleButton";
+import { GoogleButton } from "@/components/buttons/GoogleButton";
 import { useSignInWithPassword } from "@/hooks/auth/useSignIn";
 
 type LoginFormProps = React.ComponentProps<"form">;

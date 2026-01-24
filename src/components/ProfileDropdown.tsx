@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SignOutButton } from "@/components/forms/SignOutButton";
+import { SignOutButton } from "@/components/buttons/SignOutButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import type { User as UserType } from "@/types/user.types";
 

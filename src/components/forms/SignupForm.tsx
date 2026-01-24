@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { OTPVerificationCard } from "./OTPVerificationForm";
 import { useSignUp } from "@/hooks/auth/useSignUp";
 import { useOtpSend, useOtpVerify } from "@/hooks/auth/useOtp";
-import { GoogleButton } from "./GoogleButton";
+import { GoogleButton } from "../buttons/GoogleButton";
 
 export function SignupForm({
   className,
