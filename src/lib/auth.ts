@@ -19,6 +19,7 @@ supabase.auth.onAuthStateChange((event) => {
           storage.removeItem(key);
         });
     });
+    queryClient.invalidateQueries({ queryKey: queryKeys.auth.user() });
   } else {
     queryClient.invalidateQueries({ queryKey: queryKeys.auth.user() });
   }
