@@ -9,24 +9,28 @@ import { AppLayout } from "@/app/AppLayout";
 import { ProtectedRoute, GuestRoute } from "@/app/RouteGuards";
 
 /* Lazy Loaded Pages */
-const LandingPage = lazy(() => import("@/pages/public/LandingPage"));
-const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
-const SignupPage = lazy(() => import("@/pages/auth/SignupPage"));
-const ForgotPasswordPage = lazy(() => import("@/pages/auth/ForgotPasswordPage"));
-const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
-const PricingPage = lazy(() => import("@/pages/public/PricingPage"));
-const AboutPage = lazy(() => import("@/pages/public/AboutPage"));
-const ProfilePage = lazy(() => import("@/pages/app/ProfilePage"));
-const SettingsPage = lazy(() => import("@/pages/app/SettingsPage"));
-const BillingPage = lazy(() => import("@/pages/app/BillingPage"));
-const DashboardPage = lazy(() => import("@/pages/app/DashboardPage"));
-const ProjectsPage = lazy(() => import("@/pages/app/ProjectsPage"));
-const AnalyticsPage = lazy(() => import("@/pages/app/AnalyticsPage"));
-const AdminUsersPage = lazy(() => import("@/pages/admin/AdminUsersPage"));
-const AdminSubscriptionsPage = lazy(
-  () => import("@/pages/admin/AdminSubscriptionsPage"),
+const LandingPage = lazy(() => import("@/app/pages/public/LandingPage"));
+const LoginPage = lazy(() => import("@/app/pages/auth/LoginPage"));
+const SignupPage = lazy(() => import("@/app/pages/auth/SignupPage"));
+const ForgotPasswordPage = lazy(
+  () => import("@/app/pages/auth/ForgotPasswordPage"),
 );
-const TestUIPage = lazy(() => import("@/pages/admin/TestUIPage"));
+const ResetPasswordPage = lazy(
+  () => import("@/app/pages/auth/ResetPasswordPage"),
+);
+const PricingPage = lazy(() => import("@/app/pages/public/PricingPage"));
+const AboutPage = lazy(() => import("@/app/pages/public/AboutPage"));
+const ProfilePage = lazy(() => import("@/app/pages/app/ProfilePage"));
+const SettingsPage = lazy(() => import("@/app/pages/app/SettingsPage"));
+const BillingPage = lazy(() => import("@/app/pages/app/BillingPage"));
+const DashboardPage = lazy(() => import("@/app/pages/app/DashboardPage"));
+const ProjectsPage = lazy(() => import("@/app/pages/app/ProjectsPage"));
+const AnalyticsPage = lazy(() => import("@/app/pages/app/AnalyticsPage"));
+const AdminUsersPage = lazy(() => import("@/app/pages/admin/AdminUsersPage"));
+const AdminSubscriptionsPage = lazy(
+  () => import("@/app/pages/admin/AdminSubscriptionsPage"),
+);
+const TestUIPage = lazy(() => import("@/app/pages/admin/TestUIPage"));
 
 function App() {
   return (
