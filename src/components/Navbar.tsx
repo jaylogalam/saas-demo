@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { cn } from "@/utils/cn";
 import type {
   NavbarLinkItemProps,
@@ -36,14 +37,14 @@ export function NavbarLinkItem({
   children,
 }: NavbarLinkItemProps) {
   return (
-    <a
-      href={to}
+    <Link
+      to={to}
       className={cn(
         "text-base font-medium text-muted-foreground transition-colors hover:text-foreground",
         className,
       )}
     >
       {children}
-    </a>
+    </Link>
   );
 }
