@@ -20,13 +20,12 @@ import { useSidebar } from "@/hooks/useSidebar";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { useUser } from "@/hooks/auth/useUser";
 import type { SidebarSection } from "@/types/sidebar.types";
-import type { User } from "@/types/user.types";
-import type { UserSubscription } from "@/types/subscription.types";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Page } from "@/components/ui/page";
 
 type AppLayoutProps = {
-  user: User | null;
   sections: SidebarSection[];
-  subscription: UserSubscription | null;
 };
 
 ///////////////////////////////////////
@@ -34,36 +33,19 @@ type AppLayoutProps = {
 ///////////////////////////////////////
 
 export function AppLayout() {
-  const { data: user } = useUser();
-
-  const { data: userSubscription } = useUserSubscription(user);
-
   const isMobile = useIsMobile();
   const sections = useSidebar();
 
-  if (isMobile)
-    return (
-      <AppMobileLayout
-        user={user}
-        sections={sections}
-        subscription={userSubscription}
-      />
-    );
+  if (isMobile) return <AppMobileLayout sections={sections} />;
 
-  return (
-    <AppDesktopLayout
-      user={user}
-      sections={sections}
-      subscription={userSubscription}
-    />
-  );
+  return <AppDesktopLayout sections={sections} />;
 }
 
 //////////////////////////////////////
 /*          Desktop Layout          */
 //////////////////////////////////////
 
-function AppDesktopLayout({ user, sections, subscription }: AppLayoutProps) {
+function AppDesktopLayout({ sections }: AppLayoutProps) {
   return (
     <AppLayoutContainer>
       {/* Sidebar Components */}
@@ -80,13 +62,14 @@ function AppDesktopLayout({ user, sections, subscription }: AppLayoutProps) {
         <AppLayoutHeader>
           <div className="hidden lg:block" />
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <SubscriptionBadge subscription={subscription} />
-            <ProfileDropdown user={user} />
-          </div>
+          <Suspense fallback={<HeaderUserComponentsSkeleton />}>
+            <HeaderUserComponents />
+          </Suspense>
         </AppLayoutHeader>
 
-        <Outlet />
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <Outlet />
+        </Suspense>
       </AppLayoutContent>
     </AppLayoutContainer>
   );
@@ -96,7 +79,7 @@ function AppDesktopLayout({ user, sections, subscription }: AppLayoutProps) {
 /*           Mobile Layout          */
 //////////////////////////////////////
 
-function AppMobileLayout({ user, sections, subscription }: AppLayoutProps) {
+function AppMobileLayout({ sections }: AppLayoutProps) {
   return (
     <AppLayoutContainer>
       {/* Sidebar Components */}
@@ -121,13 +104,14 @@ function AppMobileLayout({ user, sections, subscription }: AppLayoutProps) {
 
           <div className="hidden lg:block" />
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <SubscriptionBadge subscription={subscription} />
-            <ProfileDropdown user={user} />
-          </div>
+          <Suspense fallback={<HeaderUserComponentsSkeleton />}>
+            <HeaderUserComponents />
+          </Suspense>
         </AppLayoutHeader>
 
-        <Outlet />
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <Outlet />
+        </Suspense>
       </AppLayoutContent>
     </AppLayoutContainer>
   );
@@ -159,4 +143,44 @@ function AppLayoutHeader({ children }: AppLayoutHeaderProps) {
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   return <div className="flex-1 flex flex-col overflow-hidden">{children}</div>;
+}
+
+function HeaderUserComponents() {
+  const { data: user } = useUser();
+  const { data: subscription } = useUserSubscription(user);
+
+  return (
+    <div className="flex items-center gap-2 sm:gap-3">
+      <SubscriptionBadge subscription={subscription} />
+      <ProfileDropdown user={user} />
+    </div>
+  );
+}
+
+function HeaderUserComponentsSkeleton() {
+  return (
+    <div className="flex items-center gap-2 sm:gap-3">
+      <Skeleton className="h-8 w-24 rounded-md" />
+      <Skeleton className="h-8 w-8 rounded-full" />
+    </div>
+  );
+}
+
+export function PageLoadingSkeleton() {
+  return (
+    <Page>
+      {/* Page header skeleton */}
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-72" />
+      </div>
+      {/* Content skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Skeleton className="h-32 rounded-lg" />
+        <Skeleton className="h-32 rounded-lg" />
+        <Skeleton className="h-32 rounded-lg" />
+      </div>
+      <Skeleton className="h-64 rounded-lg" />
+    </Page>
+  );
 }
