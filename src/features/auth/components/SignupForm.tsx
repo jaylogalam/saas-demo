@@ -16,6 +16,7 @@ import { OTPVerificationCard } from "./OTPVerificationForm";
 import { useSignUp } from "../hooks/useSignUp";
 import { useSignInWithGoogle } from "../hooks/useSignIn";
 import { useOtpSend, useOtpVerify } from "../hooks/useOtp";
+import { GoogleButton } from "./GoogleButton";
 
 export function SignupForm({
   className,
@@ -122,15 +123,7 @@ export function SignupForm({
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field>
-          <Button
-            variant="outline"
-            type="button"
-            onClick={() => signInWithGoogle.mutate()}
-            disabled={isLoading}
-          >
-            <GoogleIcon />
-            Sign up with Google
-          </Button>
+          <GoogleButton fnType="signup" disabled={isLoading} />
           <FieldDescription className="px-6 text-center">
             Already have an account?{" "}
             <Link to="/login" className="underline underline-offset-4">

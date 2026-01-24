@@ -13,6 +13,7 @@ import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { useSignInWithPassword, useSignInWithGoogle } from "../hooks/useSignIn";
+import { GoogleButton } from "./GoogleButton";
 
 type LoginFormProps = React.ComponentProps<"form">;
 
@@ -87,15 +88,7 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field>
-          <Button
-            variant="outline"
-            type="button"
-            onClick={() => signInWithGoogle.mutate()}
-            disabled={isLoading}
-          >
-            <GoogleIcon />
-            Login with Google
-          </Button>
+          <GoogleButton fnType="signin" disabled={isLoading} />
           <FieldDescription className="text-center">
             Don&apos;t have an account?{" "}
             <Link to="/signup" className="underline underline-offset-4">
