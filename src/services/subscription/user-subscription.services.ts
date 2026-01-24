@@ -12,7 +12,7 @@ export const UserSubscriptionServices = {
       .from("user_subscriptions")
       .select("*")
       .eq("customer_email", user.email)
-      .eq("active", true)
+      .eq("status", "active")
       .order("price", { ascending: false })
       .limit(1);
     if (!data) return null;
