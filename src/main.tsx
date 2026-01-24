@@ -1,13 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
+import "./index.css";
 
 // React Query
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 
 // React Router
-import { BrowserRouter } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes";
 
 // React Query Devtools
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -15,12 +16,14 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // Auth state listener
 import "@/lib/auth";
 
+// Toast notifications
+import { Toaster } from "sonner";
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <RouterProvider router={router} />
+      <Toaster position="bottom-right" theme="dark" />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>,
