@@ -8,6 +8,7 @@ import { useUser } from "@/hooks/auth/useUser";
 import { Link, Outlet } from "react-router-dom";
 import { Suspense } from "react";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
+import { ProfileIconSkeleton } from "@/components/icons/ProfileIcon";
 
 export function PublicLayout() {
   const { data: user } = useUser();
@@ -22,7 +23,7 @@ export function PublicLayout() {
           <NavbarLinkItem to="/about">About</NavbarLinkItem>
         </NavbarLinkList>
 
-        <Suspense fallback={<Skeleton className="h-9 w-9" />}>
+        <Suspense fallback={<ProfileIconSkeleton />}>
           {user ? <PublicNavbarProfile /> : <PublicNavbarAuthLinks />}
         </Suspense>
       </Navbar>
