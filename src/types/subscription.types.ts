@@ -4,21 +4,15 @@ export interface SubscriptionPlan {
   id: string;
   name: string;
   description: string;
-  price: {
-    monthly: number;
-    yearly: number;
-  };
-  priceIds: {
-    monthly: string;
-    yearly: string;
-  };
+  monthlyPrice: number;
+  yearlyPrice: number;
+  monthlyPriceId: string;
+  yearlyPriceId: string;
   currency: string;
   features: string[];
   highlighted?: boolean;
-  paymentLinks: {
-    monthly: string;
-    yearly: string;
-  };
+  monthlyPaymentLink: string;
+  yearlyPaymentLink: string;
 }
 
 export interface UserSubscription {
