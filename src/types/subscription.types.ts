@@ -2,36 +2,19 @@ export interface SubscriptionPlan {
   id: string;
   name: string;
   description: string;
-  price: {
-    monthly: number;
-    yearly: number;
-  };
-  priceIds: {
-    monthly: string;
-    yearly: string;
-  };
-  currency: string;
   features: string[];
-  highlighted?: boolean;
-  paymentLinks: {
-    monthly: string;
-    yearly: string;
-  };
+  highlighted: boolean;
+  interval: "monthly" | "yearly";
+  price: number;
+  currency: string;
+  paymentLink: string;
 }
 
 export interface UserSubscription {
-  // Product details
-  name: string;
-  description: string;
-  features: string[];
-
-  // Price details
-  price: string;
-  currency: string;
-  interval: "monthly" | "yearly";
-
-  // Subscription details
-  id: string;
+  subscriptionId: string;
+  userId: string;
+  email: string;
+  plan: SubscriptionPlan;
   status:
     | "incomplete"
     | "incomplete_expired"

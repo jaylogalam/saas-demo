@@ -10,7 +10,7 @@ import type { User } from "@/types/user.types";
 export const useUserSubscription = (user: Pick<User, "email"> | null) => {
   return useSuspenseQuery({
     queryKey: queryKeys.subscription.user(user?.email),
-    queryFn: () => UserSubscriptionServices.getUserSubscription(user),
+    queryFn: () => UserSubscriptionServices.getUserSubscriptions(user),
     staleTime: 1000 * 60 * 5,
   });
 };

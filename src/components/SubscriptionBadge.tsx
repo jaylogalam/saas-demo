@@ -1,7 +1,7 @@
-import type { UserSubscription } from "@/types/subscription.types";
+import type { SubscriptionPlan } from "@/types/subscription.types";
 
 type SubscriptionBadgeProps = {
-  subscription: Pick<UserSubscription, "name"> | null;
+  subscription: Pick<SubscriptionPlan, "name"> | null;
 };
 
 export function SubscriptionBadge({ subscription }: SubscriptionBadgeProps) {

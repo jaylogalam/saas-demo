@@ -34,10 +34,9 @@ const featureTooltips: Record<string, string> = {
 
 interface PricingCardProps {
   plan: SubscriptionPlan;
-  billingInterval: "monthly" | "yearly";
 }
 
-export function PricingCard({ plan, billingInterval }: PricingCardProps) {
+export function PricingCard({ plan }: PricingCardProps) {
   // Store and hooks
   const { data: user } = useUser();
   const { data: userSubscription } = useUserSubscription(user);
@@ -45,8 +44,8 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
   const { handleCheckout } = useCheckout();
 
   const isCurrentPlan =
-    userSubscription?.name === plan.name &&
-    userSubscription?.interval === billingInterval;
+    userSubscription?.[0].plan.name === plan.name &&
+    userSubscription?.[0].plan.interval === plan.interval;
 
   return (
     <>
@@ -80,23 +79,17 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
             <div className="text-center mb-6">
               <div className="flex items-baseline justify-center gap-1">
                 <span className="text-5xl font-bold tracking-tight">
-                  {formatSubscriptionPrice(
-                    plan.price[billingInterval],
-                    plan.currency,
-                  )}
+                  {formatSubscriptionPrice(plan.price, plan.currency)}
                 </span>
                 <span className="text-muted-foreground text-lg">
-                  {billingInterval === "yearly" ? "/year" : "/mo"}
+                  {plan.interval === "yearly" ? "/year" : "/mo"}
                 </span>
               </div>
               {/* Monthly equivalent */}
-              {billingInterval === "yearly" && (
+              {plan.interval === "yearly" && (
                 <div className="flex items-center justify-center gap-2 mt-2">
                   <span className="text-sm text-muted-foreground">
-                    {formatSubscriptionPrice(
-                      plan.price[billingInterval] / 12,
-                      plan.currency,
-                    )}
+                    {formatSubscriptionPrice(plan.price / 12, plan.currency)}
                     /mo
                   </span>
                   {/* TODO: Calculate actual savings on yearly plan */}
@@ -150,7 +143,7 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
                 className="w-full"
                 size="lg"
                 variant={plan.highlighted ? "default" : "outline"}
-                onClick={() => handleCheckout(plan, billingInterval)}
+                onClick={() => handleCheckout(plan)}
               >
                 {userSubscription ? "Change Plan" : "Get Started"}
               </Button>

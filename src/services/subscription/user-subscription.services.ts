@@ -3,20 +3,17 @@ import type { UserSubscription } from "@/types/subscription.types";
 import type { User } from "@/types/user.types";
 
 export const UserSubscriptionServices = {
-  getUserSubscription: async (
+  getUserSubscriptions: async (
     user: Pick<User, "email"> | null,
-  ): Promise<UserSubscription | null> => {
+  ): Promise<UserSubscription[] | null> => {
     if (!user) return null;
 
     const { data } = await supabase
-      .from("user_subscriptions")
+      .from("user_subscriptions_v2")
       .select("*")
-      .eq("customer_email", user.email)
-      .eq("status", "active")
-      .order("price", { ascending: false })
-      .limit(1);
-    if (!data) return null;
+      .eq("email", user.email)
+      .order("current_period_end", { ascending: false });
 
-    return data[0] as UserSubscription;
+    return data as UserSubscription[];
   },
 };

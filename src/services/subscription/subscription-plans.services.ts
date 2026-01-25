@@ -4,9 +4,9 @@ import type { SubscriptionPlan } from "@/types/subscription.types";
 export const SubscriptionPlansService = {
   getSubscriptionPlans: async (): Promise<SubscriptionPlan[]> => {
     const { data, error } = await supabase
-      .from("subscription_plans")
+      .from("subscription_plans_v2")
       .select("*")
-      .order("monthly_price");
+      .order("price");
 
     // Handle errors
     if (error) throw error;
@@ -16,21 +16,13 @@ export const SubscriptionPlansService = {
       id: plan.id,
       name: plan.name,
       description: plan.description,
-      price: {
-        monthly: plan.monthly_price,
-        yearly: plan.yearly_price,
-      },
-      priceIds: {
-        monthly: plan.monthly_price_id,
-        yearly: plan.yearly_price_id,
-      },
+      price: plan.price,
+      priceId: plan.price_id,
+      interval: plan.interval,
       currency: plan.currency,
       features: plan.features,
       highlighted: plan.highlighted,
-      paymentLinks: {
-        monthly: plan.monthly_payment_link,
-        yearly: plan.yearly_payment_link,
-      },
+      paymentLink: plan.payment_link,
     })) as SubscriptionPlan[];
   },
 };

@@ -13,9 +13,10 @@ export const queryKeys = {
     // Subscription-related keys
     subscription: {
         all: ["subscription"] as const,
-        plans: () => [...queryKeys.subscription.all, "plans"] as const,
-        plan: (planId: string) =>
-            [...queryKeys.subscription.all, "plan", planId] as const,
+        plans: (productId?: string) =>
+            [...queryKeys.subscription.all, "plans", productId] as const,
+        plan: (productId: string) =>
+            [...queryKeys.subscription.all, "plan", productId] as const,
         user: (userId: string | undefined) =>
             ["user-subscription", userId] as const,
         prorationPreview: (subscriptionId: string, priceId: string) =>

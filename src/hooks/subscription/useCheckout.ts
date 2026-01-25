@@ -1,4 +1,3 @@
-import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { useUser } from "@/hooks/auth/useUser";
 import { redirect } from "react-router-dom";
 import type { SubscriptionPlan } from "@/types/subscription.types";
@@ -10,16 +9,12 @@ import { toast } from "sonner";
  */
 export function useCheckout() {
   // State
-  const { billingInterval } = useSubscriptionStore();
   const { data: user } = useUser();
 
   // Hooks
   const { data: userSubscription } = useUserSubscription(user);
 
-  const handleCheckout = (
-    plan: SubscriptionPlan,
-    interval?: "monthly" | "yearly",
-  ) => {
+  const handleCheckout = (plan: SubscriptionPlan) => {
     // Check if user is logged in
     if (!user) {
       redirect("/login");
@@ -33,8 +28,7 @@ export function useCheckout() {
     }
 
     // Check if payment link is available
-    const selectedInterval = interval ?? billingInterval;
-    const paymentLink = plan.paymentLinks[selectedInterval];
+    const paymentLink = plan.paymentLink;
 
     if (!paymentLink) {
       toast.error(

@@ -1,6 +1,5 @@
 import { PricingCard, PricingCardSkeleton } from "@/components/PricingCard";
-import { useSubscriptionPlans } from "@/hooks/subscription/useSubscriptionPlans";
-import { useSubscriptionStore } from "@/store/subscriptionStore";
+import { useSubscriptionPlansList } from "@/hooks/subscription/useSubscriptionPlans";
 import { BillingToggle } from "@/components/BillingToggle";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { Page } from "@/components/ui/page";
@@ -9,9 +8,8 @@ import { useUser } from "@/hooks/auth/useUser";
 export default function PricingPage() {
   const { data: user } = useUser();
 
-  const { billingInterval } = useSubscriptionStore();
-
-  const { subscriptionPlans, subscriptionPlansStatus } = useSubscriptionPlans();
+  const { data: subscriptionPlans, status: subscriptionPlansStatus } =
+    useSubscriptionPlansList();
   const { isPending } = useUserSubscription(user);
 
   return (
@@ -50,11 +48,7 @@ export default function PricingPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto items-start justify-items-center">
             {subscriptionPlans?.map((plan) => (
-              <PricingCard
-                key={plan.id}
-                plan={plan}
-                billingInterval={billingInterval}
-              />
+              <PricingCard key={plan.id} plan={plan} />
             ))}
           </div>
         )}
