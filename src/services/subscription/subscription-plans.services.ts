@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { toCamelCase } from "@/utils/caseTransform";
 import type { SubscriptionPlan } from "@/types/subscription.types";
 
 export const SubscriptionPlansService = {
@@ -8,10 +9,8 @@ export const SubscriptionPlansService = {
       .select("*")
       .order("name");
 
-    // Handle errors
     if (error) throw error;
 
-    // Return as formatted subscription plans
-    return data as SubscriptionPlan[];
+    return toCamelCase<SubscriptionPlan[]>(data);
   },
 };
