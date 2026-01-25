@@ -4,5 +4,5 @@ export const formatSubscriptionPrice = (price: number, currency?: string) => {
         currency: currency || "usd",
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
-    }).format(price);
+    }).format(price / 100);
 };

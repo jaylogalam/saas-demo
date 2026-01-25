@@ -1,10 +1,7 @@
 import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { useUser } from "@/hooks/auth/useUser";
 import { redirect } from "react-router-dom";
-import type {
-  BillingInterval,
-  SubscriptionPlan,
-} from "@/types/subscription.types";
+import type { SubscriptionPlan } from "@/types/subscription.types";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { toast } from "sonner";
 
@@ -21,7 +18,7 @@ export function useCheckout() {
 
   const handleCheckout = (
     plan: SubscriptionPlan,
-    interval?: BillingInterval,
+    interval?: "monthly" | "yearly",
   ) => {
     // Check if user is logged in
     if (!user) {

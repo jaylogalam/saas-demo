@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Check, Sparkles, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,14 +16,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type {
-  SubscriptionPlan,
-  BillingInterval,
-} from "@/types/subscription.types";
+import type { SubscriptionPlan } from "@/types/subscription.types";
 import { useCheckout } from "@/hooks/subscription/useCheckout";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { Skeleton } from "./ui/skeleton";
-import { PlanChangeModal } from "./PlanChangeModal";
 import { formatSubscriptionPrice } from "../utils/formatSubscriptionPrice";
 import { useUser } from "@/hooks/auth/useUser";
 
@@ -39,31 +34,19 @@ const featureTooltips: Record<string, string> = {
 
 interface PricingCardProps {
   plan: SubscriptionPlan;
-  billingInterval: BillingInterval;
+  billingInterval: "monthly" | "yearly";
 }
 
 export function PricingCard({ plan, billingInterval }: PricingCardProps) {
   // Store and hooks
   const { data: user } = useUser();
-  const { data: userSubscription, refetch: refetchUserSubscription } =
-    useUserSubscription(user);
+  const { data: userSubscription } = useUserSubscription(user);
 
-  // Modal state
-  const [showPlanChangeModal, setShowPlanChangeModal] = useState(false);
   const { handleCheckout } = useCheckout();
 
   const isCurrentPlan =
     userSubscription?.name === plan.name &&
-    userSubscription?.interval === billingInterval.replace("ly", "");
-
-  // Get current plan price for the modal
-  const currentPlanPrice = userSubscription
-    ? ((
-        userSubscription.price as {
-          unit_amount?: number;
-        }
-      )?.unit_amount ?? 0)
-    : 0;
+    userSubscription?.interval === billingInterval;
 
   return (
     <>
@@ -175,24 +158,6 @@ export function PricingCard({ plan, billingInterval }: PricingCardProps) {
           </CardFooter>
         </Card>
       </TooltipProvider>
-
-      {/* Plan Change Modal */}
-      {userSubscription && (
-        <PlanChangeModal
-          open={showPlanChangeModal}
-          onOpenChange={setShowPlanChangeModal}
-          currentPlan={{
-            name: userSubscription.name,
-            price: currentPlanPrice / 100,
-            interval: userSubscription.interval,
-          }}
-          newPlan={plan}
-          newInterval={billingInterval}
-          subscriptionId={userSubscription.id}
-          newPriceId={plan.priceIds[billingInterval]}
-          onSuccess={() => refetchUserSubscription()}
-        />
-      )}
     </>
   );
 }
