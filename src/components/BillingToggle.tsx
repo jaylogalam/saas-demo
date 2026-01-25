@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { cn } from "@/utils/cn";
@@ -14,17 +15,23 @@ export function BillingToggle({ isLoading = false }: BillingToggleProps) {
   return (
     <div className="flex flex-col items-center gap-4 mb-12 mt-8">
       <div className="relative flex items-center gap-0 p-1.5 bg-muted/50 border border-border rounded-full">
-        <BillingToggleButton
-          name="Monthly"
+        <Button
+          variant="toggle"
+          className="w-[100px] py-2.5"
           onClick={() => setBillingInterval("monthly")}
           disabled={billingInterval === "monthly"}
-        />
+        >
+          Monthly
+        </Button>
 
-        <BillingToggleButton
-          name="Yearly"
+        <Button
+          variant="toggle"
+          className="w-[100px] py-2.5"
           onClick={() => setBillingInterval("yearly")}
           disabled={billingInterval === "yearly"}
-        />
+        >
+          Yearly
+        </Button>
 
         <div
           className={cn(
@@ -46,25 +53,5 @@ function BillingToggleSkeleton() {
         <Skeleton className="h-[52px] w-[200px] rounded-full" />
       </div>
     </div>
-  );
-}
-
-function BillingToggleButton({
-  name,
-  disabled = false,
-  ...props
-}: React.ComponentProps<"button">) {
-  return (
-    <button
-      className={cn(
-        "relative z-10 w-[100px] py-2.5 text-sm font-medium text-center rounded-full transition-all duration-300",
-        disabled
-          ? "text-primary-foreground"
-          : "text-muted-foreground hover:text-foreground",
-      )}
-      {...props}
-    >
-      <span>{name}</span>
-    </button>
   );
 }
