@@ -104,7 +104,10 @@ export function PricingCard({ plan }: PricingCardProps) {
 
             {/* Features List */}
             <ul className="space-y-3">
-              {(Array.isArray(plan.features) ? plan.features : plan.features.split(',')).map((feature, index) => {
+              {(Array.isArray(plan.features)
+                ? plan.features
+                : plan.features.split(",")
+              ).map((feature, index) => {
                 const tooltip = featureTooltips[feature];
                 return (
                   <li key={index} className="flex items-start gap-3">

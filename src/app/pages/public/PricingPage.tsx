@@ -4,13 +4,20 @@ import { BillingToggle } from "@/components/BillingToggle";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { Page } from "@/components/ui/page";
 import { useUser } from "@/hooks/auth/useUser";
+import { useSubscriptionStore } from "@/store/subscriptionStore";
 
 export default function PricingPage() {
   const { data: user } = useUser();
 
+  const { billingInterval } = useSubscriptionStore();
+
   const { data: subscriptionPlans, status: subscriptionPlansStatus } =
     useSubscriptionPlansList();
   const { isPending } = useUserSubscription(user);
+
+  const filteredPlans = subscriptionPlans?.filter(
+    (plan) => plan.interval === billingInterval,
+  );
 
   return (
     <Page variant="public">
@@ -47,7 +54,7 @@ export default function PricingPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto items-start justify-items-center">
-            {subscriptionPlans?.map((plan) => (
+            {filteredPlans?.map((plan) => (
               <PricingCard key={plan.id} plan={plan} />
             ))}
           </div>
