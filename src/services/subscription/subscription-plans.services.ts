@@ -20,7 +20,11 @@ export const SubscriptionPlansService = {
       priceId: plan.price_id,
       interval: plan.interval,
       currency: plan.currency,
-      features: plan.features,
+      features: Array.isArray(plan.features)
+        ? plan.features
+        : typeof plan.features === "string"
+          ? plan.features.split(",").map((f: string) => f.trim())
+          : [],
       highlighted: plan.highlighted,
       paymentLink: plan.payment_link,
     })) as SubscriptionPlan[];
