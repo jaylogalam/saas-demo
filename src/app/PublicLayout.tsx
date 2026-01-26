@@ -40,11 +40,12 @@ function PublicNavbarProfile() {
   const { data: user } = useUser();
   if (!user) return null;
 
-  const { data: userSubscription } = useUserSubscription(user);
+  const { data: userSubscriptions } = useUserSubscription(user);
+  const subscription = userSubscriptions?.[0]?.plan ?? null;
 
   return (
     <div className="flex items-center gap-4">
-      <SubscriptionBadge subscription={userSubscription} />
+      <SubscriptionBadge subscription={subscription} />
       <ProfileDropdown user={user} />
     </div>
   );
