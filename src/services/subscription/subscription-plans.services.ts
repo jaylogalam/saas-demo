@@ -4,7 +4,7 @@ import type { SubscriptionPlan } from "@/types/subscription.types";
 export const SubscriptionPlansService = {
   getSubscriptionPlans: async (): Promise<SubscriptionPlan[]> => {
     const { data, error } = await supabase
-      .from("subscription_plans_v2")
+      .from("subscription_plans")
       .select("*")
       .order("price");
 

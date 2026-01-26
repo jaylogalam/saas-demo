@@ -147,11 +147,12 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
 function HeaderUserComponents() {
   const { data: user } = useUser();
-  const { data: subscription } = useUserSubscription(user);
+  const { data: subscriptions } = useUserSubscription(user);
+  const subscriptionPlan = subscriptions?.[0].plan ?? null;
 
   return (
     <div className="flex items-center gap-2 sm:gap-3">
-      <SubscriptionBadge subscription={subscription} />
+      <SubscriptionBadge subscription={subscriptionPlan} />
       <ProfileDropdown user={user} />
     </div>
   );

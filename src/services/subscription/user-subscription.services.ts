@@ -9,7 +9,7 @@ export const UserSubscriptionServices = {
     if (!user) return null;
 
     const { data } = await supabase
-      .from("user_subscriptions_v2")
+      .from("user_subscriptions")
       .select("*")
       .eq("email", user.email)
       .order("current_period_end", { ascending: false });
