@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User as GuestIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { User } from "@/types/user.types";
