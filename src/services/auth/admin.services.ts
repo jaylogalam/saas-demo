@@ -5,6 +5,7 @@ import camelcaseKeys from "camelcase-keys";
 
 export const AdminServices = {
     // TODO: Improve logic without needing userId
+    // TODO: Create admin object
     getAdmin: async (user: Pick<User, "id"> | null): Promise<Admin> => {
         if (!user) return false;
 

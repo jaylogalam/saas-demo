@@ -10,7 +10,6 @@ type UpdatePasswordProps = {
 };
 
 export const PasswordServices = {
-  // TODO: Identify return type
   resetPassword: async ({ email, redirectTo }: ResetPasswordProps) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: redirectTo,
@@ -18,7 +17,6 @@ export const PasswordServices = {
     if (error) throw error;
   },
 
-  // TODO: Identify return type
   updatePassword: async ({ password }: UpdatePasswordProps) => {
     const { error } = await supabase.auth.updateUser({
       password,

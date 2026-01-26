@@ -2,7 +2,6 @@ import { supabase } from "@/lib/supabase";
 import type { OtpParams, OtpVerifyParams } from "../../types/otp.types";
 
 export const OtpServices = {
-  // TODO: Identify return type
   sendOtp: async (params: OtpParams) => {
     switch (params.type) {
       case "signup":
@@ -21,7 +20,6 @@ export const OtpServices = {
     }
   },
 
-  // TODO: Identify return type
   verifyOtp: async (params: OtpVerifyParams) => {
     const { data, error } = await supabase.auth.verifyOtp({
       email: params.email,
