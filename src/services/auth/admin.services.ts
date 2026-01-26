@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import type { Admin, AdminUserView } from "../../types/admin.types";
 import type { User } from "@/types/user.types";
+import camelcaseKeys from "camelcase-keys";
 
 export const AdminServices = {
     // TODO: Improve logic without needing userId
@@ -29,6 +30,9 @@ export const AdminServices = {
             .order("joined_at", { ascending: false });
 
         if (error) throw error;
-        return (data as AdminUserView[]) ?? [];
+
+        return data.map((user: any) =>
+            camelcaseKeys(user, { deep: true })
+        ) as AdminUserView[];
     },
 };

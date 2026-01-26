@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import type { UserSubscription } from "@/types/subscription.types";
 import type { User } from "@/types/user.types";
+import camelCaseKeys from "camelcase-keys";
 
 export const UserSubscriptionServices = {
   getUserSubscriptions: async (
@@ -14,6 +15,10 @@ export const UserSubscriptionServices = {
       .eq("email", user.email)
       .order("current_period_end", { ascending: false });
 
-    return data as UserSubscription[];
+    if (!data) return null;
+
+    return data.map((subscription) =>
+      camelCaseKeys(subscription, { deep: true })
+    ) as UserSubscription[];
   },
 };
