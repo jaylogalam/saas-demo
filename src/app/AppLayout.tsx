@@ -148,7 +148,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 function HeaderUserComponents() {
   const { data: user } = useUser();
   const { data: subscriptions } = useUserSubscription(user);
-  const subscriptionPlan = subscriptions?.[0].plan ?? null;
+  const subscriptionPlan = subscriptions?.[0]?.plan ?? null;
 
   return (
     <div className="flex items-center gap-2 sm:gap-3">

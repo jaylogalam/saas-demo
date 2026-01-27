@@ -1,13 +1,38 @@
 import { supabase } from "@/lib/supabase";
 import type { User } from "@/types/user.types";
 import camelcaseKeys from "camelcase-keys";
+import { SessionServices } from "./session.services";
 
 export const UserServices = {
   getUser: async (): Promise<User | null> => {
-    const { data } = await supabase
+    // TODO: Optimize getUser function for admins
+    const role = await SessionServices.getRole();
+
+    if (role === "admin") {
+      const { data, error } = await supabase
+        .from("users")
+        .select()
+        .eq("id", (await supabase.auth.getUser()).data.user?.id)
+        .single();
+
+      if (error) throw error;
+
+      if (!data) return null;
+
+      return camelcaseKeys(data, { deep: true }) as User;
+    }
+
+    const { data, error } = await supabase
       .from("users")
       .select()
       .single();
+
+    if (error) {
+      if (error.code === "PGRST116") {
+        return null;
+      }
+      throw error;
+    }
 
     if (!data) return null;
 

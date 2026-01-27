@@ -35,17 +35,16 @@ const SidebarAdminSection = {
 
 import type { SidebarSection } from "@/types/sidebar.types";
 import { useMemo } from "react";
-import { useUser } from "./auth/useUser";
-import { useAdmin } from "./auth/useAdmin";
+import { useRole } from "./auth/useSession";
 
 export const useSidebar = (): SidebarSection[] => {
-  const { data: user } = useUser();
-  const { data: admin } = useAdmin(user);
+  const { data: role } = useRole();
+
   const sections = useMemo(() => {
-    return admin
+    return role === "admin"
       ? [SidebarPlatformSection, SidebarAdminSection]
       : [SidebarPlatformSection];
-  }, [admin]);
+  }, [role]);
 
   return sections;
 };

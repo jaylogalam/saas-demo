@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Navigate } from "react-router-dom";
 import { Users } from "lucide-react";
 import {
   Card,
@@ -19,19 +18,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { AdminUserView } from "@/types/admin.types";
-import { useAdmin, useAdminUserList } from "@/hooks/auth/useAdmin";
-import { useUser } from "@/hooks/auth/useUser";
+import { useAdminUserList } from "@/hooks/auth/useAdmin";
 
 // ============================================================================
 // Main Export
 // ============================================================================
 
 const AdminUsersPage = () => {
-  const { data: user } = useUser();
-  const { data: admin } = useAdmin(user);
   const { data: users } = useAdminUserList();
-
-  if (!admin) return <Navigate to="/dashboard" replace />;
 
   // Deduplicate users (a user may appear multiple times if they have multiple subscriptions)
   const uniqueUsers = users

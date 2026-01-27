@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Navigate } from "react-router-dom";
 import { Palette } from "lucide-react";
 import {
   Card,
@@ -9,8 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Page, PageHeader } from "@/components/ui/page";
-import { useAdmin } from "@/hooks/auth/useAdmin";
-import { useUser } from "@/hooks/auth/useUser";
 
 // ============================================================================
 // Loading Skeleton
@@ -35,11 +32,6 @@ function TestUISkeleton() {
 // ============================================================================
 
 function TestUIPageContent() {
-  const { data: user } = useUser();
-  const { data: admin } = useAdmin(user);
-
-  if (!admin) return <Navigate to="/dashboard" replace />;
-
   return (
     <Page>
       <PageHeader

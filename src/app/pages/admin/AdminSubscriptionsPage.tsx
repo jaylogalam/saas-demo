@@ -25,8 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAdmin, useAdminUserList } from "@/hooks/auth/useAdmin";
-import { useUser } from "@/hooks/auth/useUser";
+import { useAdminUserList } from "@/hooks/auth/useAdmin";
 import type { AdminUserView } from "@/types/admin.types";
 
 // ============================================================================
@@ -34,11 +33,7 @@ import type { AdminUserView } from "@/types/admin.types";
 // ============================================================================
 
 const AdminSubscriptionsPage = () => {
-  const { data: user } = useUser();
-  const { data: admin } = useAdmin(user);
   const { data: adminUserList } = useAdminUserList();
-
-  if (!admin) return <Navigate to="/dashboard" replace />;
 
   const allUsers = adminUserList ?? [];
   const subscribedCount = allUsers.filter((u) => u.subscription_status).length;
