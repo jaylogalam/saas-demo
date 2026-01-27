@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { AdminUserView } from "@/types/admin.types";
+import type { User } from "@/types/user.types";
 import { useAdminUserList } from "@/hooks/auth/useAdmin";
 
 // ============================================================================
@@ -29,7 +29,7 @@ const AdminUsersPage = () => {
 
   // Deduplicate users (a user may appear multiple times if they have multiple subscriptions)
   const uniqueUsers = users
-    ? Array.from(new Map(users.map((u) => [u.user_id, u])).values())
+    ? Array.from(new Map(users.map((u) => [u.id, u])).values())
     : [];
   const userCount = uniqueUsers.length;
 
@@ -99,7 +99,7 @@ function AdminSkeleton() {
 // ============================================================================
 
 interface UsersTableProps {
-  users: AdminUserView[];
+  users: User[];
 }
 
 function UsersTable({ users }: UsersTableProps) {
@@ -127,7 +127,7 @@ function UsersTable({ users }: UsersTableProps) {
         </TableHeader>
         <TableBody>
           {users.map((user) => (
-            <UserRow key={user.user_id} user={user} />
+            <UserRow key={user.id} user={user} />
           ))}
         </TableBody>
       </Table>
@@ -140,19 +140,19 @@ function UsersTable({ users }: UsersTableProps) {
 // ============================================================================
 
 interface UserRowProps {
-  user: AdminUserView;
+  user: User;
 }
 
 function UserRow({ user }: UserRowProps) {
   return (
     <TableRow>
       <TableCell>
-        <p className="text-white font-medium">{user.full_name || "—"}</p>
+        <p className="text-white font-medium">{user.name || "—"}</p>
         <p>{user.email}</p>
       </TableCell>
-      <TableCell>{formatDate(user.joined_at)}</TableCell>
+      <TableCell>{formatDate(user.createdAt)}</TableCell>
       <TableCell className="font-mono text-xs">
-        {user.user_id.slice(0, 8)}...
+        {user.id.slice(0, 8)}...
       </TableCell>
     </TableRow>
   );

@@ -1,9 +1,10 @@
 import { supabase } from "@/lib/supabase";
-import type { AdminUserView } from "../../types/admin.types";
 import camelcaseKeys from "camelcase-keys";
+import type { User } from "@/types/user.types";
 
 export const AdminServices = {
-    getUserList: async (): Promise<AdminUserView[]> => {
+    // TODO: Move getUserList function to UserServices
+    getUserList: async (): Promise<User[] | null> => {
         const { data, error } = await supabase
             .from("users")
             .select("*")
@@ -13,6 +14,6 @@ export const AdminServices = {
 
         return data.map((user: any) =>
             camelcaseKeys(user, { deep: true })
-        ) as AdminUserView[];
+        ) as User[];
     },
 };
