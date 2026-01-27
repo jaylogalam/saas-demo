@@ -22,7 +22,11 @@ export const ProfileIcon = forwardRef<
       )}
       {...props}
     >
-      <AvatarImage src={user.avatarUrl} alt={user.name} />
+      <AvatarImage
+        src={user.avatarUrl}
+        alt={user.name}
+        referrerPolicy="no-referrer"
+      />
       <AvatarFallback className="bg-muted flex items-center justify-center size-full rounded-full">
         <GuestIcon className="size-5 text-muted-foreground" />
       </AvatarFallback>
