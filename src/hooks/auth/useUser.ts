@@ -9,3 +9,12 @@ export const useUser = () => {
     staleTime: 1000 * 60 * 5,
   });
 };
+
+export const useUserList = () => {
+  return useSuspenseQuery({
+    // TODO: Fix query key
+    queryKey: ["auth", "userList"],
+    queryFn: () => UserServices.listUsers(),
+    staleTime: 1000 * 60 * 5,
+  });
+};

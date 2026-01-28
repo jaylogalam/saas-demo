@@ -18,14 +18,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { User } from "@/types/user.types";
-import { useAdminUserList } from "@/hooks/auth/useAdmin";
+import { useUserList } from "@/hooks/auth/useUser";
 
 // ============================================================================
 // Main Export
 // ============================================================================
 
 const AdminUsersPage = () => {
-  const { data: users } = useAdminUserList();
+  const { data: users } = useUserList();
 
   // Deduplicate users (a user may appear multiple times if they have multiple subscriptions)
   const uniqueUsers = users

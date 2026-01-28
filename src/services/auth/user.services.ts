@@ -27,15 +27,23 @@ export const UserServices = {
       .select()
       .single();
 
-    if (error) {
-      if (error.code === "PGRST116") {
-        return null;
-      }
-      throw error;
-    }
+    if (error) return null;
 
     if (!data) return null;
 
     return camelcaseKeys(data, { deep: true }) as User;
+  },
+
+  listUsers: async (): Promise<User[] | null> => {
+    const { data, error } = await supabase
+      .from("users")
+      .select()
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    if (!data) return null;
+
+    return camelcaseKeys(data, { deep: true }) as User[];
   },
 };
