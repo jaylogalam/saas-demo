@@ -11,7 +11,7 @@ export interface SubscriptionPlan {
 }
 
 export interface UserSubscription {
-  subscriptionId: string;
+  id: string;
   userId: string;
   email: string;
   plan: SubscriptionPlan;
@@ -24,6 +24,7 @@ export interface UserSubscription {
     | "canceled"
     | "unpaid"
     | "paused";
+  currentPeriodStart: number;
   currentPeriodEnd: number;
   cancelAtPeriodEnd: boolean;
 }

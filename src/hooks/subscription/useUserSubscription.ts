@@ -14,3 +14,12 @@ export const useUserSubscription = (user: Pick<User, "email"> | null) => {
     staleTime: 1000 * 60 * 5,
   });
 };
+
+export const useUserSubscriptionList = () => {
+  return useSuspenseQuery({
+    // TODO: Fix query key
+    queryKey: ["user-subscriptions-list"],
+    queryFn: () => UserSubscriptionServices.listAllUserSubscriptions(),
+    staleTime: 1000 * 60 * 5,
+  });
+};

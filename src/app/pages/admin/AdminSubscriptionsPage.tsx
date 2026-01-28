@@ -25,22 +25,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAdminUserList } from "@/hooks/auth/useAdmin";
-import type { AdminUserView } from "@/types/admin.types";
+import { useUserSubscriptionList } from "@/hooks/subscription/useUserSubscription";
+import type { UserSubscription } from "@/types/subscription.types";
 
 // ============================================================================
 // Main Export
 // ============================================================================
 
 const AdminSubscriptionsPage = () => {
-  const { data: adminUserList } = useAdminUserList();
+  const { data: userSubscriptionList } = useUserSubscriptionList();
 
-  const allUsers = adminUserList ?? [];
-  const subscribedCount = allUsers.filter((u) => u.subscription_status).length;
-  const activeCount = allUsers.filter(
-    (u) =>
-      u.subscription_status === "active" ||
-      u.subscription_status === "trialing",
+  const allSubscriptions = userSubscriptionList ?? [];
+  const subscribedCount = allSubscriptions.filter((u) => u.status).length;
+  const activeCount = allSubscriptions.filter(
+    (s) => s.status === "active" || s.status === "trialing",
   ).length;
 
   return (
@@ -69,8 +67,10 @@ const AdminSubscriptionsPage = () => {
             <CardHeader className="pb-2">
               <CardDescription>Conversion Rate</CardDescription>
               <CardTitle className="text-3xl">
-                {allUsers.length > 0
-                  ? Math.round((subscribedCount / allUsers.length) * 100)
+                {allSubscriptions.length > 0
+                  ? Math.round(
+                      (subscribedCount / allSubscriptions.length) * 100,
+                    )
                   : 0}
                 %
               </CardTitle>
@@ -90,7 +90,7 @@ const AdminSubscriptionsPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
-            <SubscriptionsTable users={allUsers} />
+            <SubscriptionsTable subscriptions={allSubscriptions} />
           </CardContent>
         </Card>
       </Page>
@@ -168,11 +168,11 @@ function getStatusConfig(status: string | null) {
 // ============================================================================
 
 interface SubscriptionsTableProps {
-  users: AdminUserView[];
+  subscriptions: UserSubscription[];
 }
 
-function SubscriptionsTable({ users }: SubscriptionsTableProps) {
-  const subscribedUsers = users.filter((u) => u.subscription_status);
+function SubscriptionsTable({ subscriptions }: SubscriptionsTableProps) {
+  const subscribedUsers = subscriptions.filter((u) => u.status);
 
   if (subscribedUsers.length === 0) {
     return (
@@ -200,8 +200,11 @@ function SubscriptionsTable({ users }: SubscriptionsTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {subscribedUsers.map((user) => (
-            <SubscriptionRow key={user.subscription_id} user={user} />
+          {subscribedUsers.map((subscription) => (
+            <SubscriptionRow
+              key={subscription.id}
+              subscription={subscription}
+            />
           ))}
         </TableBody>
       </Table>
@@ -214,11 +217,11 @@ function SubscriptionsTable({ users }: SubscriptionsTableProps) {
 // ============================================================================
 
 interface SubscriptionRowProps {
-  user: AdminUserView;
+  subscription: UserSubscription;
 }
 
-function SubscriptionRow({ user }: SubscriptionRowProps) {
-  const statusConfig = getStatusConfig(user.subscription_status);
+function SubscriptionRow({ subscription }: SubscriptionRowProps) {
+  const statusConfig = getStatusConfig(subscription.status);
   if (!statusConfig) return null; // Skip users without subscriptions
 
   const StatusIcon = statusConfig.icon;
@@ -226,11 +229,10 @@ function SubscriptionRow({ user }: SubscriptionRowProps) {
   return (
     <TableRow variant="body">
       <TableCell>
-        <p className="text-foreground font-medium">{user.full_name || "—"}</p>
-        <p>{user.email}</p>
+        <p>{subscription.email}</p>
       </TableCell>
       <TableCell>
-        <span className="font-medium">{user.product_name}</span>
+        <span className="font-medium">{subscription.plan.name}</span>
       </TableCell>
       <TableCell>
         <Badge className={statusConfig.color} variant="outline">
@@ -238,15 +240,15 @@ function SubscriptionRow({ user }: SubscriptionRowProps) {
           {statusConfig.label}
         </Badge>
       </TableCell>
-      <TableCell capitalize>{user.billing_interval || "—"}</TableCell>
+      <TableCell capitalize>{subscription.plan.interval || "—"}</TableCell>
       <TableCell>
-        {user.current_period_start
-          ? formatUnixTimestamp(user.current_period_start)
+        {subscription.currentPeriodStart
+          ? formatUnixTimestamp(subscription.currentPeriodStart)
           : "—"}
       </TableCell>
       <TableCell>
-        {user.current_period_end
-          ? formatUnixTimestamp(user.current_period_end)
+        {subscription.currentPeriodEnd
+          ? formatUnixTimestamp(subscription.currentPeriodEnd)
           : "—"}
       </TableCell>
     </TableRow>

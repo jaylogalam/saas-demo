@@ -21,4 +21,17 @@ export const UserSubscriptionServices = {
       camelCaseKeys(subscription, { deep: true })
     ) as UserSubscription[];
   },
+
+  listAllUserSubscriptions: async (): Promise<UserSubscription[] | null> => {
+    const { data } = await supabase
+      .from("user_subscriptions")
+      .select("*")
+      .order("current_period_end", { ascending: false });
+
+    if (!data) return null;
+
+    return data.map((subscription) =>
+      camelCaseKeys(subscription, { deep: true })
+    ) as UserSubscription[];
+  },
 };
