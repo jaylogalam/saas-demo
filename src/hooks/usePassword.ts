@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
-import { PasswordServices } from "@/services/auth/password.services";
+import { PasswordServices } from "@/services/password.services";
 
 export const usePasswordReset = () => {
   return useMutation({

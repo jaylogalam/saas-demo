@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { AppLogo } from "@/components/icons/AppLogo";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
-import { SubscriptionBadge } from "@/components/SubscriptionBadge";
+import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge";
 import {
   Navbar,
   NavbarLinkItem,

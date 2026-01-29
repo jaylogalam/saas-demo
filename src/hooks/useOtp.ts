@@ -1,8 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 import { useNavigate } from "react-router-dom";
-import { OtpServices } from "@/services/auth/otp.services";
-import type { OtpParams, OtpVerifyParams } from "@/types/otp.types";
+import { OtpServices } from "@/services/otp.services";
+
+type OtpParams = {
+  type: "signup" | "recovery";
+  email: string;
+};
+
+type OtpVerifyParams = OtpParams & {
+  token: string;
+};
 
 export const useOtpSend = () => {
   return useMutation({

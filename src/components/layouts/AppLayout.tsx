@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
-import { SubscriptionBadge } from "@/components/SubscriptionBadge";
+import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";

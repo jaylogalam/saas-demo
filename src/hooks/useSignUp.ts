@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { SignUpServices } from "@/services/auth/sign-up.services";
+import { SignUpServices } from "@/services/sign-up.services";
 
 type SignUpParams = {
   email: string;

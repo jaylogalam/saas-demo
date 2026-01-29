@@ -1,6 +1,6 @@
 import { queryKeys } from "@/lib/queryKeys";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { SessionServices } from "@/services/auth/session.services";
+import { SessionServices } from "@/services/session.services";
 
 export const useSuspenseSession = () => {
     return useSuspenseQuery({

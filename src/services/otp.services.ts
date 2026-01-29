@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { OtpParams, OtpVerifyParams } from "../../types/otp.types";
+import type { OtpParams, OtpVerifyParams } from "../types/otp.types";
 
 export const OtpServices = {
   sendOtp: async (params: OtpParams) => {

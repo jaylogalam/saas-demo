@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { queryKeys } from "@/lib/queryKeys";
-import { SignInServices } from "@/services/auth/sign-in.services";
+import { SignInServices } from "@/services/sign-in.services";
 
 interface SignInWithPasswordProps {
   email: string;

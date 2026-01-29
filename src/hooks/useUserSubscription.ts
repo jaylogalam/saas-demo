@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
-import { UserSubscriptionServices } from "@/services/subscription/user-subscription.services";
+import { UserSubscriptionServices } from "@/services/user-subscription.services";
 import type { User } from "@/types/user.types";
 
 /**
