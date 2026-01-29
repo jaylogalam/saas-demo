@@ -1,6 +1,6 @@
 import { PricingCard, PricingCardSkeleton } from "@/components/PricingCard";
 import { useSubscriptionPlansList } from "@/hooks/subscription/useSubscriptionPlans";
-import { BillingToggle } from "@/components/BillingToggle";
+import { BillingToggleButton } from "@/components/buttons/BillingToggleButton";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { Page } from "@/components/ui/page";
 import { useUser } from "@/hooks/auth/useUser";
@@ -40,7 +40,7 @@ export default function PricingPage() {
       </section>
 
       {/* Billing Toggle */}
-      <BillingToggle
+      <BillingToggleButton
         isLoading={subscriptionPlansStatus === "pending" || isPending}
       />
 
