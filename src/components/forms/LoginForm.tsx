@@ -12,7 +12,7 @@ import {
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { GoogleButton } from "@/components/buttons/GoogleButton";
-import { useSignInWithPassword } from "@/hooks/auth/useSignIn";
+import { useSignInWithPassword } from "@/hooks/useSignIn";
 
 type LoginFormProps = React.ComponentProps<"form">;
 

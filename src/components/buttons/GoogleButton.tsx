@@ -1,6 +1,6 @@
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { Button } from "@/components/ui/button";
-import { useSignInWithGoogle } from "@/hooks/auth/useSignIn";
+import { useSignInWithGoogle } from "@/hooks/useSignIn";
 
 type GoogleButtonProps = {
   fnType: "signup" | "signin";

@@ -7,8 +7,8 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { OTPVerificationCard } from "@/components/forms/OTPVerificationForm";
-import { usePasswordReset } from "@/hooks/auth/usePassword";
-import { useOtpSend, useOtpVerify } from "@/hooks/auth/useOtp";
+import { usePasswordReset } from "@/hooks/usePassword";
+import { useOtpSend, useOtpVerify } from "@/hooks/useOtp";
 
 export function ForgotPasswordForm({
   className,
