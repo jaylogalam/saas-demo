@@ -15,14 +15,12 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/utils/cn";
 
 interface CancelSubscriptionButtonProps {
-  onCancel: () => Promise<void> | void;
   isLoading?: boolean;
   className?: string;
   disabled?: boolean;
 }
 
 export function CancelSubscriptionButton({
-  onCancel,
   isLoading: externalIsLoading = false,
   className,
   disabled,
@@ -31,6 +29,11 @@ export function CancelSubscriptionButton({
   const [open, setOpen] = useState(false);
 
   const isLoading = externalIsLoading || internalIsLoading;
+
+  const onCancel = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    alert("Subscription cancelled!");
+  };
 
   const handleConfirm = async (e: React.MouseEvent) => {
     e.preventDefault();
