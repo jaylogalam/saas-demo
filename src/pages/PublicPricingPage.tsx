@@ -1,12 +1,30 @@
+import { create } from "zustand";
 import { PricingCard, PricingCardSkeleton } from "@/components/PricingCard";
 import { useSubscriptionPlansList } from "@/hooks/subscription/useSubscriptionPlans";
 import { BillingToggleButton } from "@/components/buttons/BillingToggleButton";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { Page } from "@/components/ui/page";
 import { useUser } from "@/hooks/auth/useUser";
-import { useSubscriptionStore } from "@/store/subscriptionStore";
 
-export default function PricingPage() {
+type SubscriptionState = {
+  billingInterval: "monthly" | "yearly";
+  loading: boolean;
+  error: string | null;
+  setBillingInterval: (interval: "monthly" | "yearly") => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+};
+
+const useSubscriptionStore = create<SubscriptionState>((set) => ({
+  billingInterval: "monthly",
+  loading: false,
+  error: null,
+  setBillingInterval: (interval) => set({ billingInterval: interval }),
+  setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error }),
+}));
+
+function PricingPage() {
   const { data: user } = useUser();
 
   const { billingInterval } = useSubscriptionStore();
@@ -42,6 +60,10 @@ export default function PricingPage() {
       {/* Billing Toggle */}
       <BillingToggleButton
         isLoading={subscriptionPlansStatus === "pending" || isPending}
+        billingInterval={billingInterval}
+        setBillingInterval={(interval) =>
+          useSubscriptionStore.getState().setBillingInterval(interval)
+        }
       />
 
       {/* Pricing Cards */}
@@ -63,3 +85,5 @@ export default function PricingPage() {
     </Page>
   );
 }
+
+export default PricingPage;

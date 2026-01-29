@@ -1,17 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { cn } from "@/utils/cn";
 
 type BillingToggleButtonProps = {
   isLoading?: boolean;
+  billingInterval: "monthly" | "yearly";
+  setBillingInterval: (interval: "monthly" | "yearly") => void;
 };
 
 export function BillingToggleButton({
   isLoading = false,
+  billingInterval,
+  setBillingInterval,
 }: BillingToggleButtonProps) {
-  const { billingInterval, setBillingInterval } = useSubscriptionStore();
-
   if (isLoading) return <BillingToggleSkeleton />;
 
   return (
