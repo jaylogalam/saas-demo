@@ -1,38 +1,19 @@
+import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import { AppLogo } from "@/components/icons/AppLogo";
-import { Menu, X } from "lucide-react";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/components/SubscriptionBadge";
-import {
-  DesktopSidebar,
-  DesktopSidebarContent,
-  DesktopSidebarHeader,
-} from "@/components/sidebar/DesktopSidebar";
-import {
-  MobileSidebar,
-  MobileSidebarContent,
-  MobileSidebarHeader,
-  MobileSidebarOverlay,
-  MobileSidebarToggler,
-} from "@/components/sidebar/MobileSidebar";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { useUser } from "@/hooks/auth/useUser";
-import type { SidebarSection } from "@/types/sidebar.types";
-import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Page } from "@/components/ui/page";
+import MobileSidebar, {
+  MobileSidebarToggler,
+} from "@/components/layouts/components/MobileSidebar";
+import DesktopSidebar from "@/components/layouts/components/DesktopSidebar";
 
-type AppLayoutProps = {
-  sections: SidebarSection[];
-};
-
-///////////////////////////////////////
-/*        Exported Component         */
-///////////////////////////////////////
-
-export function AppLayout() {
+function AppLayout() {
   const isMobile = useIsMobile();
   const sections = useSidebar();
 
@@ -41,23 +22,10 @@ export function AppLayout() {
   return <AppDesktopLayout sections={sections} />;
 }
 
-//////////////////////////////////////
-/*          Desktop Layout          */
-//////////////////////////////////////
-
-function AppDesktopLayout({ sections }: AppLayoutProps) {
+function AppDesktopLayout({ sections }: Parameters<typeof DesktopSidebar>[0]) {
   return (
     <AppLayoutContainer>
-      {/* Sidebar Components */}
-      <DesktopSidebar>
-        <DesktopSidebarHeader>
-          <AppLogo />
-        </DesktopSidebarHeader>
-
-        <DesktopSidebarContent sections={sections} />
-      </DesktopSidebar>
-
-      {/* Main Content */}
+      <DesktopSidebar sections={sections} />
       <AppLayoutContent>
         <AppLayoutHeader>
           <div className="hidden lg:block" />
@@ -75,32 +43,13 @@ function AppDesktopLayout({ sections }: AppLayoutProps) {
   );
 }
 
-//////////////////////////////////////
-/*           Mobile Layout          */
-//////////////////////////////////////
-
-function AppMobileLayout({ sections }: AppLayoutProps) {
+function AppMobileLayout({ sections }: Parameters<typeof MobileSidebar>[0]) {
   return (
     <AppLayoutContainer>
-      {/* Sidebar Components */}
-      <MobileSidebarOverlay />
-      <MobileSidebar>
-        <MobileSidebarHeader>
-          <AppLogo />
-          <MobileSidebarToggler>
-            <X size={20} />
-          </MobileSidebarToggler>
-        </MobileSidebarHeader>
-
-        <MobileSidebarContent sections={sections} />
-      </MobileSidebar>
-
-      {/* Main Content */}
+      <MobileSidebar sections={sections} />
       <AppLayoutContent>
         <AppLayoutHeader>
-          <MobileSidebarToggler>
-            <Menu size={20} />
-          </MobileSidebarToggler>
+          <MobileSidebarToggler />
 
           <div className="hidden lg:block" />
 
@@ -117,17 +66,28 @@ function AppMobileLayout({ sections }: AppLayoutProps) {
   );
 }
 
-////////////////////////////////
-/*    Component Prop Types    */
-////////////////////////////////
+function PageLoadingSkeleton() {
+  return (
+    <Page>
+      {/* Page header skeleton */}
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-72" />
+      </div>
+      {/* Content skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Skeleton className="h-32 rounded-lg" />
+        <Skeleton className="h-32 rounded-lg" />
+        <Skeleton className="h-32 rounded-lg" />
+      </div>
+      <Skeleton className="h-64 rounded-lg" />
+    </Page>
+  );
+}
 
 type AppLayoutContainerProps = React.HTMLAttributes<HTMLDivElement>;
 type AppLayoutContentProps = React.HTMLAttributes<HTMLDivElement>;
 type AppLayoutHeaderProps = React.HTMLAttributes<HTMLHeadElement>;
-
-/////////////////////////////////////
-/*    Component Implementations    */
-/////////////////////////////////////
 
 function AppLayoutContainer({ children }: AppLayoutContainerProps) {
   return <div className="flex h-screen overflow-hidden">{children}</div>;
@@ -167,21 +127,4 @@ function HeaderUserComponentsSkeleton() {
   );
 }
 
-export function PageLoadingSkeleton() {
-  return (
-    <Page>
-      {/* Page header skeleton */}
-      <div className="space-y-2">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-4 w-72" />
-      </div>
-      {/* Content skeleton */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Skeleton className="h-32 rounded-lg" />
-        <Skeleton className="h-32 rounded-lg" />
-        <Skeleton className="h-32 rounded-lg" />
-      </div>
-      <Skeleton className="h-64 rounded-lg" />
-    </Page>
-  );
-}
+export default AppLayout;

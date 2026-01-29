@@ -1,10 +1,21 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/utils/cn";
-import type {
-  NavbarLinkItemProps,
-  NavbarLinkListProps,
-  NavbarProps,
-} from "../types/navbar.types";
+
+type NavbarProps = {
+  children: React.ReactNode;
+  className?: string;
+};
+
+type NavbarLinkListProps = {
+  children: React.ReactElement<NavbarLinkItemProps>[];
+  className?: string;
+};
+
+type NavbarLinkItemProps = {
+  children: React.ReactNode;
+  to: string;
+  className?: string;
+};
 
 export function Navbar({ children, className }: NavbarProps) {
   return (

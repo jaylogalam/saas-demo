@@ -2,18 +2,18 @@ import { Button } from "@/components/ui/button";
 import { AppLogo } from "@/components/icons/AppLogo";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/components/SubscriptionBadge";
-import { Navbar, NavbarLinkItem, NavbarLinkList } from "@/components/Navbar";
+import { Navbar, NavbarLinkItem, NavbarLinkList } from "@/components/layouts/components/Navbar";
 import { useUser } from "@/hooks/auth/useUser";
 import { Link, Outlet } from "react-router-dom";
 import { Suspense } from "react";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { ProfileIconSkeleton } from "@/components/icons/ProfileIcon";
 
-export function PublicLayout() {
+function PublicLayout() {
   const { data: user } = useUser();
 
   return (
-    <PublicLayoutContainer>
+    <div>
       <Navbar>
         <AppLogo />
 
@@ -28,12 +28,8 @@ export function PublicLayout() {
       </Navbar>
 
       <Outlet />
-    </PublicLayoutContainer>
+    </div>
   );
-}
-
-export function PublicLayoutContainer({ children }: React.PropsWithChildren) {
-  return <div>{children}</div>;
 }
 
 function PublicNavbarProfile() {
@@ -63,3 +59,5 @@ function PublicNavbarAuthLinks() {
     </>
   );
 }
+
+export default PublicLayout;

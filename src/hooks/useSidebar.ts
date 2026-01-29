@@ -1,9 +1,8 @@
-import type { SidebarSection } from "@/types/sidebar.types";
 import { useMemo } from "react";
 import { useRole } from "./auth/useSession";
 import { SidebarAdminSection, SidebarPlatformSection } from "@/app/sidebar";
 
-export const useSidebar = (): SidebarSection[] => {
+export const useSidebar = () => {
   const { data: role } = useRole();
 
   const sections = useMemo(() => {
