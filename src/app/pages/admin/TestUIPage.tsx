@@ -48,15 +48,27 @@ function TestUIPageContent() {
           </CardTitle>
           <CardDescription>Test and preview UI components here</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <p className="text-muted-foreground">
             Add your test UI components here.
           </p>
+
+          <div className="p-4 border rounded-md space-y-4">
+            <h3 className="font-medium">Cancel Subscription Button</h3>
+            <CancelSubscriptionButton
+              onCancel={async () => {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                alert("Subscription cancelled!");
+              }}
+            />
+          </div>
         </CardContent>
       </Card>
     </Page>
   );
 }
+
+import { CancelSubscriptionButton } from "@/components/buttons/CancelSubscriptionButton";
 
 // ============================================================================
 // Main Export
