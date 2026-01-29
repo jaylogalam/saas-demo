@@ -1,4 +1,4 @@
-import { AppLogo } from "../../icons/AppLogo";
+import { AppLogo } from "@/components/icons/AppLogo";
 import Sidebar from "./Sidebar";
 
 type DesktopSidebarProps = {

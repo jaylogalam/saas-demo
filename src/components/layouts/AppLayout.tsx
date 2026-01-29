@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import { ProfileDropdown } from "@/components/ProfileDropdown";
-import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge";
+import { ProfileDropdown } from "@/components/dropdowns/ProfileDropdown";
+import { SubscriptionBadge } from "@/components/icons/SubscriptionBadge";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
@@ -10,8 +10,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Page } from "@/components/ui/page";
 import MobileSidebar, {
   MobileSidebarToggler,
-} from "@/components/layouts/components/MobileSidebar";
-import DesktopSidebar from "@/components/layouts/components/DesktopSidebar";
+} from "@/components/navigation/MobileSidebar";
+import DesktopSidebar from "@/components/navigation/DesktopSidebar";
 
 function AppLayout() {
   const isMobile = useIsMobile();

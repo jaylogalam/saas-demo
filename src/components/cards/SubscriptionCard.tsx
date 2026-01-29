@@ -12,7 +12,6 @@ import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Link } from "react-router-dom";
 import { useUser } from "@/hooks/useUser";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
-import { EmptyState } from "../EmptyState";
 import { ArrowUpRight, Rocket } from "lucide-react";
 
 export function SubscriptionCard() {
@@ -87,15 +86,23 @@ export function SubscriptionCard() {
 
 export function NoSubscriptionCard() {
   return (
-    <EmptyState
-      icon={Rocket}
-      title="No Active Subscription"
-      description="Unlock premium features and take your experience to the next level. Choose a plan that works for you."
-      action={{
-        label: "View Plans",
-        href: "/pricing",
-        icon: ArrowUpRight,
-      }}
-    />
+    <div className="flex flex-col items-center justify-center py-16 text-center">
+      <div className="mb-6 rounded-full bg-primary/10 p-4">
+        <Rocket className="size-8 text-primary" />
+      </div>
+      <h2 className="mb-2 text-xl sm:text-2xl font-semibold tracking-tight">
+        No Active Subscription
+      </h2>
+      <p className="mb-6 max-w-sm text-sm sm:text-base text-muted-foreground">
+        Unlock premium features and take your experience to the next level.
+        Choose a plan that works for you.
+      </p>
+      <Button asChild size="lg">
+        <Link to="/pricing">
+          View Plans
+          <ArrowUpRight className="ml-1 size-4" />
+        </Link>
+      </Button>
+    </div>
   );
 }

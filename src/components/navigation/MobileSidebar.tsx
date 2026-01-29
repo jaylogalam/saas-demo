@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
-import { AppLogo } from "../../icons/AppLogo";
+import { AppLogo } from "@/components/icons/AppLogo";
 import { Menu, X } from "lucide-react";
 import Sidebar from "./Sidebar";
 

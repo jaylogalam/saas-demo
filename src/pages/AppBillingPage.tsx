@@ -1,8 +1,8 @@
 import { Page, PageHeader } from "@/components/ui/page";
-import { SubscriptionCard } from "@/components/subscription/SubscriptionCard";
-import { PaymentMethodCard } from "@/components/subscription/PaymentMethod";
+import { SubscriptionCard } from "@/components/cards/SubscriptionCard";
+import { PaymentMethodCard } from "@/components/cards/PaymentMethodCard";
 import { Suspense } from "react";
-import { BillingHistoryTable } from "@/components/subscription/BillingHistoryTable";
+import { BillingHistoryTable } from "@/components/tables/BillingHistoryTable";
 
 export function BillingPage() {
   return (

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import {
   PricingCard,
   PricingCardSkeleton,
-} from "@/components/subscription/PricingCard";
+} from "@/components/cards/PricingCard";
 import { useSubscriptionPlansList } from "@/hooks/useSubscriptionPlans";
 import { BillingToggleButton } from "@/components/buttons/BillingToggleButton";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
