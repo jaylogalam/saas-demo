@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 
 /* Layout Components */
-import { PublicLayout } from "@/app/PublicLayout";
-import { AppLayout } from "@/app/AppLayout";
-import { ProtectedRoute, GuestRoute } from "@/app/RouteGuards";
+import { PublicLayout } from "@/components/layouts/PublicLayout";
+import { AppLayout } from "@/components/layouts/AppLayout";
+import { ProtectedRoute, GuestRoute } from "@/components/layouts/RouteGuards";
 
 export const router = createBrowserRouter([
   // Public pages with navbar
