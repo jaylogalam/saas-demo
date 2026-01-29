@@ -3,18 +3,10 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useNavigate } from "react-router-dom";
 import { OtpServices } from "@/services/otp.services";
 
-type OtpParams = {
-  type: "signup" | "recovery";
-  email: string;
-};
-
-type OtpVerifyParams = OtpParams & {
-  token: string;
-};
-
 export const useOtpSend = () => {
   return useMutation({
-    mutationFn: (props: OtpParams) => OtpServices.sendOtp(props),
+    mutationFn: (props: Parameters<typeof OtpServices.sendOtp>[0]) =>
+      OtpServices.sendOtp(props),
   });
 };
 
@@ -23,7 +15,8 @@ export const useOtpVerify = () => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: (props: OtpVerifyParams) => OtpServices.verifyOtp(props),
+    mutationFn: (props: Parameters<typeof OtpServices.verifyOtp>[0]) =>
+      OtpServices.verifyOtp(props),
     onSuccess: (_data, props) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.auth.session(),

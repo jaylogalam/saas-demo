@@ -1,5 +1,13 @@
 import { supabase } from "@/lib/supabase";
-import type { OtpParams, OtpVerifyParams } from "../types/otp.types";
+
+type OtpParams = {
+  type: "signup" | "recovery";
+  email: string;
+};
+
+type OtpVerifyParams = OtpParams & {
+  token: string;
+};
 
 export const OtpServices = {
   sendOtp: async (params: OtpParams) => {
