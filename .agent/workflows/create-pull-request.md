@@ -64,24 +64,9 @@ Brief overview of what this PR accomplishes.
 
 Include screenshots for UI changes.
 
-## Testing
-
-- [ ] Manual testing completed
-- [ ] All existing tests pass
-
 ## Notes
 
 Any additional context, known issues, or follow-up tasks.
 ```
 
-## 5. Create the Pull Request
-
-```bash
-# Push branch if not already pushed
-git push origin <branch-name>
-
-# Use GitHub CLI to create PR (if available)
-gh pr create --title "<title>" --body "<description>"
-```
-
-Or create via GitHub web interface using the generated title and description.
+## 5. Save to a new .md file in root directory
