@@ -8,6 +8,8 @@ export const queryKeys = {
         all: ["auth"] as const,
         session: () => [...queryKeys.auth.all, "session"] as const,
         user: () => [...queryKeys.auth.all, "user"] as const,
+        list: () => [...queryKeys.auth.all, "list"] as const,
+        role: () => [...queryKeys.auth.all, "role"] as const,
     },
 
     // Subscription-related keys
@@ -19,6 +21,7 @@ export const queryKeys = {
             [...queryKeys.subscription.all, "plan", productId] as const,
         user: (userId: string | undefined) =>
             ["user-subscription", userId] as const,
+        list: () => [...queryKeys.subscription.all, "list"] as const,
         prorationPreview: (subscriptionId: string, priceId: string) =>
             [
                 ...queryKeys.subscription.all,

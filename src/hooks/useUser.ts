@@ -12,8 +12,7 @@ export const useUser = () => {
 
 export const useUserList = () => {
   return useSuspenseQuery({
-    // TODO: Fix query key
-    queryKey: ["auth", "userList"],
+    queryKey: queryKeys.auth.list(),
     queryFn: () => UserServices.listUsers(),
     staleTime: 1000 * 60 * 5,
   });

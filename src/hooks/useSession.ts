@@ -12,7 +12,7 @@ export const useSuspenseSession = () => {
 
 export const useRole = () => {
     return useSuspenseQuery({
-        queryKey: ["role"],
+        queryKey: queryKeys.auth.role(),
         queryFn: () => SessionServices.getRole(),
         staleTime: 1000 * 60 * 5,
     });

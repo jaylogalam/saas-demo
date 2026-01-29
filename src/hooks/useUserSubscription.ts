@@ -17,8 +17,7 @@ export const useUserSubscription = (user: Pick<User, "email"> | null) => {
 
 export const useUserSubscriptionList = () => {
   return useSuspenseQuery({
-    // TODO: Fix query key
-    queryKey: ["user-subscriptions-list"],
+    queryKey: queryKeys.subscription.list(),
     queryFn: () => UserSubscriptionServices.listAllUserSubscriptions(),
     staleTime: 1000 * 60 * 5,
   });
