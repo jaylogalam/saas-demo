@@ -13,19 +13,19 @@ export const router = createBrowserRouter([
       {
         path: "/",
         lazy: async () => ({
-          Component: (await import("@/app/pages/public/LandingPage")).default,
+          Component: (await import("@/pages/PublicLandingPage")).default,
         }),
       },
       {
         path: "/pricing",
         lazy: async () => ({
-          Component: (await import("@/app/pages/public/PricingPage")).default,
+          Component: (await import("@/pages/PublicPricingPage")).default,
         }),
       },
       {
         path: "/about",
         lazy: async () => ({
-          Component: (await import("@/app/pages/public/AboutPage")).default,
+          Component: (await import("@/pages/PublicAboutPage")).default,
         }),
       },
     ],
@@ -40,60 +40,50 @@ export const router = createBrowserRouter([
           {
             path: "/dashboard",
             lazy: async () => ({
-              Component: (await import("@/app/pages/app/DashboardPage"))
-                .default,
+              Component: (await import("@/pages/AppDashboardPage")).default,
             }),
           },
           {
             path: "/projects",
             lazy: async () => ({
-              Component: (await import("@/app/pages/app/ProjectsPage")).default,
+              Component: (await import("@/pages/AppProjectsPage")).default,
             }),
           },
           {
             path: "/analytics",
             lazy: async () => ({
-              Component: (await import("@/app/pages/app/AnalyticsPage"))
-                .default,
+              Component: (await import("@/pages/AppAnalyticsPage")).default,
             }),
           },
           {
             path: "/profile",
             lazy: async () => ({
-              Component: (await import("@/app/pages/app/ProfilePage")).default,
+              Component: (await import("@/pages/AppProfilePage")).default,
             }),
           },
           {
             path: "/settings",
             lazy: async () => ({
-              Component: (await import("@/app/pages/app/SettingsPage")).default,
+              Component: (await import("@/pages/AppSettingsPage")).default,
             }),
           },
           {
             path: "/billing",
             lazy: async () => ({
-              Component: (await import("@/app/pages/app/BillingPage")).default,
+              Component: (await import("@/pages/AppBillingPage")).default,
             }),
           },
           {
             path: "/admin/users",
             lazy: async () => ({
-              Component: (await import("@/app/pages/admin/AdminUsersPage"))
-                .default,
+              Component: (await import("@/pages/AdminUsersPage")).default,
             }),
           },
           {
             path: "/admin/subscriptions",
             lazy: async () => ({
-              Component: (
-                await import("@/app/pages/admin/AdminSubscriptionsPage")
-              ).default,
-            }),
-          },
-          {
-            path: "/admin/test-ui",
-            lazy: async () => ({
-              Component: (await import("@/app/pages/admin/TestUIPage")).default,
+              Component: (await import("@/pages/AdminSubscriptionsPage"))
+                .default,
             }),
           },
         ],
@@ -107,13 +97,13 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         lazy: async () => ({
-          Component: (await import("@/app/pages/auth/LoginPage")).default,
+          Component: (await import("@/pages/AuthLoginPage")).default,
         }),
       },
       {
         path: "/signup",
         lazy: async () => ({
-          Component: (await import("@/app/pages/auth/SignupPage")).default,
+          Component: (await import("@/pages/AuthSignupPage")).default,
         }),
       },
     ],
@@ -122,13 +112,13 @@ export const router = createBrowserRouter([
   {
     path: "/forgot-password",
     lazy: async () => ({
-      Component: (await import("@/app/pages/auth/ForgotPasswordPage")).default,
+      Component: (await import("@/pages/AuthForgotPasswordPage")).default,
     }),
   },
   {
     path: "/reset-password",
     lazy: async () => ({
-      Component: (await import("@/app/pages/auth/ResetPasswordPage")).default,
+      Component: (await import("@/pages/AuthResetPasswordPage")).default,
     }),
   },
 ]);
