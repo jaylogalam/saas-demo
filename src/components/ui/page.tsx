@@ -9,6 +9,11 @@ type PageHeaderProps = {
   description?: string;
 };
 
+type PageContentProps = {
+  className?: string;
+  children: React.ReactNode;
+} & React.ComponentProps<"div">;
+
 const pageVariants = cva("", {
   variants: {
     variant: {
@@ -42,6 +47,18 @@ export function PageHeader({ title, description }: PageHeaderProps) {
           {description}
         </p>
       )}
+    </div>
+  );
+}
+
+export function PageContent({
+  className,
+  children,
+  ...props
+}: PageContentProps) {
+  return (
+    <div className={cn("", className)} {...props}>
+      {children}
     </div>
   );
 }
