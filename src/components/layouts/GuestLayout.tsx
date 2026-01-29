@@ -1,4 +1,4 @@
-import { useUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/hooks/useUser";
 import { Navigate, Outlet } from "react-router-dom";
 
 function GuestLayout() {

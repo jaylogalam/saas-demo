@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Link } from "react-router-dom";
-import { useUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/hooks/useUser";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { EmptyState } from "../EmptyState";
 import { ArrowUpRight, Rocket } from "lucide-react";

@@ -21,7 +21,7 @@ import { useCheckout } from "@/hooks/subscription/useCheckout";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { Skeleton } from "./ui/skeleton";
 import { formatSubscriptionPrice } from "../utils/formatSubscriptionPrice";
-import { useUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/hooks/useUser";
 
 // Feature tooltips for complex features
 const featureTooltips: Record<string, string> = {
@@ -51,10 +51,11 @@ export function PricingCard({ plan }: PricingCardProps) {
     <>
       <TooltipProvider delayDuration={300}>
         <Card
-          className={`relative w-full max-w-sm h-full flex flex-col transition-all duration-300 hover:shadow-xl ${plan.highlighted
-            ? "border-primary shadow-lg md:scale-105 z-10"
-            : "hover:border-primary/50"
-            }`}
+          className={`relative w-full max-w-sm h-full flex flex-col transition-all duration-300 hover:shadow-xl ${
+            plan.highlighted
+              ? "border-primary shadow-lg md:scale-105 z-10"
+              : "hover:border-primary/50"
+          }`}
         >
           {/* Popular Badge */}
           {plan.highlighted && (

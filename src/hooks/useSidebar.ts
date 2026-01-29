@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useRole } from "./auth/useSession";
+import { useRole } from "./useSession";
 import { SidebarAdminSection, SidebarPlatformSection } from "@/app/sidebar";
 
 export const useSidebar = () => {

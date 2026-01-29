@@ -4,7 +4,7 @@ import { useSubscriptionPlansList } from "@/hooks/subscription/useSubscriptionPl
 import { BillingToggleButton } from "@/components/buttons/BillingToggleButton";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
 import { Page } from "@/components/ui/page";
-import { useUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/hooks/useUser";
 
 type SubscriptionState = {
   billingInterval: "monthly" | "yearly";

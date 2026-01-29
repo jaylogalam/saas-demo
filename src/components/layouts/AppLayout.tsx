@@ -5,7 +5,7 @@ import { SubscriptionBadge } from "@/components/SubscriptionBadge";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
-import { useUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/hooks/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Page } from "@/components/ui/page";
 import MobileSidebar, {

@@ -1,7 +1,7 @@
-import { useUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/hooks/useUser";
 import { redirect } from "react-router-dom";
 import type { SubscriptionPlan } from "@/types/subscription.types";
-import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { toast } from "sonner";
 
 /**

@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { User } from "@/types/user.types";
-import { useUserList } from "@/hooks/auth/useUser";
+import { useUserList } from "@/hooks/useUser";
 
 // ============================================================================
 // Main Export

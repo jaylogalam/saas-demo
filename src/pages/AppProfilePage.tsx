@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useUser } from "@/hooks/auth/useUser";
+import { useUser } from "@/hooks/useUser";
 import { useUpdateDisplayName } from "@/hooks/useUpdateProfile";
 import { formatDate } from "@/utils/formatDate";
 import { Page, PageHeader } from "@/components/ui/page";

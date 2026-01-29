@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { User as UserType } from "@/types/user.types";
-import { useSignOut } from "@/hooks/auth/useSignOut";
+import { useSignOut } from "@/hooks/useSignOut";
 import { ProfileIcon } from "@/components/icons/ProfileIcon";
 
 type ProfileDropdownProps = {

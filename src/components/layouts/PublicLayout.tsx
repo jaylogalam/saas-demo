@@ -2,8 +2,12 @@ import { Button } from "@/components/ui/button";
 import { AppLogo } from "@/components/icons/AppLogo";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/components/SubscriptionBadge";
-import { Navbar, NavbarLinkItem, NavbarLinkList } from "@/components/layouts/components/Navbar";
-import { useUser } from "@/hooks/auth/useUser";
+import {
+  Navbar,
+  NavbarLinkItem,
+  NavbarLinkList,
+} from "@/components/layouts/components/Navbar";
+import { useUser } from "@/hooks/useUser";
 import { Link, Outlet } from "react-router-dom";
 import { Suspense } from "react";
 import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
