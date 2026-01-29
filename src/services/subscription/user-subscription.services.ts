@@ -17,8 +17,6 @@ export const UserSubscriptionServices = {
       .limit(1)
       .single();
 
-    console.log(data)
-
     if (!data) return null;
 
     return camelCaseKeys(data, { deep: true }) as UserSubscription;
