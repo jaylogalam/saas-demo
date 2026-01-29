@@ -57,7 +57,7 @@ export function PageContent({
   ...props
 }: PageContentProps) {
   return (
-    <div className={cn("", className)} {...props}>
+    <div className={cn("space-y-6", className)} {...props}>
       {children}
     </div>
   );
