@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Navigate } from "react-router-dom";
 import {
   CreditCard,
   ShieldCheck,

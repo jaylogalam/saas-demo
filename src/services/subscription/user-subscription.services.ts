@@ -6,20 +6,22 @@ import camelCaseKeys from "camelcase-keys";
 export const UserSubscriptionServices = {
   getUserSubscriptions: async (
     user: Pick<User, "email"> | null,
-  ): Promise<UserSubscription[] | null> => {
+  ): Promise<UserSubscription | null> => {
     if (!user) return null;
 
     const { data } = await supabase
       .from("user_subscriptions")
       .select("*")
       .eq("email", user.email)
-      .order("current_period_end", { ascending: false });
+      .order("current_period_end", { ascending: false })
+      .limit(1)
+      .single();
+
+    console.log(data)
 
     if (!data) return null;
 
-    return data.map((subscription) =>
-      camelCaseKeys(subscription, { deep: true })
-    ) as UserSubscription[];
+    return camelCaseKeys(data, { deep: true }) as UserSubscription;
   },
 
   listAllUserSubscriptions: async (): Promise<UserSubscription[] | null> => {

@@ -140,11 +140,11 @@ const BillingPage = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-2xl font-bold">{userSubscription.name}</p>
-                {userSubscription.interval && (
+                <p className="text-2xl font-bold">{userSubscription.plan.name}</p>
+                {userSubscription.plan.interval && (
                   <p className="text-sm text-muted-foreground">
                     Billed{" "}
-                    {userSubscription.interval === "monthly"
+                    {userSubscription.plan.interval === "monthly"
                       ? "monthly"
                       : "yearly"}
                   </p>

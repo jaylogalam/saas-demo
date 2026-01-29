@@ -44,18 +44,17 @@ export function PricingCard({ plan }: PricingCardProps) {
   const { handleCheckout } = useCheckout();
 
   const isCurrentPlan =
-    userSubscription?.[0].plan.name === plan.name &&
-    userSubscription?.[0].plan.interval === plan.interval;
+    userSubscription?.plan.name === plan.name &&
+    userSubscription?.plan.interval === plan.interval;
 
   return (
     <>
       <TooltipProvider delayDuration={300}>
         <Card
-          className={`relative w-full max-w-sm h-full flex flex-col transition-all duration-300 hover:shadow-xl ${
-            plan.highlighted
-              ? "border-primary shadow-lg md:scale-105 z-10"
-              : "hover:border-primary/50"
-          }`}
+          className={`relative w-full max-w-sm h-full flex flex-col transition-all duration-300 hover:shadow-xl ${plan.highlighted
+            ? "border-primary shadow-lg md:scale-105 z-10"
+            : "hover:border-primary/50"
+            }`}
         >
           {/* Popular Badge */}
           {plan.highlighted && (
