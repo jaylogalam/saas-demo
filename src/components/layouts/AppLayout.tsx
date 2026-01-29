@@ -4,7 +4,7 @@ import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useSidebar } from "@/hooks/useSidebar";
-import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { useUser } from "@/hooks/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Page } from "@/components/ui/page";

@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
-import type { User } from "@/types/user.types";
 import camelcaseKeys from "camelcase-keys";
 import { SessionServices } from "./session.services";
+import type { User } from "@/types/user.types";
 
 export const UserServices = {
   getUser: async (): Promise<User | null> => {

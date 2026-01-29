@@ -1,8 +1,11 @@
 import { create } from "zustand";
-import { PricingCard, PricingCardSkeleton } from "@/components/PricingCard";
-import { useSubscriptionPlansList } from "@/hooks/subscription/useSubscriptionPlans";
+import {
+  PricingCard,
+  PricingCardSkeleton,
+} from "@/components/subscription/PricingCard";
+import { useSubscriptionPlansList } from "@/hooks/useSubscriptionPlans";
 import { BillingToggleButton } from "@/components/buttons/BillingToggleButton";
-import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { Page } from "@/components/ui/page";
 import { useUser } from "@/hooks/useUser";
 

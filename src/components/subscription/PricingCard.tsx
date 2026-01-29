@@ -17,10 +17,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { SubscriptionPlan } from "@/types/subscription.types";
-import { useCheckout } from "@/hooks/subscription/useCheckout";
-import { useUserSubscription } from "@/hooks/subscription/useUserSubscription";
-import { Skeleton } from "./ui/skeleton";
-import { formatSubscriptionPrice } from "../utils/formatSubscriptionPrice";
+import { useCheckout } from "@/hooks/useCheckout";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { Skeleton } from "../ui/skeleton";
+import { formatSubscriptionPrice } from "../../utils/formatSubscriptionPrice";
 import { useUser } from "@/hooks/useUser";
 
 // Feature tooltips for complex features

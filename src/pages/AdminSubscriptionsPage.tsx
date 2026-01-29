@@ -24,7 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useUserSubscriptionList } from "@/hooks/subscription/useUserSubscription";
+import { useUserSubscriptionList } from "@/hooks/useUserSubscription";
 import type { UserSubscription } from "@/types/subscription.types";
 
 // ============================================================================
