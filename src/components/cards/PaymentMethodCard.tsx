@@ -4,41 +4,63 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, CreditCard, ShieldCheck } from "lucide-react";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { ExternalLink } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
-/* TODO: Implement Payment Method Card */
 export function PaymentMethodCard() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
+    <Card className="rounded-lg border-0 shadow-lg flex flex-col">
+      <CardHeader className="-mb-4">
+        <CardDescription className="text-muted-foreground font-medium">
           Payment Method
-        </CardTitle>
-        <CardDescription>Manage your payment details</CardDescription>
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center gap-4 rounded-lg border bg-muted/30 p-4">
-          <div className="flex size-12 items-center justify-center rounded-lg bg-background shadow-sm">
-            <CreditCard className="size-6 text-muted-foreground" />
-          </div>
+      <CardContent>
+        <div className="flex items-center gap-3">
           <div className="flex-1">
-            <p className="font-medium">Managed by Stripe</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Securely stored and encrypted
             </p>
           </div>
-          <ShieldCheck className="size-5 text-emerald-500" />
         </div>
       </CardContent>
 
-      <CardFooter>
-        <Button variant="outline" className="w-full" disabled>
-          Update Payment Method
-          <ArrowUpRight className="ml-1 size-4" />
-        </Button>
+      <Separator />
+
+      <CardFooter className="w-full flex justify-center">
+        <Dialog>
+          <DialogTrigger asChild>
+            <p className="text-muted-foreground text-sm hover:text-primary transition-colors duration-200 cursor-pointer">
+              Update Payment Method
+            </p>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Update Payment Method</DialogTitle>
+              <DialogDescription>
+                Your payment details are securely managed by Stripe.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col gap-3 py-4">
+              <Button variant="outline" className="justify-start gap-2">
+                <ExternalLink className="size-4" />
+                Open Stripe Customer Portal
+              </Button>
+            </div>
+            <DialogFooter showCloseButton />
+          </DialogContent>
+        </Dialog>
       </CardFooter>
     </Card>
   );

@@ -6,13 +6,22 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Link } from "react-router-dom";
 import { useUser } from "@/hooks/useUser";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
-import { ArrowUpRight, Rocket } from "lucide-react";
+import { ArrowUpRight, Rocket, RefreshCw, XCircle } from "lucide-react";
+import { Separator } from "../ui/separator";
 
 export function SubscriptionCard() {
   const { data: user } = useUser();
@@ -20,65 +29,69 @@ export function SubscriptionCard() {
 
   if (!userSubscription) return <NoSubscriptionCard />;
 
+  const planName = userSubscription.plan.name;
+  const price = userSubscription.plan.price;
+  const currency = userSubscription.plan.currency;
+  const nextBillingDate = formatUnixTimestamp(
+    userSubscription.currentPeriodEnd,
+  );
+
+  const formattedPrice = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency.toUpperCase(),
+  }).format(price / 100);
+
   return (
-    <Card className="relative overflow-hidden">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            Current Plan
-          </CardTitle>
-        </div>
-        <CardDescription>Your subscription details</CardDescription>
+    <Card className="rounded-lg border-0 shadow-lg flex flex-col">
+      <CardHeader className="-mb-4">
+        <CardDescription className="text-muted-foreground font-medium">
+          Active plan
+        </CardDescription>
+        <CardTitle className="text-3xl font-bold mt-1 text-primary">
+          {planName}
+        </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+
+      <CardContent>
         <div>
-          <p className="text-2xl font-bold">{userSubscription.plan.name}</p>
-          {userSubscription.plan.interval && (
-            <p className="text-sm text-muted-foreground">
-              Billed{" "}
-              {userSubscription.plan.interval === "monthly"
-                ? "monthly"
-                : "yearly"}
-            </p>
-          )}
+          <p className="text-muted-foreground text-sm">
+            Your next bill is for{" "}
+            <span className="text-primary">{formattedPrice}</span> on{" "}
+            <span className="text-primary">{nextBillingDate}</span>.
+          </p>
         </div>
-        <Separator />
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">
-            {userSubscription.cancelAtPeriodEnd
-              ? "Expires on"
-              : "Next billing date"}
-          </span>
-          <span className="font-medium">
-            {formatUnixTimestamp(userSubscription.currentPeriodEnd)}
-          </span>
-        </div>
-        {userSubscription.status === "active" ||
-          (userSubscription.status === "trialing" &&
-            !userSubscription.cancelAtPeriodEnd && (
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                >
-                  Cancel
-                </Button>
-                <Button variant="outline" size="sm" className="flex-1" asChild>
-                  <Link to="/pricing">
-                    Change Plan
-                    <ArrowUpRight className="ml-1 size-3 sm:size-4" />
-                  </Link>
-                </Button>
-              </div>
-            ))}
       </CardContent>
 
-      <CardFooter>
-        <Button variant="outline" className="w-full" disabled>
-          Manage Subscription
-          <ArrowUpRight className="ml-1 size-4" />
-        </Button>
+      <Separator />
+
+      <CardFooter className="w-full flex justify-center">
+        <Dialog>
+          <DialogTrigger asChild>
+            <p className="text-muted-foreground text-sm hover:text-primary transition-colors duration-200 cursor-pointer">
+              Manage Subscription
+            </p>
+          </DialogTrigger>
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Manage Subscription</DialogTitle>
+              <DialogDescription>
+                Choose an action for your {planName} subscription.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex justify-end gap-3 py-4">
+              <Button variant="outline" asChild className="justify-start gap-2">
+                <Link to="/pricing">Change Plan</Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                Cancel Subscription
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardFooter>
     </Card>
   );
