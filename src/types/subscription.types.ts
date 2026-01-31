@@ -11,7 +11,7 @@ export interface SubscriptionPlan {
 }
 
 export interface UserSubscription {
-  id: string;
+  subscriptionId: string;
   userId: string;
   email: string;
   plan: SubscriptionPlan;
