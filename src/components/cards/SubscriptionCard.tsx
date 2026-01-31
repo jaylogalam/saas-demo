@@ -24,6 +24,7 @@ import {
 } from "@/hooks/useUserSubscription";
 import { ArrowUpRight, Rocket } from "lucide-react";
 import { Separator } from "../ui/separator";
+import { formatSubscriptionPrice } from "@/utils/formatSubscriptionPrice";
 
 export function SubscriptionCard() {
   const { data: user } = useUser();
@@ -32,18 +33,6 @@ export function SubscriptionCard() {
 
   if (!userSubscription) return <NoSubscriptionCard />;
 
-  const planName = userSubscription.plan.name;
-  const price = userSubscription.plan.price;
-  const currency = userSubscription.plan.currency;
-  const nextBillingDate = formatUnixTimestamp(
-    userSubscription.currentPeriodEnd,
-  );
-
-  const formattedPrice = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency.toUpperCase(),
-  }).format(price / 100);
-
   return (
     <Card className="rounded-lg border-0 shadow-lg flex flex-col">
       <CardHeader className="-mb-4">
@@ -51,18 +40,43 @@ export function SubscriptionCard() {
           Active plan
         </CardDescription>
         <CardTitle className="text-3xl font-bold mt-1 text-primary">
-          {planName}
+          {userSubscription.plan.name}
         </CardTitle>
       </CardHeader>
 
       <CardContent>
-        <div>
-          <p className="text-muted-foreground text-sm">
-            Your next bill is for{" "}
-            <span className="text-primary">{formattedPrice}</span> on{" "}
-            <span className="text-primary">{nextBillingDate}</span>.
-          </p>
-        </div>
+        {/* Is ongoing subscription */}
+        {!userSubscription.cancelAtPeriodEnd && (
+          <div>
+            <p className="text-muted-foreground text-sm">
+              Your next bill is for{" "}
+              <span className="text-primary">
+                {formatSubscriptionPrice(
+                  userSubscription.plan.price,
+                  userSubscription.plan.currency,
+                )}
+              </span>{" "}
+              on{" "}
+              <span className="text-primary">
+                {formatUnixTimestamp(userSubscription.currentPeriodEnd)}
+              </span>
+              .
+            </p>
+          </div>
+        )}
+
+        {/* Is cancelled subscription */}
+        {userSubscription.cancelAtPeriodEnd && (
+          <div>
+            <p className="text-muted-foreground text-sm">
+              Your subscription will end on{" "}
+              <span className="text-primary">
+                {formatUnixTimestamp(userSubscription.cancelAt)}
+              </span>
+              .
+            </p>
+          </div>
+        )}
       </CardContent>
 
       <Separator />
@@ -79,7 +93,8 @@ export function SubscriptionCard() {
             <DialogHeader>
               <DialogTitle>Manage Subscription</DialogTitle>
               <DialogDescription>
-                Choose an action for your {planName} subscription.
+                Choose an action for your {userSubscription.plan.name}{" "}
+                subscription.
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex justify-end gap-3 py-4">

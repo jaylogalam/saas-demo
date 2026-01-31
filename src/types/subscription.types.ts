@@ -27,4 +27,6 @@ export interface UserSubscription {
   currentPeriodStart: number;
   currentPeriodEnd: number;
   cancelAtPeriodEnd: boolean;
+  cancelAt: number;
+  canceledAt: number;
 }
