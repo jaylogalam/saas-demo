@@ -41,11 +41,7 @@ export const UserSubscriptionServices = {
       { body: { subscription_id: subscriptionId } },
     );
 
-    if (error) {
-      const errorMsg = await error.context.json();
-      console.log("Detailed Error:", errorMsg);
-    }
-    if (data) console.log(data);
+    if (error) throw error;
 
     return data;
   },
