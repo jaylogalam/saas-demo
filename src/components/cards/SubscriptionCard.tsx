@@ -14,18 +14,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Link } from "react-router-dom";
 import { useUser } from "@/hooks/useUser";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
-import { ArrowUpRight, Rocket, RefreshCw, XCircle } from "lucide-react";
+import {
+  useCancelUserSubscription,
+  useUserSubscription,
+} from "@/hooks/useUserSubscription";
+import { ArrowUpRight, Rocket } from "lucide-react";
 import { Separator } from "../ui/separator";
 
 export function SubscriptionCard() {
   const { data: user } = useUser();
   const { data: userSubscription } = useUserSubscription(user);
+  const { mutate: cancelUserSubscription } = useCancelUserSubscription();
 
   if (!userSubscription) return <NoSubscriptionCard />;
 
@@ -86,6 +89,9 @@ export function SubscriptionCard() {
               <Button
                 variant="outline"
                 className="justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                onClick={() => {
+                  cancelUserSubscription(userSubscription.subscriptionId);
+                }}
               >
                 Cancel Subscription
               </Button>

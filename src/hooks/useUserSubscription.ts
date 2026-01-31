@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 import { UserSubscriptionServices } from "@/services/user-subscription.services";
 import type { User } from "@/types/user.types";
@@ -20,5 +20,12 @@ export const useUserSubscriptionList = () => {
     queryKey: queryKeys.subscription.list(),
     queryFn: () => UserSubscriptionServices.listAllUserSubscriptions(),
     staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useCancelUserSubscription = () => {
+  return useMutation({
+    mutationFn: (subscriptionId: string) =>
+      UserSubscriptionServices.cancelUserSubscription(subscriptionId),
   });
 };

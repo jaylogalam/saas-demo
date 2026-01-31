@@ -34,4 +34,19 @@ export const UserSubscriptionServices = {
       camelCaseKeys(subscription, { deep: true })
     ) as UserSubscription[];
   },
+
+  cancelUserSubscription: async (subscriptionId: string) => {
+    const { data, error } = await supabase.functions.invoke(
+      "cancel-subscription",
+      { body: { subscription_id: subscriptionId } },
+    );
+
+    if (error) {
+      const errorMsg = await error.context.json();
+      console.log("Detailed Error:", errorMsg);
+    }
+    if (data) console.log(data);
+
+    return data;
+  },
 };
