@@ -4,9 +4,7 @@ import type { SubscriptionPlan } from "@/types/subscription.types";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { toast } from "sonner";
 
-/**
- * Handle checkout redirect to processing page
- */
+// TODO: Create app checkout page
 export function useCheckout() {
   const navigate = useNavigate();
   const { data: user } = useUser();
