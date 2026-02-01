@@ -61,7 +61,9 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   // 5. Restore the subscription by removing the cancellation via Stripe API
-  const restoredSubscription = await stripe.subscriptions.resume(subscription_id);
+  const restoredSubscription = await stripe.subscriptions.update(subscription_id, {
+    cancel_at_period_end: false,
+  });
 
   return new Response(
     JSON.stringify({

@@ -61,7 +61,9 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   // 5. Cancel the subscription at period end via Stripe API
-  const cancelledSubscription = await stripe.subscriptions.cancel(subscription_id);
+  const cancelledSubscription = await stripe.subscriptions.update(subscription_id, {
+    cancel_at_period_end: true,
+  });
 
   return new Response(
     JSON.stringify({
