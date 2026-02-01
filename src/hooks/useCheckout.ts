@@ -39,10 +39,7 @@ export function useCheckout() {
     const url = new URL(paymentLink);
     if (user.id) url.searchParams.set("client_reference_id", user.id);
     if (user.email) url.searchParams.set("prefilled_email", user.email);
-    window.open(url.toString(), "_blank");
-
-    // Navigate to processing page
-    navigate(`/checkout/processing?plan=${plan.id}`);
+    window.location.href = url.toString();
   };
 
   return { handleCheckout };
