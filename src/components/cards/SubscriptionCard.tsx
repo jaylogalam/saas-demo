@@ -13,16 +13,16 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Link } from "react-router-dom";
 import { useUser } from "@/hooks/useUser";
 import {
   useCancelUserSubscription,
+  useRestoreUserSubscription,
   useUserSubscription,
 } from "@/hooks/useUserSubscription";
-import { ArrowUpRight, Rocket } from "lucide-react";
+
 import { Separator } from "../ui/separator";
 import { formatSubscriptionPrice } from "@/utils/formatSubscriptionPrice";
 
@@ -30,6 +30,7 @@ export function SubscriptionCard() {
   const { data: user } = useUser();
   const { data: userSubscription } = useUserSubscription(user);
   const { mutate: cancelUserSubscription } = useCancelUserSubscription();
+  const { mutate: restoreUserSubscription } = useRestoreUserSubscription();
 
   if (!userSubscription) return <NoSubscriptionCard />;
 
@@ -92,24 +93,88 @@ export function SubscriptionCard() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Manage Subscription</DialogTitle>
-              <DialogDescription>
-                Choose an action for your {userSubscription.plan.name}{" "}
-                subscription.
-              </DialogDescription>
             </DialogHeader>
-            <div className="flex flex justify-end gap-3 py-4">
-              <Button variant="outline" asChild className="justify-start gap-2">
-                <Link to="/pricing">Change Plan</Link>
-              </Button>
-              <Button
-                variant="outline"
-                className="justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
-                onClick={() => {
-                  cancelUserSubscription(userSubscription.subscriptionId);
-                }}
-              >
-                Cancel Subscription
-              </Button>
+
+            <div className="flex flex-col gap-4 mt-2 text-sm text-muted-foreground">
+              <div className="flex flex-col">
+                <p className="text-xl font-semibold text-primary/90">
+                  {userSubscription.plan.name}
+                </p>
+                <p>{userSubscription.plan.description}</p>
+                <p>
+                  {formatSubscriptionPrice(
+                    userSubscription.plan.price,
+                    userSubscription.plan.currency,
+                  )}
+                  /month
+                </p>
+              </div>
+
+              <Separator />
+
+              {userSubscription.cancelAtPeriodEnd && (
+                <>
+                  <p>
+                    You have cancelled your subscription on{" "}
+                    <span className="text-primary">
+                      {formatUnixTimestamp(userSubscription.canceledAt)}
+                    </span>
+                    . You can still use the premium features until{" "}
+                    <span className="text-primary">
+                      {formatUnixTimestamp(userSubscription.cancelAt)}.
+                    </span>
+                  </p>
+                  <div className="flex flex justify-end gap-3 py-4">
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="justify-start gap-2"
+                    >
+                      <Link to="/pricing">View Plans</Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-2 text-primary"
+                      onClick={() => {
+                        restoreUserSubscription(
+                          userSubscription.subscriptionId,
+                        );
+                      }}
+                    >
+                      Resume Subscription
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {!userSubscription.cancelAtPeriodEnd && (
+                <>
+                  <p>
+                    Your subscription will end on{" "}
+                    <span className="text-primary">
+                      {formatUnixTimestamp(userSubscription.currentPeriodEnd)}
+                    </span>
+                  </p>
+                  <div className="flex flex justify-end gap-3 py-4">
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="justify-start gap-2"
+                    >
+                      <Link to="/pricing">Change Plan</Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => {
+                        cancelUserSubscription(userSubscription.subscriptionId);
+                      }}
+                    >
+                      Cancel Subscription
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
           </DialogContent>
         </Dialog>
@@ -120,23 +185,32 @@ export function SubscriptionCard() {
 
 export function NoSubscriptionCard() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="mb-6 rounded-full bg-primary/10 p-4">
-        <Rocket className="size-8 text-primary" />
-      </div>
-      <h2 className="mb-2 text-xl sm:text-2xl font-semibold tracking-tight">
-        No Active Subscription
-      </h2>
-      <p className="mb-6 max-w-sm text-sm sm:text-base text-muted-foreground">
-        Unlock premium features and take your experience to the next level.
-        Choose a plan that works for you.
-      </p>
-      <Button asChild size="lg">
-        <Link to="/pricing">
+    <Card className="rounded-lg border-0 shadow-lg flex flex-col">
+      <CardHeader className="-mb-4">
+        <CardDescription className="text-muted-foreground font-medium">
+          Current plan
+        </CardDescription>
+        <CardTitle className="text-xl font-bold mt-1 text-primary">
+          Free
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent>
+        <p className="text-muted-foreground text-sm">
+          Unlock premium features and take your experience to the next level.
+        </p>
+      </CardContent>
+
+      <Separator />
+
+      <CardFooter className="w-full flex justify-center">
+        <Link
+          to="/pricing"
+          className="text-muted-foreground text-sm hover:text-primary transition-colors duration-200 cursor-pointer"
+        >
           View Plans
-          <ArrowUpRight className="ml-1 size-4" />
         </Link>
-      </Button>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }
