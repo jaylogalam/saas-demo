@@ -27,6 +27,18 @@ export const router = createBrowserRouter([
           Component: (await import("@/pages/PublicAboutPage")).default,
         }),
       },
+      {
+        path: "/checkout/processing",
+        lazy: async () => ({
+          Component: (await import("@/pages/CheckoutProcessingPage")).default,
+        }),
+      },
+      {
+        path: "/checkout/success",
+        lazy: async () => ({
+          Component: (await import("@/pages/CheckoutSuccessPage")).default,
+        }),
+      },
     ],
   },
   // Protected: Dashboard pages (require auth)

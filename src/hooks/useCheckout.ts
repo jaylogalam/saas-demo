@@ -1,23 +1,21 @@
 import { useUser } from "@/hooks/useUser";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { SubscriptionPlan } from "@/types/subscription.types";
 import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { toast } from "sonner";
 
 /**
- * Handle checkout redirect to Stripe Payment Link
+ * Handle checkout redirect to processing page
  */
 export function useCheckout() {
-  // State
+  const navigate = useNavigate();
   const { data: user } = useUser();
-
-  // Hooks
   const { data: userSubscription } = useUserSubscription(user);
 
   const handleCheckout = (plan: SubscriptionPlan) => {
     // Check if user is logged in
     if (!user) {
-      redirect("/login");
+      navigate("/login");
       return;
     }
 
@@ -37,11 +35,14 @@ export function useCheckout() {
       return;
     }
 
+    // Open Stripe payment link immediately
     const url = new URL(paymentLink);
-    if (user?.id) url.searchParams.set("client_reference_id", user.id);
-    if (user?.email) url.searchParams.set("prefilled_email", user.email);
-
+    if (user.id) url.searchParams.set("client_reference_id", user.id);
+    if (user.email) url.searchParams.set("prefilled_email", user.email);
     window.open(url.toString(), "_blank");
+
+    // Navigate to processing page
+    navigate(`/checkout/processing?plan=${plan.id}`);
   };
 
   return { handleCheckout };
