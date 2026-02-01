@@ -1,4 +1,4 @@
-// supabase/functions/cancel-subscription/index.ts
+// supabase/functions/restore-subscription/index.ts
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { withMiddleware } from "../_shared/wrapper.ts";
 import { getAdminClient, getUserClient } from "../_shared/supabase.ts";
@@ -60,15 +60,14 @@ const handler = async (req: Request): Promise<Response> => {
     );
   }
 
-  // 5. Cancel the subscription at period end via Stripe API
-  const cancelledSubscription = await stripe.subscriptions.cancel(subscription_id);
+  // 5. Restore the subscription by removing the cancellation via Stripe API
+  const restoredSubscription = await stripe.subscriptions.resume(subscription_id);
 
   return new Response(
     JSON.stringify({
       success: true,
-      message: "Subscription will be cancelled at the end of the billing period",
-      cancel_at: cancelledSubscription.cancel_at,
-      cancel_at_period_end: cancelledSubscription.cancel_at_period_end,
+      message: "Subscription has been restored",
+      cancel_at_period_end: restoredSubscription.cancel_at_period_end,
     }),
     { status: 200, headers: { "Content-Type": "application/json" } },
   );

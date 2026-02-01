@@ -29,3 +29,10 @@ export const useCancelUserSubscription = () => {
       UserSubscriptionServices.cancelUserSubscription(subscriptionId),
   });
 };
+
+export const useRestoreUserSubscription = () => {
+  return useMutation({
+    mutationFn: (subscriptionId: string) =>
+      UserSubscriptionServices.restoreUserSubscription(subscriptionId),
+  });
+};
