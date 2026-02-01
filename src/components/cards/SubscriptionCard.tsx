@@ -22,17 +22,24 @@ import {
   useRestoreUserSubscription,
   useUserSubscription,
 } from "@/hooks/useUserSubscription";
-
 import { Separator } from "../ui/separator";
 import { formatSubscriptionPrice } from "@/utils/formatSubscriptionPrice";
 
 export function SubscriptionCard() {
   const { data: user } = useUser();
   const { data: userSubscription } = useUserSubscription(user);
+
+  if (!userSubscription) return <NoSubscriptionCard />;
+
   const { mutate: cancelUserSubscription } = useCancelUserSubscription();
   const { mutate: restoreUserSubscription } = useRestoreUserSubscription();
 
-  if (!userSubscription) return <NoSubscriptionCard />;
+  const isProcessing = userSubscription && !userSubscription.currentPeriodEnd;
+  const isCancelled = userSubscription && userSubscription.cancelAtPeriodEnd;
+
+  useUserSubscription(user, {
+    refetchInterval: isProcessing ? 10000 : false,
+  });
 
   return (
     <Card className="rounded-lg border-0 shadow-lg flex flex-col">
@@ -46,8 +53,18 @@ export function SubscriptionCard() {
       </CardHeader>
 
       <CardContent>
+        {/* Is processing subscription */}
+        {isProcessing && (
+          <div className="flex items-center gap-2">
+            <p className="text-muted-foreground text-sm">
+              Your subscription is currently being processed. This usually takes
+              a few seconds.
+            </p>
+          </div>
+        )}
+
         {/* Is ongoing subscription */}
-        {!userSubscription.cancelAtPeriodEnd && (
+        {!isProcessing && !isCancelled && (
           <div>
             <p className="text-muted-foreground text-sm">
               Your next bill is for{" "}
@@ -67,7 +84,7 @@ export function SubscriptionCard() {
         )}
 
         {/* Is cancelled subscription */}
-        {userSubscription.cancelAtPeriodEnd && (
+        {!isProcessing && isCancelled && (
           <div>
             <p className="text-muted-foreground text-sm">
               Your subscription will end on{" "}
