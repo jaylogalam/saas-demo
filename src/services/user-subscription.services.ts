@@ -57,4 +57,15 @@ export const UserSubscriptionServices = {
 
     return data;
   },
+
+  updateSubscription: async (subscriptionId: string, priceId: string) => {
+    const { data, error } = await supabase.functions.invoke(
+      "update-subscription",
+      { body: { subscription_id: subscriptionId, price_id: priceId } },
+    );
+
+    if (error) throw error;
+
+    return data;
+  },
 };
