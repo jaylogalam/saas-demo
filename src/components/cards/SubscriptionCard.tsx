@@ -90,9 +90,6 @@ export function SubscriptionCard() {
     refetchInterval: isProcessing ? 3000 : false,
   });
 
-  console.log("resumeInProgress", resumeInProgress);
-  console.log("cancelInProgress", cancelInProgress);
-
   return (
     <Card className="rounded-lg border-0 shadow-lg flex flex-col">
       <CardHeader className="-mb-4">
