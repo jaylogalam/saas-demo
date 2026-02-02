@@ -49,7 +49,7 @@ export const UserSubscriptionServices = {
 
   restoreUserSubscription: async (subscriptionId: string) => {
     const { data, error } = await supabase.functions.invoke(
-      "restore-subscription",
+      "resume-subscription",
       { body: { subscription_id: subscriptionId } },
     );
 

@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useUser } from "@/hooks/useUser";
 import {
   useCancelUserSubscription,
@@ -31,14 +33,35 @@ export function SubscriptionCard() {
 
   if (!userSubscription) return <NoSubscriptionCard />;
 
-  const { mutate: cancelUserSubscription } = useCancelUserSubscription();
-  const { mutate: restoreUserSubscription } = useRestoreUserSubscription();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { mutate: cancelUserSubscription, isPending: isCancelling } =
+    useCancelUserSubscription();
+  const { mutate: restoreUserSubscription, isPending: isResuming } =
+    useRestoreUserSubscription();
+
+  const handleCancel = () => {
+    cancelUserSubscription(userSubscription.subscriptionId, {
+      onSuccess: () => {
+        setDialogOpen(false);
+      },
+    });
+  };
+
+  const handleResume = () => {
+    restoreUserSubscription(userSubscription.subscriptionId, {
+      onSuccess: () => {
+        setDialogOpen(false);
+      },
+    });
+  };
 
   const isProcessing = userSubscription && !userSubscription.currentPeriodEnd;
   const isCancelled = userSubscription && userSubscription.cancelAtPeriodEnd;
 
+  const shouldPoll = isProcessing || isCancelling || isResuming;
   useUserSubscription(user, {
-    refetchInterval: isProcessing ? 10000 : false,
+    refetchInterval: shouldPoll ? 3000 : false,
   });
 
   return (
@@ -100,7 +123,7 @@ export function SubscriptionCard() {
       <Separator />
 
       <CardFooter className="w-full flex justify-center">
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <p className="text-muted-foreground text-sm hover:text-primary transition-colors duration-200 cursor-pointer">
               Manage Subscription
@@ -152,12 +175,12 @@ export function SubscriptionCard() {
                     <Button
                       variant="outline"
                       className="justify-start gap-2 text-primary"
-                      onClick={() => {
-                        restoreUserSubscription(
-                          userSubscription.subscriptionId,
-                        );
-                      }}
+                      disabled={isResuming}
+                      onClick={handleResume}
                     >
+                      {isResuming && (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      )}
                       Resume Subscription
                     </Button>
                   </div>
@@ -183,10 +206,12 @@ export function SubscriptionCard() {
                     <Button
                       variant="outline"
                       className="justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
-                      onClick={() => {
-                        cancelUserSubscription(userSubscription.subscriptionId);
-                      }}
+                      disabled={isCancelling}
+                      onClick={handleCancel}
                     >
+                      {isCancelling && (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      )}
                       Cancel Subscription
                     </Button>
                   </div>

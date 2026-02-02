@@ -20,7 +20,7 @@ export const queryKeys = {
         plan: (productId: string) =>
             [...queryKeys.subscription.all, "plan", productId] as const,
         user: (userId: string | undefined) =>
-            ["user-subscription", userId] as const,
+            [...queryKeys.subscription.all, "user", userId] as const,
         list: () => [...queryKeys.subscription.all, "list"] as const,
         prorationPreview: (subscriptionId: string, priceId: string) =>
             [

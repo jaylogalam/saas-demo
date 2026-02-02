@@ -1,7 +1,12 @@
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 import { UserSubscriptionServices } from "@/services/user-subscription.services";
 import type { User } from "@/types/user.types";
+import { toast } from "sonner";
 
 /**
  * Fetch the current user's subscription via email-based customer lookup
@@ -28,15 +33,45 @@ export const useUserSubscriptionList = () => {
 };
 
 export const useCancelUserSubscription = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (subscriptionId: string) =>
       UserSubscriptionServices.cancelUserSubscription(subscriptionId),
+    onSuccess: () => {
+      toast.success("Subscription cancelled successfully");
+      // Invalidate user subscription queries
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const key = query.queryKey[0];
+          return key === "user-subscription" || key === "subscription";
+        },
+      });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to cancel subscription");
+    },
   });
 };
 
 export const useRestoreUserSubscription = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (subscriptionId: string) =>
       UserSubscriptionServices.restoreUserSubscription(subscriptionId),
+    onSuccess: () => {
+      toast.success("Subscription resumed successfully");
+      // Invalidate user subscription queries
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const key = query.queryKey[0];
+          return key === "user-subscription" || key === "subscription";
+        },
+      });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to resume subscription");
+    },
   });
 };
