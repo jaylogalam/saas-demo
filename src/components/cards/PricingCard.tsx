@@ -22,6 +22,7 @@ import { useUserSubscription } from "@/hooks/useUserSubscription";
 import { Skeleton } from "../ui/skeleton";
 import { formatSubscriptionPrice } from "../../utils/formatSubscriptionPrice";
 import { useUser } from "@/hooks/useUser";
+import { cn } from "@/utils/cn";
 
 // Feature tooltips for complex features
 const featureTooltips: Record<string, string> = {
@@ -41,7 +42,7 @@ export function PricingCard({ plan }: PricingCardProps) {
   const { data: user } = useUser();
   const { data: userSubscription } = useUserSubscription(user);
 
-  const { handleCheckout } = useCheckout();
+  const { handleCheckout, isUpdating } = useCheckout();
 
   const isCurrentPlan =
     userSubscription?.plan.name === plan.name &&
@@ -51,11 +52,10 @@ export function PricingCard({ plan }: PricingCardProps) {
     <>
       <TooltipProvider delayDuration={300}>
         <Card
-          className={`relative w-full max-w-sm h-full flex flex-col transition-all duration-300 hover:shadow-xl ${
-            plan.highlighted
-              ? "border-primary shadow-lg md:scale-105 z-10"
-              : "hover:border-primary/50"
-          }`}
+          className={cn("relative w-full max-w-sm h-full flex flex-col transition-all duration-300 hover:shadow-xl", plan.highlighted
+            ? "border-primary shadow-lg md:scale-105 z-10"
+            : "hover:border-primary/50"
+          )}
         >
           {/* Popular Badge */}
           {plan.highlighted && (
@@ -144,8 +144,9 @@ export function PricingCard({ plan }: PricingCardProps) {
                 size="lg"
                 variant={plan.highlighted ? "default" : "outline"}
                 onClick={() => handleCheckout(plan)}
+                disabled={isUpdating}
               >
-                {userSubscription ? "Change Plan" : "Get Started"}
+                {isUpdating ? "Updating..." : userSubscription ? "Change Plan" : "Get Started"}
               </Button>
             )}
           </CardFooter>

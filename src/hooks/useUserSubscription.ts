@@ -75,3 +75,15 @@ export const useRestoreUserSubscription = () => {
     },
   });
 };
+
+export const useUpdateSubscription = () => {
+  return useMutation({
+    mutationFn: ({
+      subscriptionId,
+      priceId,
+    }: {
+      subscriptionId: string;
+      priceId: string;
+    }) => UserSubscriptionServices.updateSubscription(subscriptionId, priceId),
+  });
+};

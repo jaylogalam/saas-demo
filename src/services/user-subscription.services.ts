@@ -57,4 +57,19 @@ export const UserSubscriptionServices = {
 
     return data;
   },
+
+  /** TODOs
+   *  - Check balance before updating subscription?
+   *  - Add new checkout page?
+   */
+  updateSubscription: async (subscriptionId: string, priceId: string) => {
+    const { data, error } = await supabase.functions.invoke(
+      "update-subscription",
+      { body: { subscription_id: subscriptionId, price_id: priceId } },
+    );
+
+    if (error) throw error;
+
+    return data;
+  },
 };
