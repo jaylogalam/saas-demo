@@ -28,36 +28,70 @@ import {
 import { Separator } from "../ui/separator";
 import { formatSubscriptionPrice } from "@/utils/formatSubscriptionPrice";
 
+// TODO: Optimize polling
 export function SubscriptionCard() {
   const { data: user } = useUser();
   const { data: userSubscription } = useUserSubscription(user);
 
   if (!userSubscription) return <NoSubscriptionCard />;
 
+  // UI States
   const [dialogOpen, setDialogOpen] = useState(false);
-  const isProcessing = userSubscription && userSubscription.cancelAtPeriodEnd;
-  const isCancelled = userSubscription && userSubscription.cancelAtPeriodEnd;
+  const [resumeInProgress, setResumeInProgress] = useState(false);
+  const [cancelInProgress, setCancelInProgress] = useState(false);
+  const isProcessing = cancelInProgress || resumeInProgress;
+  const isCancelled = userSubscription.cancelAtPeriodEnd;
 
+  // Functions
   const { mutate: cancelUserSubscription, isPending: isCancelling } =
     useCancelUserSubscription();
-  const { mutate: restoreUserSubscription, isPending: isResuming } =
+  const { mutate: resumeUserSubscription, isPending: isResuming } =
     useRestoreUserSubscription();
 
   const handleCancel = () => {
     cancelUserSubscription(userSubscription.subscriptionId, {
-      onSuccess: () => setDialogOpen(false),
+      onSuccess: () => {
+        setDialogOpen(false);
+        setCancelInProgress(true);
+      },
     });
   };
 
   const handleResume = () => {
-    restoreUserSubscription(userSubscription.subscriptionId, {
-      onSuccess: () => setDialogOpen(false),
+    resumeUserSubscription(userSubscription.subscriptionId, {
+      onSuccess: () => {
+        setDialogOpen(false);
+        setResumeInProgress(true);
+      },
     });
   };
 
+  if (resumeInProgress)
+    if (
+      userSubscription.currentPeriodStart &&
+      userSubscription.currentPeriodEnd &&
+      !userSubscription.cancelAtPeriodEnd &&
+      !userSubscription.canceledAt &&
+      !userSubscription.cancelAt
+    )
+      setResumeInProgress(false);
+
+  if (cancelInProgress)
+    if (
+      userSubscription.currentPeriodStart &&
+      userSubscription.currentPeriodEnd &&
+      userSubscription.cancelAtPeriodEnd &&
+      userSubscription.canceledAt &&
+      userSubscription.cancelAt
+    )
+      setCancelInProgress(false);
+
   useUserSubscription(user, {
-    refetchInterval: isProcessing ? 5000 : false,
+    refetchInterval: isProcessing ? 3000 : false,
   });
+
+  console.log("resumeInProgress", resumeInProgress);
+  console.log("cancelInProgress", cancelInProgress);
 
   return (
     <Card className="rounded-lg border-0 shadow-lg flex flex-col">
