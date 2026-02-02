@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Link } from "react-router-dom";
@@ -34,6 +35,8 @@ export function SubscriptionCard() {
   if (!userSubscription) return <NoSubscriptionCard />;
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const isProcessing = userSubscription && userSubscription.cancelAtPeriodEnd;
+  const isCancelled = userSubscription && userSubscription.cancelAtPeriodEnd;
 
   const { mutate: cancelUserSubscription, isPending: isCancelling } =
     useCancelUserSubscription();
@@ -42,26 +45,18 @@ export function SubscriptionCard() {
 
   const handleCancel = () => {
     cancelUserSubscription(userSubscription.subscriptionId, {
-      onSuccess: () => {
-        setDialogOpen(false);
-      },
+      onSuccess: () => setDialogOpen(false),
     });
   };
 
   const handleResume = () => {
     restoreUserSubscription(userSubscription.subscriptionId, {
-      onSuccess: () => {
-        setDialogOpen(false);
-      },
+      onSuccess: () => setDialogOpen(false),
     });
   };
 
-  const isProcessing = userSubscription && !userSubscription.currentPeriodEnd;
-  const isCancelled = userSubscription && userSubscription.cancelAtPeriodEnd;
-
-  const shouldPoll = isProcessing || isCancelling || isResuming;
   useUserSubscription(user, {
-    refetchInterval: shouldPoll ? 3000 : false,
+    refetchInterval: isProcessing ? 5000 : false,
   });
 
   return (
@@ -133,6 +128,7 @@ export function SubscriptionCard() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Manage Subscription</DialogTitle>
+              <DialogDescription></DialogDescription>
             </DialogHeader>
 
             <div className="flex flex-col gap-4 mt-2 text-sm text-muted-foreground">
