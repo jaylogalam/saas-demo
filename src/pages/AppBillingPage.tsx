@@ -1,4 +1,4 @@
-import { Page, PageHeader } from "@/components/ui/page";
+import { Page, PageContent, PageHeader } from "@/components/ui/page";
 import { SubscriptionCard } from "@/components/cards/SubscriptionCard";
 import { PaymentMethodCard } from "@/components/cards/PaymentMethodCard";
 import { Suspense } from "react";
@@ -7,18 +7,18 @@ import { BillingHistoryTable } from "@/components/tables/BillingHistoryTable";
 export function BillingPage() {
   return (
     <Suspense fallback={<BillingPageSkeleton />}>
-      <Page>
+      <Page className="w-full lg:max-w-256 lg:min-w-164 md:max-w-200 mx-auto">
         <PageHeader
           title="Billing"
           description="Manage your subscription and billing information"
         />
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <PageContent>
           <SubscriptionCard />
           <PaymentMethodCard />
-        </div>
 
-        <BillingHistoryTable />
+          <BillingHistoryTable />
+        </PageContent>
       </Page>
     </Suspense>
   );

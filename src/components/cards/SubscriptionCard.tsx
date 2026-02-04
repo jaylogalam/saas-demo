@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -6,79 +7,246 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { formatUnixTimestamp } from "@/utils/formatDate";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useUser } from "@/hooks/useUser";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
-import { ArrowUpRight, Rocket } from "lucide-react";
+import {
+  useCancelUserSubscription,
+  useRestoreUserSubscription,
+  useUserSubscription,
+} from "@/hooks/useUserSubscription";
+import { Separator } from "../ui/separator";
+import { formatSubscriptionPrice } from "@/utils/formatSubscriptionPrice";
 
+// TODO: Optimize polling
 export function SubscriptionCard() {
   const { data: user } = useUser();
   const { data: userSubscription } = useUserSubscription(user);
 
   if (!userSubscription) return <NoSubscriptionCard />;
 
+  // UI States
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [resumeInProgress, setResumeInProgress] = useState(false);
+  const [cancelInProgress, setCancelInProgress] = useState(false);
+  const isProcessing = cancelInProgress || resumeInProgress;
+  const isCancelled = userSubscription.cancelAtPeriodEnd;
+
+  // Functions
+  const { mutate: cancelUserSubscription, isPending: isCancelling } =
+    useCancelUserSubscription();
+  const { mutate: resumeUserSubscription, isPending: isResuming } =
+    useRestoreUserSubscription();
+
+  const handleCancel = () => {
+    cancelUserSubscription(userSubscription.subscriptionId, {
+      onSuccess: () => {
+        setDialogOpen(false);
+        setCancelInProgress(true);
+      },
+    });
+  };
+
+  const handleResume = () => {
+    resumeUserSubscription(userSubscription.subscriptionId, {
+      onSuccess: () => {
+        setDialogOpen(false);
+        setResumeInProgress(true);
+      },
+    });
+  };
+
+  if (resumeInProgress)
+    if (
+      userSubscription.currentPeriodStart &&
+      userSubscription.currentPeriodEnd &&
+      !userSubscription.cancelAtPeriodEnd &&
+      !userSubscription.canceledAt &&
+      !userSubscription.cancelAt
+    )
+      setResumeInProgress(false);
+
+  if (cancelInProgress)
+    if (
+      userSubscription.currentPeriodStart &&
+      userSubscription.currentPeriodEnd &&
+      userSubscription.cancelAtPeriodEnd &&
+      userSubscription.canceledAt &&
+      userSubscription.cancelAt
+    )
+      setCancelInProgress(false);
+
+  useUserSubscription(user, {
+    refetchInterval: isProcessing ? 3000 : false,
+  });
+
   return (
-    <Card className="relative overflow-hidden">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            Current Plan
-          </CardTitle>
-        </div>
-        <CardDescription>Your subscription details</CardDescription>
+    <Card className="rounded-lg border-0 shadow-lg flex flex-col">
+      <CardHeader className="-mb-4">
+        <CardDescription className="text-muted-foreground font-medium">
+          Active plan
+        </CardDescription>
+        <CardTitle className="text-3xl font-bold mt-1 text-primary">
+          {userSubscription.plan.name}
+        </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <p className="text-2xl font-bold">{userSubscription.plan.name}</p>
-          {userSubscription.plan.interval && (
-            <p className="text-sm text-muted-foreground">
-              Billed{" "}
-              {userSubscription.plan.interval === "monthly"
-                ? "monthly"
-                : "yearly"}
+
+      <CardContent>
+        {/* Is processing subscription */}
+        {isProcessing && (
+          <div className="flex items-center gap-2">
+            <p className="text-muted-foreground text-sm">
+              Your subscription is currently being processed. This usually takes
+              a few seconds.
             </p>
-          )}
-        </div>
-        <Separator />
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">
-            {userSubscription.cancelAtPeriodEnd
-              ? "Expires on"
-              : "Next billing date"}
-          </span>
-          <span className="font-medium">
-            {formatUnixTimestamp(userSubscription.currentPeriodEnd)}
-          </span>
-        </div>
-        {userSubscription.status === "active" ||
-          (userSubscription.status === "trialing" &&
-            !userSubscription.cancelAtPeriodEnd && (
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                >
-                  Cancel
-                </Button>
-                <Button variant="outline" size="sm" className="flex-1" asChild>
-                  <Link to="/pricing">
-                    Change Plan
-                    <ArrowUpRight className="ml-1 size-3 sm:size-4" />
-                  </Link>
-                </Button>
-              </div>
-            ))}
+          </div>
+        )}
+
+        {/* Is ongoing subscription */}
+        {!isProcessing && !isCancelled && (
+          <div>
+            <p className="text-muted-foreground text-sm">
+              Your next bill is for{" "}
+              <span className="text-primary">
+                {formatSubscriptionPrice(
+                  userSubscription.plan.price,
+                  userSubscription.plan.currency,
+                )}
+              </span>{" "}
+              on{" "}
+              <span className="text-primary">
+                {formatUnixTimestamp(userSubscription.currentPeriodEnd)}
+              </span>
+              .
+            </p>
+          </div>
+        )}
+
+        {/* Is cancelled subscription */}
+        {!isProcessing && isCancelled && (
+          <div>
+            <p className="text-muted-foreground text-sm">
+              Your subscription will end on{" "}
+              <span className="text-primary">
+                {formatUnixTimestamp(userSubscription.cancelAt)}
+              </span>
+              .
+            </p>
+          </div>
+        )}
       </CardContent>
 
-      <CardFooter>
-        <Button variant="outline" className="w-full" disabled>
-          Manage Subscription
-          <ArrowUpRight className="ml-1 size-4" />
-        </Button>
+      <Separator />
+
+      <CardFooter className="w-full flex justify-center">
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <p className="text-muted-foreground text-sm hover:text-primary transition-colors duration-200 cursor-pointer">
+              Manage Subscription
+            </p>
+          </DialogTrigger>
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Manage Subscription</DialogTitle>
+              <DialogDescription></DialogDescription>
+            </DialogHeader>
+
+            <div className="flex flex-col gap-4 mt-2 text-sm text-muted-foreground">
+              <div className="flex flex-col">
+                <p className="text-xl font-semibold text-primary/90">
+                  {userSubscription.plan.name}
+                </p>
+                <p>{userSubscription.plan.description}</p>
+                <p>
+                  {formatSubscriptionPrice(
+                    userSubscription.plan.price,
+                    userSubscription.plan.currency,
+                  )}
+                  /month
+                </p>
+              </div>
+
+              <Separator />
+
+              {userSubscription.cancelAtPeriodEnd && (
+                <>
+                  <p>
+                    You have cancelled your subscription on{" "}
+                    <span className="text-primary">
+                      {formatUnixTimestamp(userSubscription.canceledAt)}
+                    </span>
+                    . You can still use the premium features until{" "}
+                    <span className="text-primary">
+                      {formatUnixTimestamp(userSubscription.cancelAt)}.
+                    </span>
+                  </p>
+                  <div className="flex flex justify-end gap-3 py-4">
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="justify-start gap-2"
+                    >
+                      <Link to="/pricing">View Plans</Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-2 text-primary"
+                      disabled={isResuming}
+                      onClick={handleResume}
+                    >
+                      {isResuming && (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      )}
+                      Resume Subscription
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {!userSubscription.cancelAtPeriodEnd && (
+                <>
+                  <p>
+                    Your subscription will end on{" "}
+                    <span className="text-primary">
+                      {formatUnixTimestamp(userSubscription.currentPeriodEnd)}
+                    </span>
+                  </p>
+                  <div className="flex flex justify-end gap-3 py-4">
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="justify-start gap-2"
+                    >
+                      <Link to="/pricing">Change Plan</Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      disabled={isCancelling}
+                      onClick={handleCancel}
+                    >
+                      {isCancelling && (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      )}
+                      Cancel Subscription
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardFooter>
     </Card>
   );
@@ -86,23 +254,32 @@ export function SubscriptionCard() {
 
 export function NoSubscriptionCard() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="mb-6 rounded-full bg-primary/10 p-4">
-        <Rocket className="size-8 text-primary" />
-      </div>
-      <h2 className="mb-2 text-xl sm:text-2xl font-semibold tracking-tight">
-        No Active Subscription
-      </h2>
-      <p className="mb-6 max-w-sm text-sm sm:text-base text-muted-foreground">
-        Unlock premium features and take your experience to the next level.
-        Choose a plan that works for you.
-      </p>
-      <Button asChild size="lg">
-        <Link to="/pricing">
+    <Card className="rounded-lg border-0 shadow-lg flex flex-col">
+      <CardHeader className="-mb-4">
+        <CardDescription className="text-muted-foreground font-medium">
+          Current plan
+        </CardDescription>
+        <CardTitle className="text-xl font-bold mt-1 text-primary">
+          Free
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent>
+        <p className="text-muted-foreground text-sm">
+          Unlock premium features and take your experience to the next level.
+        </p>
+      </CardContent>
+
+      <Separator />
+
+      <CardFooter className="w-full flex justify-center">
+        <Link
+          to="/pricing"
+          className="text-muted-foreground text-sm hover:text-primary transition-colors duration-200 cursor-pointer"
+        >
           View Plans
-          <ArrowUpRight className="ml-1 size-4" />
         </Link>
-      </Button>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }

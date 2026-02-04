@@ -11,7 +11,7 @@ export interface SubscriptionPlan {
 }
 
 export interface UserSubscription {
-  id: string;
+  subscriptionId: string;
   userId: string;
   email: string;
   plan: SubscriptionPlan;
@@ -27,4 +27,6 @@ export interface UserSubscription {
   currentPeriodStart: number;
   currentPeriodEnd: number;
   cancelAtPeriodEnd: boolean;
+  cancelAt: number;
+  canceledAt: number;
 }

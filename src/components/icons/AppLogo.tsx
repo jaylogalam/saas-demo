@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { appName } from "@/app/config";
 
 interface AppLogoProps {
   to?: string;
@@ -8,7 +9,7 @@ interface AppLogoProps {
 
 export function AppLogo({
   to = "/",
-  name = "SaaS Demo",
+  name = appName,
   iconSize = "md",
 }: AppLogoProps) {
   const sizeClasses = iconSize === "sm" ? "size-6" : "size-8";

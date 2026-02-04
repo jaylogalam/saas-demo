@@ -13,6 +13,7 @@ export const UserSubscriptionServices = {
       .from("user_subscriptions")
       .select("*")
       .eq("email", user.email)
+      .eq("status", "active")
       .order("current_period_end", { ascending: false })
       .limit(1)
       .single();
@@ -33,5 +34,42 @@ export const UserSubscriptionServices = {
     return data.map((subscription) =>
       camelCaseKeys(subscription, { deep: true })
     ) as UserSubscription[];
+  },
+
+  cancelUserSubscription: async (subscriptionId: string) => {
+    const { data, error } = await supabase.functions.invoke(
+      "cancel-subscription",
+      { body: { subscription_id: subscriptionId } },
+    );
+
+    if (error) throw error;
+
+    return data;
+  },
+
+  restoreUserSubscription: async (subscriptionId: string) => {
+    const { data, error } = await supabase.functions.invoke(
+      "resume-subscription",
+      { body: { subscription_id: subscriptionId } },
+    );
+
+    if (error) throw error;
+
+    return data;
+  },
+
+  /** TODOs
+   *  - Check balance before updating subscription?
+   *  - Add new checkout page?
+   */
+  updateSubscription: async (subscriptionId: string, priceId: string) => {
+    const { data, error } = await supabase.functions.invoke(
+      "update-subscription",
+      { body: { subscription_id: subscriptionId, price_id: priceId } },
+    );
+
+    if (error) throw error;
+
+    return data;
   },
 };

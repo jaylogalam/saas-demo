@@ -201,7 +201,7 @@ function SubscriptionsTable({ subscriptions }: SubscriptionsTableProps) {
         <TableBody>
           {subscribedUsers.map((subscription) => (
             <SubscriptionRow
-              key={subscription.id}
+              key={subscription.subscriptionId}
               subscription={subscription}
             />
           ))}

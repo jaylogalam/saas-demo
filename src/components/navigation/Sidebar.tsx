@@ -20,18 +20,19 @@ type SidebarItem = {
 function Sidebar({ sections, ...props }: SidebarProps) {
   return (
     <nav className="flex-1 p-4 space-y-6 overflow-y-auto" {...props}>
-      {sections.map((section: SidebarSection) => (
-        <div key={section.title} className="space-y-2">
+      {sections.map((section: SidebarSection, index: number) => (
+        <div key={index} className="space-y-2">
           <h4 className="px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             {section.title}
           </h4>
           <div className="space-y-1">
-            {section.items.map((link: SidebarItem) => {
+            {section.items.map((link: SidebarItem, linkIndex: number) => {
               const { pathname } = useLocation();
               const isActive = pathname === link.href;
 
               return (
                 <Button
+                  key={linkIndex}
                   variant={isActive ? "secondary" : "ghost"}
                   className="w-full justify-start gap-3"
                   asChild
